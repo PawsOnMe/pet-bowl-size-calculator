@@ -1,6 +1,6 @@
-# Pet Bowl Size Calculator (by PawsOnMePet)
+# Pet Bowl Size Calculator (by PawsOnMe)
 
-> Free calculator for how high and how big a dog's or cat's food bowl should be, from the pet's elbow height, meal size and needs. Each number is labelled as a study result or a rule of thumb, with sources. Made by PawsOnMePet, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
+> Free calculator for how high and how big a dog's or cat's food bowl should be, from the pet's elbow height, meal size and needs. Each number is labelled as a study result or a rule of thumb, with sources. Made by PawsOnMe, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
 
 ## Key answers
 - Dog bowl height: rim between elbow height and 5 to 7.5 cm (2 to 3 in) below it. Rule of thumb; no veterinary guideline sets a height.
@@ -15,7 +15,7 @@
 - Low-fat and copper-restricted diet math for dogs (skills/dog-diet-fat-copper): RER = 70 x kg^0.75; fat line 24 g per 1000 kcal (Today's Veterinary Practice), AAFCO fat minimum 13.8 g per 1000 kcal; copper target for copper-associated hepatopathy < 1.2 mg per 1000 kcal (Today's Veterinary Practice 2025), AAFCO copper minimum 1.83 mg per 1000 kcal.
 
 ## Files
-- [Calculator](https://pawsonmepet.github.io/pet-bowl-size-calculator/)
+- [Calculator](https://pawsonme.github.io/pet-bowl-size-calculator/)
 - [bowlfit.js](bowlfit.js): the calculation, no dependencies
 - [data/guidance.json](data/guidance.json): rules, evidence level and sources
 - [SKILL.md](SKILL.md): agent skill

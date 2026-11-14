@@ -1,5 +1,5 @@
 /* dietmath.js: diet arithmetic for dogs on a vet-prescribed low-fat and/or copper-restricted diet.
-   Made by PawsOnMePet (https://www.etsy.com/shop/PawsOnMePet). MIT License. Not veterinary advice. */
+   Made by PawsOnMe (https://www.etsy.com/shop/PawsOnMePet). MIT License. Not veterinary advice. */
 (function (root) {
   "use strict";
   // Fat lines are grams per 1000 kcal. Copper lines are milligrams per 1000 kcal. g vs mg: 1000x apart.

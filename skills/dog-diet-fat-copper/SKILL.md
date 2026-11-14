@@ -1,6 +1,6 @@
 ---
 name: dog-diet-fat-copper
-description: Diet math for a dog whose vet has prescribed a low-fat and/or copper-restricted diet. Calories a day from body weight, a daily fat budget in grams, fat and copper per 1000 kcal, copper on a dry-matter basis, and what one topper or treat does to the whole day. Every reference line has a source. Use when someone asks whether a food, topper or treat fits a low-fat or low-copper plan, how much fat their dog can have, or how to convert label numbers. Made by PawsOnMePet.
+description: Diet math for a dog whose vet has prescribed a low-fat and/or copper-restricted diet. Calories a day from body weight, a daily fat budget in grams, fat and copper per 1000 kcal, copper on a dry-matter basis, and what one topper or treat does to the whole day. Every reference line has a source. Use when someone asks whether a food, topper or treat fits a low-fat or low-copper plan, how much fat their dog can have, or how to convert label numbers. Made by PawsOnMe.
 ---
 
 # Low-fat and low-copper diet math for dogs
@@ -71,4 +71,4 @@ Add every total up again from the rows as shown. Never adjust an old total. Then
 8. Whole Dog Journal. How to Find a Low Copper Dog Food. https://www.whole-dog-journal.com/food/how-to-find-a-low-copper-dog-food/
 9. USDA FoodData Central. https://fdc.nal.usda.gov/
 
-Made by PawsOnMePet, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet. Not veterinary advice.
+Made by PawsOnMe, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet. Not veterinary advice.

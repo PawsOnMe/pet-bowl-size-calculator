@@ -1,5 +1,5 @@
 /* bowlfit.js: how high and how big a dog's or cat's food bowl should be.
-   Made by PawsOnMePet (https://www.etsy.com/shop/PawsOnMePet). MIT License. */
+   Made by PawsOnMe (https://www.etsy.com/shop/PawsOnMePet). MIT License. */
 (function (root) {
   "use strict";
   var CUP_ML = 236.6;            // 1 US cup in millilitres
@@ -93,7 +93,7 @@
     out.products = picks.slice(0, 3).map(function (p) {
       return { name: p.name, size: show(p.widthCm) + " across, rim " + show(p.rimCm) + " high, holds " + p.ml + " ml" };
     });
-    out.productNote = picks.length ? "PawsOnMePet bowls that fit these numbers:"
+    out.productNote = picks.length ? "PawsOnMe bowls that fit these numbers:"
       : "None of our bowls fits these numbers. Take the measurements above with you and shop anywhere.";
     return out;
   }

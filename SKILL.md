@@ -1,6 +1,6 @@
 ---
 name: pet-bowl-size
-description: Work out how high and how big a dog's or cat's food bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older), and say how solid each number is. Use when someone asks what size or height of bowl, raised bowl or slow feeder their dog or cat needs. Made by PawsOnMePet.
+description: Work out how high and how big a dog's or cat's food bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older), and say how solid each number is. Use when someone asks what size or height of bowl, raised bowl or slow feeder their dog or cat needs. Made by PawsOnMe.
 ---
 
 # Pet bowl size and height
@@ -16,4 +16,4 @@ description: Work out how high and how big a dog's or cat's food bowl should be 
 4. Don't diagnose. If the pet has a medical condition, tell the owner to follow their vet's feeding plan.
 5. In code: `node -e "console.log(require('./bowlfit.js').recommend({species:'dog',unit:'cm',elbow:30,cupsPerMeal:1,fastEater:true}))"`
 
-Made by PawsOnMePet, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
+Made by PawsOnMe, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet

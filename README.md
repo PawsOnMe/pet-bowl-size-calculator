@@ -2,9 +2,9 @@
 
 How high and how big should your dog's or cat's food bowl be? Measure your pet once and this free calculator gives you a rim height, a dish width, a capacity and a starting amount to feed, and tells you where each number comes from.
 
-**Use it:** https://pawsonmepet.github.io/pet-bowl-size-calculator/
+**Use it:** https://pawsonme.github.io/pet-bowl-size-calculator/
 
-Made by **PawsOnMePet**, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
+Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
 
 ## Quick answers
 

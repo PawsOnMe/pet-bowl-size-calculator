@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Check a one-page feeding plan: layout rules and that every total is re-added from the rows.
    Usage: node check_one_pager.js plan.html [--print]   (--print also checks it prints on 1 Letter page with Chrome)
-   Made by PawsOnMePet. MIT License. */
+   Made by PawsOnMe. MIT License. */
 const fs = require("fs"), path = require("path");
 const file = process.argv[2]; if (!file) { console.error("usage: node check_one_pager.js plan.html [--print]"); process.exit(2); }
 const html = fs.readFileSync(file, "utf8"), errs = [];

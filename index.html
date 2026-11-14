@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pet Bowl Size Calculator: bowl height, size and how much to feed</title>
-<meta name="description" content="Free calculator: how high and how big your dog's or cat's food bowl should be, from elbow height, weight and food. Sources cited. Made by PawsOnMePet.">
-<link rel="canonical" href="https://pawsonmepet.github.io/pet-bowl-size-calculator/">
+<meta name="description" content="Free calculator: how high and how big your dog's or cat's food bowl should be, from elbow height, weight and food. Sources cited. Made by PawsOnMe.">
+<link rel="canonical" href="https://pawsonme.github.io/pet-bowl-size-calculator/">
 <style>
 :root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--warn:#8f4317;--warn-soft:#fdf0e6}
 @media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--warn:#f0a774;--warn-soft:#3a2a1f}}
@@ -43,7 +43,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"WebApplication","name":"Pet Bowl Size Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonmepet.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMePet","url":"https://www.etsy.com/shop/PawsOnMePet"}},
+{"@type":"WebApplication","name":"Pet Bowl Size Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonme.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMe","url":"https://www.etsy.com/shop/PawsOnMePet"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor."}},
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds (Glickman et al., 2000). Ask your vet before raising a large or giant breed's bowl."}},
@@ -58,7 +58,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <body data-species="dog">
 <main>
 <header>
-<p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMePet</a></p>
+<p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
 <h1>How high and how big should your pet's bowl be?</h1>
 <p class="lede">Measure your dog or cat once and get a rim height, dish width, capacity and a starting amount to feed. Every number says where it comes from.</p>
 </header>
@@ -143,7 +143,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 </section>
 
 <footer>
-<p>Made by <a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMePet</a>, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs. Free and open source (MIT).</p>
+<p>Made by <a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a>, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs. Free and open source (MIT).</p>
 <p>Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.</p>
 </footer>
 </main>
@@ -173,7 +173,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
     if (r.tips.length) h += '<ul class="tips">' + r.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
-    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span></li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMePet shop on Etsy</a></p>';
+    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span></li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
     out.innerHTML = h + "</div>";
   }
   f.addEventListener("input", render); f.addEventListener("change", render); render();
