@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Food, Nutrition &amp; Medication Plan</title>
+<style>
+@page { size: Letter; margin: 0.45in; }
+body { font: 10pt/1.35 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #222; margin: 0; }
+@media screen { body { padding: 16px 20px; max-width: 8.5in; margin: 0 auto; box-sizing: border-box; } }
+@media print { body { font-size: 10.2pt; } }
+h1 { font-size: 15pt; margin: 0 0 4px; }
+h2 { font-size: 11pt; margin: 12px 0 4px; }
+.gist { font-size: 9.5pt; margin: 0 0 8px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #bbb; padding: 3px 6px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tr.total td { font-weight: 700; background: #eee; }
+.hl { background: #fff3a8; }
+tr.stopped td, tr.stopped td * { text-decoration: line-through; text-decoration-color: #c00; text-decoration-thickness: 2px; color: #777; }
+.notes { font-size: 7.5pt; color: #444; margin-top: 10px; }
+.notes p { margin: 2px 0; }
+</style>
+</head>
+<body>
+<h1>[Dog's name] – Daily Food, Nutrition &amp; Medication Plan</h1>
+<div class="gist">Plan: [why this version exists and what it should achieve, in one or two lines]. Example: low-fat, copper-restricted diet set by the vet; about 1.6 × RER (630 kcal) a day in 3 meals.</div>
+
+<h2>Daily timeline (times are targets, may float ± 2 hours max)</h2>
+<table>
+<tr><th style="width:18%">Time</th><th>Food</th><th>Medication / supplement</th></tr>
+<tr><td>7:30</td><td>Main food A, 200 g</td><td><b>Medication as prescribed</b></td></tr>
+<tr><td>12:30</td><td>Main food A, 200 g + cooked carrot, 60 g</td><td>—</td></tr>
+<tr><td>18:30</td><td>Main food A, 200 g + cooked chicken breast, <span class="hl">40 g</span></td><td><b>Supplement as prescribed</b></td></tr>
+<tr class="stopped"><td>Stopped 11/1</td><td>Treat B</td><td>—</td></tr>
+</table>
+
+<h2>kcal, fat and copper per day</h2>
+<table>
+<tr><th>Food</th><th class="num">Amount / day</th><th class="num">kcal / day</th><th class="num">Fat g / day</th><th class="num">Copper mg / day</th></tr>
+<tr class="main"><td>Main food A*</td><td class="num">600 g</td><td class="num">540</td><td class="num">11.9</td><td class="num">0.59</td></tr>
+<tr><td>Cooked carrot*</td><td class="num">60 g</td><td class="num">21</td><td class="num">0.1</td><td class="num">0.03</td></tr>
+<tr><td>Cooked chicken breast, skinless*</td><td class="num">40 g</td><td class="num">66</td><td class="num">1.4</td><td class="num">0.02</td></tr>
+<tr class="total addons"><td>Add-ons (everything except main food A)</td><td class="num"></td><td class="num">87</td><td class="num">1.5</td><td class="num">0.05</td></tr>
+<tr class="total whole"><td>Whole day</td><td class="num"></td><td class="num">627</td><td class="num">13.4</td><td class="num">0.64</td></tr>
+<tr class="density-fat"><td colspan="5">Fat density: 21.4 g per 1000 kcal (line ≤ 24)</td></tr>
+<tr class="density-cu"><td colspan="5">Copper density: 1.02 mg per 1000 kcal (vet's target)</td></tr>
+<tr class="fat-room"><td colspan="5">Fat room: 1.6 g left (24 × 0.627 − 13.4)</td></tr>
+</table>
+
+<div class="notes">
+<p>Key: yellow = approximate or to confirm · red strikethrough = stopped (date in the row) · * = example numbers, replace with your dog's foods</p>
+<p>Data: maker's typical analysis per 1000 kcal; USDA FoodData Central (write the FDC ID); food labels</p>
+<p>In use: [date] (transition) → [date] (full plan)</p>
+</div>
+</body>
+</html>

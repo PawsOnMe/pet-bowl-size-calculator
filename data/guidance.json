@@ -1,0 +1,84 @@
+{
+  "name": "Pet bowl size and height guidance",
+  "by": "PawsOnMePet",
+  "shop": "https://www.etsy.com/shop/PawsOnMePet",
+  "rules": [
+    {
+      "id": "rim-height",
+      "applies_to": "dogs and cats",
+      "rule": "Rim from elbow height down to 7.5 cm (3 in) below it",
+      "evidence": "rule of thumb from pet-product guides; no veterinary guideline"
+    },
+    {
+      "id": "large-breed-raised-bowl",
+      "applies_to": "large and giant breed dogs",
+      "rule": "Floor level unless a vet advises otherwise",
+      "evidence": "cohort study, more than 1,600 dogs: raised bowls linked to about 20% (large) and 52% (giant) of GDV cases",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/11128539/",
+        "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf"
+      ]
+    },
+    {
+      "id": "cat-dish-width",
+      "applies_to": "cats",
+      "rule": "Dish at least as wide as the whisker span",
+      "evidence": "38-cat study: no difference in time eating, food dropped or food eaten; 63% of owners said their cat preferred the wide dish",
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/"
+      ]
+    },
+    {
+      "id": "capacity",
+      "applies_to": "dogs and cats",
+      "rule": "At least 1.5 x the meal volume, 2 x for a slow feeder; 1 US cup = 236.6 ml",
+      "evidence": "rule of thumb"
+    },
+    {
+      "id": "slow-feeder",
+      "applies_to": "pets that gulp their food",
+      "rule": "A slow feeder lengthens the meal",
+      "evidence": "five-dog study showed slower eating; no trial shows bloat prevention",
+      "sources": [
+        "https://hau.repository.guildhe.ac.uk/id/eprint/15072/"
+      ]
+    },
+    {
+      "id": "short-legs",
+      "applies_to": "short-legged dogs",
+      "rule": "Size by elbow height, not weight",
+      "evidence": "practical tip"
+    },
+    {
+      "id": "long-ears",
+      "applies_to": "long-eared dogs",
+      "rule": "Narrower opening or a tilted bowl",
+      "evidence": "practical tip"
+    },
+    {
+      "id": "flat-face",
+      "applies_to": "flat-faced dogs and cats",
+      "rule": "Wide, shallow or tilted bowl",
+      "evidence": "practical tip"
+    },
+    {
+      "id": "daily-calories",
+      "applies_to": "dogs and cats",
+      "rule": "RER = 70 x kg^0.75 kcal/day; MER = RER x factor (dog: neutered 1.6, intact 1.8, inactive 1.2-1.4, growth 2-3; cat: neutered 1.2, intact 1.4, inactive 1.0, growth 2-3); cups = MER / kcal per cup",
+      "evidence": "Pet Nutrition Alliance table; estimates only, pets can vary by as much as 50%, adjust to body condition",
+      "sources": [
+        "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf"
+      ]
+    },
+    {
+      "id": "food-label",
+      "applies_to": "dogs and cats",
+      "rule": "Choose a food labelled complete and balanced for the life stage; for puppies that will be large dogs, the label should include growth of large size dogs",
+      "evidence": "label rule; large-breed puppies need tighter calcium limits",
+      "sources": [
+        "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods",
+        "https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/"
+      ]
+    }
+  ]
+}

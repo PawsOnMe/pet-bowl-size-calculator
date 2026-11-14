@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pet Bowl Size Calculator: bowl height, size and how much to feed</title>
+<meta name="description" content="Free calculator: how high and how big your dog's or cat's food bowl should be, from elbow height, weight and food. Sources cited. Made by PawsOnMePet.">
+<link rel="canonical" href="https://pawsonmepet.github.io/pet-bowl-size-calculator/">
+<style>
+:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--warn:#8f4317;--warn-soft:#fdf0e6}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--warn:#f0a774;--warn-soft:#3a2a1f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
+.brand{margin:0;color:var(--accent);font-weight:600;letter-spacing:.02em}.brand a{color:inherit;text-decoration:none}
+h1{font-size:1.75rem;line-height:1.2;margin:.3em 0 .4em}
+h2{font-size:1.2rem;margin:0 0 .6em}
+h3{font-size:1.02rem;margin:1.4em 0 .3em}
+.lede,.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:18px 0}
+fieldset{border:0;padding:0;margin:0 0 14px}
+legend{font-weight:600;margin-bottom:6px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pills label{border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pills input{accent-color:var(--accent)}
+.field{display:grid;gap:4px;margin:0 0 14px}
+.calc{margin:0 0 14px}.calc summary{cursor:pointer;color:var(--accent);font-weight:600;margin-bottom:10px}
+.field select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);max-width:100%}
+.field input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);max-width:220px}
+.hint{font-size:.88rem;color:var(--muted)}
+.checks label{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
+.checks input{margin-top:5px;accent-color:var(--accent)}
+body[data-species=cat] .dog-only,body[data-species=dog] .cat-only{display:none}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+dt{color:var(--muted)}dd{margin:0;font-weight:600}
+.caution{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0 0}
+.tips{margin:12px 0 0;padding-left:20px}
+.ours{background:var(--accent-soft);border-radius:10px;padding:12px;margin-top:14px}
+.ours p{margin:0}.ours ul{margin:8px 0;padding-left:20px}.ours span{color:var(--muted);font-size:.92rem}
+a{color:var(--accent)}
+.sources li{margin:6px 0;font-size:.92rem}
+footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Pet Bowl Size Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonmepet.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMePet","url":"https://www.etsy.com/shop/PawsOnMePet"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor."}},
+{"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds (Glickman et al., 2000). Ask your vet before raising a large or giant breed's bowl."}},
+{"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
+{"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml."}},
+{"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag and adjust to body condition."}},
+{"@type":"Question","name":"What should I feed my puppy?","acceptedAnswer":{"@type":"Answer","text":"A food labelled complete and balanced for growth or all life stages. For a puppy that will be a large dog, the label should say it includes growth of large size dogs."}},
+{"@type":"Question","name":"Do slow feeder bowls work?","acceptedAnswer":{"@type":"Answer","text":"A small study of five dogs found a slow feeder lowered eating speed. No trial has shown that slow feeders prevent bloat."}}
+]}]}
+</script>
+</head>
+<body data-species="dog">
+<main>
+<header>
+<p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMePet</a></p>
+<h1>How high and how big should your pet's bowl be?</h1>
+<p class="lede">Measure your dog or cat once and get a rim height, dish width, capacity and a starting amount to feed. Every number says where it comes from.</p>
+</header>
+
+<form id="f" class="card" autocomplete="off">
+<fieldset><legend>Your pet</legend><div class="pills">
+<label><input type="radio" name="species" value="dog" checked> Dog</label>
+<label><input type="radio" name="species" value="cat"> Cat</label></div></fieldset>
+<fieldset><legend>Units</legend><div class="pills">
+<label><input type="radio" name="unit" value="cm" checked> Metric (cm, kg)</label>
+<label><input type="radio" name="unit" value="in"> US (inches, lb)</label></div></fieldset>
+<div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
+<input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
+<span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
+<div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
+<input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
+<span class="hint">Tip to tip, across the face.</span></div>
+<div class="field"><label for="cups">Food per meal (US cups)</label>
+<input id="cups" name="cups" type="number" min="0" step="0.05" inputmode="decimal">
+<span class="hint">The amount on the food bag, split by the number of meals.</span></div>
+<details class="calc"><summary>Not sure how much per meal? Work it out</summary>
+<div class="field"><label for="weight">Weight (<span id="u3">kg</span>)</label>
+<input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
+<div class="field"><label for="stage">Life stage</label>
+<select id="stage" name="stage">
+<option value="neutered">Adult, spayed or neutered</option>
+<option value="intact">Adult, not spayed or neutered</option>
+<option value="inactive">Adult, not very active or gains weight easily</option>
+<option value="young">Puppy or kitten</option>
+</select></div>
+<div class="field"><label for="kcal">Calories per cup (kcal/cup)</label>
+<input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
+<span class="hint">Printed on the food bag as kcal/cup.</span></div>
+<div class="field"><label for="meals">Meals a day</label>
+<input id="meals" name="meals" type="number" min="1" step="1" value="2" inputmode="numeric"></div>
+</details>
+<fieldset class="checks"><legend>Anything that applies</legend>
+<label class="dog-only"><input type="checkbox" name="largeBreed"> Large or giant breed</label>
+<label class="dog-only"><input type="checkbox" name="shortLegs"> Short legs, long back (dachshund, corgi, basset)</label>
+<label><input type="checkbox" name="fastEater"> Eats very fast or throws up after meals</label>
+<label><input type="checkbox" name="flatFace"> Flat face (pug, Persian)</label>
+<label class="dog-only"><input type="checkbox" name="longEars"> Long, floppy ears</label>
+<label><input type="checkbox" name="senior"> Older or stiff joints</label>
+</fieldset>
+</form>
+
+<section id="result" class="card" aria-live="polite"></section>
+
+<section>
+<h2>Quick answers</h2>
+<h3>How high should my dog's food bowl be?</h3>
+<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice.</p>
+<h3>Are raised bowls safe for large dogs?</h3>
+<p>In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds [1]. A later evidence review found no study showing raised bowls lower that risk [2]. If your dog is a large or giant breed, ask your vet first.</p>
+<h3>How tall should a cat's bowl be?</h3>
+<p>Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this, so treat it as a comfort tweak.</p>
+<h3>How wide should a cat's bowl be? Is whisker fatigue real?</h3>
+<p>In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish [3]. A wide, shallow dish at least as wide as your cat's whisker span is a cheap thing to try.</p>
+<h3>Do slow feeder bowls work?</h3>
+<p>In a small study of five dogs, a slow feeder lowered eating speed [4]. Eating fast was one of the bloat risk factors in the large-breed study [1]. No trial has shown that slow feeders prevent bloat.</p>
+<h3>How big should the bowl be?</h3>
+<p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. This is our rule of thumb.</p>
+<h3>How much should I feed my dog or cat?</h3>
+<p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag, then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
+<h3>What should I feed?</h3>
+<p>A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].</p>
+<h3>Short legs, long ears or a flat face?</h3>
+<p>Short-legged dogs: measure the elbow height, because size charts based on weight don't account for leg length. Long-eared dogs often dip their ears in the bowl, so a narrower opening or a tilted bowl helps. Flat-faced pets usually find wide, shallow or tilted bowls easier. These are practical tips, not study results.</p>
+</section>
+
+<section class="sources">
+<h2>Sources</h2>
+<ol>
+<li>Glickman LT, et al. Non-dietary risk factors for gastric dilatation-volvulus in large and giant breed dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/11128539/">PubMed</a></li>
+<li>Buckley L. Are dogs that are fed from a raised bowl at an increased risk of gastric dilation volvulus compared with floor-fed dogs? Veterinary Evidence. <a href="https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf">PDF</a></li>
+<li>Slovak JE, Foster TE. Evaluation of whisker stress in cats. Journal of Feline Medicine and Surgery, 2021. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/">PMC</a></li>
+<li>Buckley L. "Go slow" feeding bowls: how effective are they? Conference poster, Harper Adams University, 2016. <a href="https://hau.repository.guildhe.ac.uk/id/eprint/15072/">Repository</a></li>
+<li>Pet Nutrition Alliance. Calculating Calories Based on Pet Needs. <a href="https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf">PDF</a></li>
+<li>Merck Veterinary Manual. Dog and Cat Foods. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods">Merck</a></li>
+<li>Whole Dog Journal. In the Fine Print: Nutritional Adequacy Statements. <a href="https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/">Article</a></li>
+</ol>
+</section>
+
+<footer>
+<p>Made by <a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMePet</a>, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs. Free and open source (MIT).</p>
+<p>Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.</p>
+</footer>
+</main>
+<script src="bowlfit.js"></script>
+<script>
+(function () {
+  var f = document.getElementById("f"), out = document.getElementById("result");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function vals() {
+    var d = new FormData(f), dog = d.get("species") === "dog";
+    return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
+      cupsPerMeal: d.get("cups"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), largeBreed: dog && d.has("largeBreed"), shortLegs: dog && d.has("shortLegs"),
+      fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
+  }
+  function render() {
+    var v = vals(), r = BowlFit.recommend(v);
+    document.body.setAttribute("data-species", v.species);
+    document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
+    document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
+    var h = "<h2>Your numbers</h2><dl>";
+    h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
+    if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
+    var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
+    if (fd) h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd><dt>Food a day</dt><dd>" + rng(fd.cupsDayLo, fd.cupsDayHi) + " cups in " + fd.meals + " meals</dd>";
+    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)" : "Add the food per meal.") + "</dd>";
+    h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";
+    r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
+    if (r.tips.length) h += '<ul class="tips">' + r.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
+    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span></li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMePet shop on Etsy</a></p>';
+    out.innerHTML = h + "</div>";
+  }
+  f.addEventListener("input", render); f.addEventListener("change", render); render();
+})();
+</script>
+</body>
+</html>
