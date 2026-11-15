@@ -32,6 +32,12 @@ Start with the chart on the food bag, or work it out: resting energy is 70 × (w
 **What should I feed?**
 A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].
 
+**Dry, wet, freeze-dried, fresh or raw: what should my dog eat?**
+Any type can work if the label says complete and balanced for your dog's life stage [8]. For most healthy dogs, canned or dry doesn't matter, so go by your dog, your budget and your routine [9]. Treat freeze-dried food as raw unless the pack says it was cooked, because freeze-drying only reduces germs [10][11]. Vet groups advise against raw diets because of Salmonella, Listeria and drug-resistant bacteria [11][12]. Homemade food needs a recipe from a board-certified veterinary nutritionist; in one study 95% of 200 published recipes fell short on at least one nutrient [13]. Switch foods over at least 3 days [14]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
+
+**Should I add water to my dog's kibble?**
+It's fine, and it helps dogs that need more water, such as dogs prone to some bladder stones [15], and dogs with sore or missing teeth [9]. It won't help with weight loss, because dogs eat more to make up for it [16], and it didn't improve digestion in a puppy study [17]. In large and giant breeds, soaked kibble with citric acid in the ingredients was linked to bloat in one study [18], so check the label and feed two or more meals a day. Pick up soaked leftovers and refrigerate or throw them out [19].
+
 **Short legs, long ears or a flat face?**
 Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because size charts based on weight don't account for leg length. Long-eared dogs often dip their ears in the bowl, so a narrower opening or a tilted bowl helps. Flat-faced pets usually find wide, shallow or tilted bowls easier. These are practical tips, not study results.
 
@@ -87,6 +93,18 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 5. Pet Nutrition Alliance. Calculating Calories Based on Pet Needs. https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf
 6. Merck Veterinary Manual. Dog and Cat Foods. https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods
 7. Whole Dog Journal. In the Fine Print: Nutritional Adequacy Statements. https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/
+8. AAFCO. Reading Labels. https://www.aafco.org/consumers/understanding-pet-food/reading-labels/
+9. Tufts Petfoodology. Should I feed canned or dry food? 2016. https://sites.tufts.edu/petfoodology/2016/03/22/should-i-feed-canned-or-dry-food/
+10. Reboul et al. Cornell study of 112 commercial cat foods, 2025. https://pmc.ncbi.nlm.nih.gov/articles/PMC12460818/
+11. CDC. Pet Food Safety. https://www.cdc.gov/healthy-pets/about/pet-food-safety.html
+12. AVMA. Raw or undercooked animal-source protein in cat and dog diets. https://www.avma.org/resources-tools/avma-policies/raw-or-undercooked-animal-source-protein-cat-and-dog-diets
+13. Stockman et al. 200 homemade dog food recipes, JAVMA 2013 (UC Davis summary). https://ccah.vetmed.ucdavis.edu/sites/g/files/dgvnsk4586/files/local_resources/pdfs/Homemade_dog_food_recipes_July-15-2013_UCD-News.pdf
+14. WSAVA. Frequently Asked Questions and Myths. https://wsava.org/wp-content/uploads/2020/01/Frequently-Asked-Questions-and-Myths.pdf
+15. Lulich et al. ACVIM small animal consensus on the treatment and prevention of uroliths in dogs and cats. Journal of Veterinary Internal Medicine, 2016. https://pmc.ncbi.nlm.nih.gov/articles/PMC5032870/
+16. Alexander et al. Hydrated kibble and food intake in 46 dogs, 2017. https://pubmed.ncbi.nlm.nih.gov/29152246/
+17. Zhang et al. Soaked vs dry kibble in 20 beagle puppies. Metabolites, 2022. https://pmc.ncbi.nlm.nih.gov/articles/PMC9697261/
+18. Raghavan M. PhD dissertation, Purdue University, 2002 (106 bloat cases, 212 controls). https://docs.lib.purdue.edu/dissertations/AAI3099198
+19. FDA. Tips for Safe Handling of Pet Food and Treats. https://www.fda.gov/animal-veterinary/animal-health-literacy/tips-safe-handling-pet-food-and-treats
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 
