@@ -117,7 +117,8 @@
     if (cups) out.capacityMl = Math.ceil(cups * CUP_ML * (out.slowFeeder ? ROOM.slow : ROOM.regular) / 50) * 50;
     if (feed) out.tips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
     if (big && i.stage === "young") out.tips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
-    if (i.fastEater) out.tips.push("A slow feeder makes each meal take longer. It hasn't been shown to prevent bloat.");
+    if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
+      : "A slow feeder or puzzle feeder spreads the meal out. A feline vet consensus recommends small meals from puzzle feeders, partly because cats that gorge may vomit.");
     if (i.flatFace) out.tips.push("Flat face: a wide, shallow or tilted bowl is easier to eat from.");
     if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
     if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");

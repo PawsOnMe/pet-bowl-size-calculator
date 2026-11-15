@@ -54,11 +54,18 @@
     },
     {
       "id": "slow-feeder",
-      "applies_to": "pets that gulp their food",
-      "rule": "A slow feeder lengthens the meal",
-      "evidence": "10-dog study showed slower eating; no trial shows bloat prevention",
+      "applies_to": "dogs and cats that eat fast",
+      "rule": "A slow feeder or puzzle feeder lengthens the meal; vets suggest one for large and giant dogs and for pets that gulp and vomit, and puzzle feeders for cats",
+      "evidence": "10-dog study: meals took longer, still slower after 9 days; eating fast was a GDV risk factor in two Purdue studies; VCA advises a puzzle feeder or slow-down bowl for large and giant dogs; AAFP consensus recommends puzzle feeders for cats; Veterinary Partner says feeders prevent gulping and may lessen vomiting, and suggests puzzle bowls for dogs that swallow air; no trial of bloat prevention",
       "sources": [
-        "https://hau.repository.guildhe.ac.uk/id/eprint/15072/"
+        "https://hau.repository.guildhe.ac.uk/id/eprint/15072/",
+        "https://pubmed.ncbi.nlm.nih.gov/9138229/",
+        "https://pubmed.ncbi.nlm.nih.gov/11128539/",
+        "https://vcahospitals.com/know-your-pet/nutritional-considerations-for-large-and-giant-breed-dogs",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11343346/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11148901/",
+        "https://veterinarypartner.vin.com/default.aspx?pid=19239&catId=102901&Id=9956352",
+        "https://veterinarypartner.vin.com/default.aspx?pid=19239&catId=254092&id=4952806"
       ]
     },
     {
