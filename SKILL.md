@@ -1,6 +1,6 @@
 ---
 name: pet-bowl-size
-description: Work out how high and how big a dog's or cat's food bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older), how many calories and cups of food a dog of any breed needs a day, and which kind of food fits (dry, wet, freeze-dried, fresh, raw or homemade, and whether to add water to kibble), and say how solid each answer is. Use when someone asks what size or height of bowl, raised bowl or slow feeder their dog or cat needs, how much to feed, or what type of food to choose. Made by PawsOnMe.
+description: Work out whether a dog or cat should eat from a plain bowl, a slow feeder or a raised bowl, how high and how big the bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older, arthritis, megaesophagus), how many calories and cups of food a dog of any breed needs a day, and which kind of food fits (dry, wet, freeze-dried, fresh, raw or homemade, and whether to add water to kibble), and say how solid each answer is. Use when someone asks whether their dog or cat needs a slow feeder or a raised bowl, what size or height of bowl to get, how much to feed, or what type of food to choose. Made by PawsOnMe.
 ---
 
 # Pet bowl size and height
@@ -15,6 +15,48 @@ description: Work out how high and how big a dog's or cat's food bowl should be 
 3. Say how solid each number is. Rim height and capacity are rules of thumb. The large-breed caution comes from a cohort study of more than 1,600 dogs (Glickman et al., JAVMA 2000). Whisker-friendly dishes made no measurable difference in a 38-cat study (Slovak and Foster, 2021).
 4. Don't diagnose. If the pet has a medical condition, tell the owner to follow their vet's feeding plan.
 5. In code: `node -e "console.log(require('./bowlfit.js').recommend({species:'dog',unit:'cm',elbow:30,cupsPerMeal:1,fastEater:true}))"`
+
+## Which bowl: plain, slow feeder or raised
+
+Use this when someone asks whether their dog or cat needs a slow feeder, a raised bowl or just a plain bowl. Give the reason and say how solid it is. The tags in brackets point to the sources at the end of this section.
+
+1. **A plain bowl on the floor is the default.** We found no veterinary guideline that says a healthy dog or cat needs a slow feeder or a raised bowl. Size the bowl to the meal (see capacity above) and wash it with soap and hot water after each use [FDA-handling].
+2. **Slow feeder: for dogs that gulp.**
+   - 10 pet dogs ate from a plain bowl and from a slow feeder for 9 days each. The slow feeder cut their eating speed. They got quicker with practice but stayed slower than at the plain bowl, and in a choice test they preferred the plain bowl, so the authors warn against selling slow eating as a game the dog enjoys [Buckley 2016].
+   - Eating fast was a bloat (GDV) risk factor in two Purdue studies [Glickman 1997] [Glickman 2000] and is on Merck's list [Merck-GDV], but it showed no link in a study of 74 Irish setters with bloat [Elwood 1998]. No trial has shown that a slow feeder prevents bloat or vomiting.
+   - Choose ridges the dog can manage. Flat-faced dogs usually do better with low, shallow ones. This is a practical tip, not a study result.
+   - Give it about twice the meal volume, because the ridges take up space (our rule of thumb, see capacity above).
+3. **Raised bowl: not for large or giant breeds unless the vet says so.**
+   - In 1,637 dogs of 11 large and giant breeds, a raised bowl was linked to about 20% of bloat cases in the large breeds and 52% in the giant breeds [Glickman 2000].
+   - An internet survey with 1,114 bloat cases found no clear effect of bowl height, but it published no numbers on this. A review of both studies found none showing that a raised bowl lowers the risk, and advised floor feeding for at-risk dogs [Pipan 2012] [Buckley 2017-raised].
+   - Merck's advice for owners of high-risk breeds: avoid raised bowls, feed several small meals instead of one big one, limit exercise before and after meals and keep mealtimes calm [Merck-GDV]. Cornell's canine health center also says to avoid raised bowls [Cornell-GDV].
+4. **When a raised bowl helps, with the vet's plan.**
+   - Megaesophagus: the dog eats with its front legs higher than its back legs and stays that way for at least 10–15 minutes after eating, so gravity carries the food to the stomach. Frequent small meals work best for most dogs [Merck-ME]. A raised bowl alone isn't enough. In 12 dogs fed upright in Bailey chairs, food cleared at very different speeds, and 9 of them had their food texture, time upright or medicine changed after an X-ray video test [Haines 2019].
+   - Arthritis in the front legs, shoulders or neck: an arthritis site founded by a board-certified veterinary surgeon and rehabilitation specialist suggests raising the bowl to about shoulder height, so the neck stays level and less weight goes on the front legs [CARE]. This is expert advice, not a trial result. Shoulder height is higher than this tool's rim rule (elbow height down to 7.5 cm below it), so let the vet or rehab vet set it, and for a large or giant breed ask the vet first because of the bloat finding above.
+5. **Cats.**
+   - The AAFP feeding consensus says to split the day's food into several small meals and use puzzle feeders when possible, because they increase activity and help weight control. Two of its six authors consult for pet food companies [AAFP 2018].
+   - Case reports from vet behaviour practices describe weight loss and calmer cats after food puzzles were added along with other changes. One older cat lost 6.4% of its body weight in 3.5 months. These are case reports, not a trial [Dantas 2016].
+   - Whisker-friendly wide dishes made no difference to time spent eating, food dropped or food eaten in 38 cats, though 24 of the owners (63%) said their cat preferred the wider dish [Slovak 2021].
+   - We found no study on raised or tilted bowls for cats.
+6. **Signs that need a vet, not a new bowl.** Retching without bringing anything up, drooling, restlessness or a swelling belly can mean bloat (GDV), which is an emergency [Merck-GDV]. Bringing food back up can be regurgitation, the main sign of megaesophagus [Merck-ME], so see a vet before changing bowls.
+
+### Sources for this section
+
+- [FDA-handling] FDA, Tips for safe handling of pet food and treats. https://www.fda.gov/animal-veterinary/animal-health-literacy/tips-safe-handling-pet-food-and-treats
+- [Buckley 2016] Buckley and Lees, Veterinary Evidence Today poster, 2016, 10 pet dogs, slow feeder vs plain bowl. https://hau.repository.guildhe.ac.uk/id/eprint/15072/
+- [Glickman 1997] Glickman et al., JAAHA 1997, GDV risk factors, 101 cases and 101 controls. https://pubmed.ncbi.nlm.nih.gov/9138229/
+- [Glickman 2000] Glickman et al., JAVMA 2000, non-dietary GDV risk factors, cohort of 1,637 large and giant breed dogs. https://pubmed.ncbi.nlm.nih.gov/11128539/
+- [Elwood 1998] Elwood, Journal of Small Animal Practice 1998, risk factors in 74 Irish setters with bloat. https://pubmed.ncbi.nlm.nih.gov/9577760/
+- [Pipan 2012] Pipan et al., JAVMA 2012, internet survey of 2,551 dogs. https://pubmed.ncbi.nlm.nih.gov/22657929/
+- [Buckley 2017-raised] Buckley, Veterinary Evidence 2017, knowledge summary on raised bowls and GDV. https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf
+- [Merck-GDV] Merck Veterinary Manual, Gastric Dilation and Volvulus in Small Animals (updated Aug 2025). https://www.merckvetmanual.com/digestive-system/diseases-of-the-stomach-and-intestines-in-small-animals/gastric-dilation-and-volvulus-in-small-animals
+- [Cornell-GDV] Cornell Riney Canine Health Center, Gastric dilatation-volvulus (GDV) or bloat, written by a Cornell veterinary student. https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/gastric-dilatation-volvulus-gdv-or-bloat
+- [Merck-ME] Merck Veterinary Manual, Dilatation of the Esophagus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals
+- [Haines 2019] Haines et al., JAAHA 2019, 12 dogs with megaesophagus fed upright. https://pubmed.ncbi.nlm.nih.gov/31099601/
+- [CARE] Canine Arthritis Resources and Education, Food bowls: How can I make it easier for my dog to eat? https://caninearthritis.org/article/food-bowls-raised-feeding-stations/
+- [AAFP 2018] Sadek et al., AAFP consensus statement, Feline feeding programs, JFMS 2018. https://pmc.ncbi.nlm.nih.gov/articles/PMC11343346/
+- [Dantas 2016] Dantas et al., Food puzzles for cats, JFMS 2016. https://pmc.ncbi.nlm.nih.gov/articles/PMC11148901/
+- [Slovak 2021] Slovak and Foster, Evaluation of whisker stress in cats, JFMS 2021, 38 cats. https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/
 
 ## Which kind of food: dry, wet, freeze-dried, fresh, raw or homemade
 
