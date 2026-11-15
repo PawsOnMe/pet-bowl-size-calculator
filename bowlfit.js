@@ -8,6 +8,18 @@
   var ROOM = { regular: 1.5, slow: 2 }; // rule of thumb: the bowl holds one meal with room to spare
   var SHOP = "https://www.etsy.com/shop/PawsOnMePet";
   var LB_KG = 0.45359237;
+  var FT_CM = 30.48;             // 1 ft = 12 in x 2.54 cm
+  // Glickman et al., JAVMA 2000 (numbers as summarised by Buckley, Veterinary Evidence 2017): bloat (GDV) cases
+  // per 1,000 dog-years by bowl height. Large breeds (23-45 kg): floor 18, raised 1 ft or less 56 (RR 3.06),
+  // raised more than 1 ft 29 (not significant). Giant breeds (over 45 kg): floor 17, 1 ft or less 15 (not
+  // significant), more than 1 ft 39 (RR 2.29). One study, 98 GDV cases in all.
+  var MEGA = "Dogs with megaesophagus are fed from a raised position on purpose, on their vet's plan. If you're unsure, ask your vet.";
+  var GUIDE = "It is one study with 98 bloat cases, so treat the cut-off as a guide. ";
+  var NOTES = {
+    large: "Height matters for large breeds (adults 23 to 45 kg). In the one study that measured it, bloat (GDV) cases per 1,000 dog-years were 18 with a floor bowl, 56 with a bowl raised 1 ft (30.5 cm) or less, which is 3.06 times the risk, and 29 above 1 ft, which was not a significant difference. " + GUIDE + MEGA,
+    giant: "Height matters for giant breeds (adults over 45 kg). In the one study that measured it, bloat (GDV) cases per 1,000 dog-years were 17 with a floor bowl, 15 with a bowl raised 1 ft (30.5 cm) or less, which was not a significant difference, and 39 above 1 ft, which is 2.29 times the risk. " + GUIDE + MEGA,
+    both: "Height matters, and differently by size. In the one study that measured it, large breeds (23 to 45 kg) had 3.06 times the bloat (GDV) risk with a bowl raised 1 ft (30.5 cm) or less and no significant difference above it; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at or below it. " + GUIDE + MEGA
+  };
   // Pet Nutrition Alliance, "Calculating Calories Based on Pet Needs":
   // RER (kcal/day) = 70 x kg^0.75, MER = factor x RER. Estimates only; pets can vary by as much as 50%.
   var MER = {
@@ -53,13 +65,32 @@
     var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, slowFeeder: !!i.fastEater,
                 tips: [], cautions: [], products: [], productNote: "", shop: SHOP };
 
+    // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
+    var size = !dog ? "" : (i.size === "large" || i.size === "giant") ? i.size : (i.largeBreed ? "both" : "");
+    var big = size !== "";
     var lo = elbow ? Math.max(0, elbow - BELOW_ELBOW_CM) : null, hi = elbow;
-    if (dog && i.largeBreed) {
-      // The studies disagree for large and giant breeds, so both options are shown.
-      out.height = elbow
-        ? { floor: true, minCm: r1(lo), maxCm: r1(hi), text: "On the floor, or between " + show(lo) + " and " + show(hi) + " off the floor." }
-        : { floor: true, text: "On the floor, or raised. Add the elbow height for a raised range." };
-      out.cautions.push("The studies disagree on raised bowls for large and giant breeds. One study of more than 1,600 dogs linked them to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds; an internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals. If you're unsure, ask your vet.");
+    if (big) {
+      out.height = { floor: true, text: "" };
+      if (size === "large") {
+        if (!elbow) out.height.text = "On the floor, or raised above " + show(FT_CM) + ". Add the elbow height for the upper limit.";
+        else if (hi <= FT_CM) out.height.text = "On the floor. The elbow rule gives " + show(lo) + " to " + show(hi) + ", which is at or below 1 ft, the height linked to extra risk for large breeds.";
+        else {
+          out.height.minCm = r1(Math.max(lo, FT_CM)); out.height.maxCm = r1(hi);
+          out.height.text = lo >= FT_CM ? "On the floor, or between " + show(lo) + " and " + show(hi) + " off the floor."
+            : "On the floor, or above " + show(FT_CM) + " and up to " + show(hi) + " off the floor.";
+        }
+      } else if (size === "giant") {
+        if (elbow && lo <= FT_CM) {
+          out.height.minCm = r1(lo); out.height.maxCm = r1(Math.min(hi, FT_CM));
+          out.height.text = "On the floor, or between " + show(lo) + " and " + show(Math.min(hi, FT_CM)) + " off the floor.";
+        } else {
+          out.height.maxCm = r1(FT_CM);
+          out.height.text = "On the floor, or raised no higher than " + show(FT_CM) + (elbow ? ", lower than the usual elbow rule of " + show(lo) + " to " + show(hi) + "." : ".");
+        }
+      } else {
+        out.height.text = "On the floor, or raised: above " + show(FT_CM) + " for a large breed, " + show(FT_CM) + " or lower for a giant breed.";
+      }
+      out.cautions.push(NOTES[size]);
     } else if (elbow) {
       out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor." };
       if (lo < 3) out.tips.push("A flat plate on the floor already sits in this range.");
@@ -75,13 +106,13 @@
     }
     if (cups) out.capacityMl = Math.ceil(cups * CUP_ML * (out.slowFeeder ? ROOM.slow : ROOM.regular) / 50) * 50;
     if (feed) out.tips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
-    if (dog && i.stage === "young" && i.largeBreed) out.tips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
+    if (big && i.stage === "young") out.tips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
     if (i.fastEater) out.tips.push("A slow feeder makes each meal take longer. It hasn't been shown to prevent bloat.");
     if (i.flatFace) out.tips.push("Flat face: a wide, shallow or tilted bowl is easier to eat from.");
     if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
     if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");
 
-    if (dog && i.largeBreed) {
+    if (big) {
       out.productNote = "We only make bowls for cats and small to medium dogs, so none of ours is the right size for a large or giant breed.";
       return out;
     }

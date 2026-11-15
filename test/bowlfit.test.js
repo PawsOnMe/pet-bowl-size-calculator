@@ -10,9 +10,21 @@ assert.ok(names(r).includes("Lilac flower slow feeder on a pedestal"));
 assert.ok(!names(r).includes("Sage green raised tilted slow feeder")); // 200 ml < 250 ml
 assert.ok(!names(r).includes("Two-tone raised tilted flower slow feeder")); // 200 ml < 250 ml
 
-// Large breed: floor or the elbow range (studies disagree), one note, no products
-r = recommend({ species: "dog", elbow: 50, largeBreed: true, cupsPerMeal: 2 });
+// Large breed (23-45 kg): floor, or above 1 ft (30.5 cm) up to the elbow; one note; no products
+r = recommend({ species: "dog", elbow: 50, size: "large", cupsPerMeal: 2 });
 assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1 && r.products.length === 0);
+r = recommend({ species: "dog", elbow: 35, size: "large" });
+assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [30.5, 35]);   // elbow rule 27.5-35 cm, cut at 30.5
+r = recommend({ species: "dog", elbow: 28, size: "large" });
+assert.ok(r.height.floor && r.height.minCm === undefined);              // whole elbow range is at or below 1 ft
+
+// Giant breed (over 45 kg): floor, or raised no higher than 1 ft (30.5 cm), even with a tall elbow
+r = recommend({ species: "dog", elbow: 65, size: "giant" });
+assert.ok(r.height.floor && r.height.maxCm === 30.5 && r.height.minCm === undefined && r.cautions.length === 1 && r.products.length === 0);
+
+// Old flag largeBreed (size unknown): both cut-offs explained, no products
+r = recommend({ species: "dog", elbow: 50, largeBreed: true });
+assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 0);
 
 // Inches: elbow 10 in = 25.4 cm -> 17.9 to 25.4 cm, too tall for our bowls
 r = recommend({ species: "dog", unit: "in", elbow: 10, cupsPerMeal: 1 });

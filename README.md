@@ -9,16 +9,23 @@ Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and sma
 ## Quick answers
 
 **Slow feeder or regular bowl, raised or not: which one?**
-A plain bowl on the floor suits most healthy dogs and cats. We found no vet guideline saying they need more. A slow feeder suits dogs that gulp [4], and for cats a vet consensus recommends food puzzles and several small meals a day [22]. For large and giant breeds, the studies on raised bowls disagree [1][2][30]. A raised bowl does help some dogs, on a vet's plan: dogs with megaesophagus eat with their front legs up and stay upright for at least 10 to 15 minutes after meals [23], and an arthritis site run by a veterinary surgeon and rehab specialist suggests about shoulder height for dogs with front-leg or neck arthritis, which is expert advice rather than a study result [24]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
+A plain bowl on the floor suits most healthy dogs and cats. We found no vet guideline saying they need more. A slow feeder suits dogs that gulp [4], and for cats a vet consensus recommends food puzzles and several small meals a day [22]. For large and giant breeds, height matters: in the one study that measured it, the extra bloat risk came with bowls raised 1 ft (30.5 cm) or less in large breeds and above 1 ft in giant breeds (details below) [1][2]. A raised bowl does help some dogs, on a vet's plan: dogs with megaesophagus eat with their front legs up and stay upright for at least 10 to 15 minutes after meals [23], and an arthritis site run by a veterinary surgeon and rehab specialist suggests about shoulder height for dogs with front-leg or neck arthritis, which is expert advice rather than a study result [24]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
 
 **Ceramic, stainless steel (304), titanium or plastic?**
 How you wash the bowl matters more than what it's made of. On 68 dog dishes, a week of FDA's hygiene steps cut bacteria, and water hotter than 71 °C (160 °F) beat cold or lukewarm water [25]. Studies on material disagree: in 96 dog bowls from homes, metal carried more bacteria than plastic [26], while in a small test of new water bowls plastic ended with the highest average count, though not significantly, and ceramic had the most kinds of bacteria [27]. With ceramic, the glaze touches the food, and FDA says lead in pottery may leach into food [28], so pick ceramic sold as food safe with a lead and cadmium test. With steel, ask the grade: type 201 has less nickel and more manganese and was first made to save nickel [29]. We found no study on titanium pet bowls.
 
 **How high should my dog's food bowl be?**
-No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs.
+No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.
 
 **Are raised bowls safe for large dogs?**
-The studies disagree. In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds [1]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][30]. A review of both found none showing that raised bowls lower the risk [2]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [23]. If you're unsure, ask your vet.
+It depends on the height and on how big the breed is. A study followed 1,637 dogs of 11 large and giant breeds and asked whether the bowl was on the floor, raised 1 ft (30.5 cm) or less, or raised more than 1 ft [1][2]. In this study, large meant breeds of 23 to 45 kg (50 to 99 lb) and giant meant over 45 kg (99 lb) [31]. Bloat (GDV) cases per 1,000 dog-years:
+
+| Breed size | Floor | Raised 1 ft (30.5 cm) or less | Raised more than 1 ft |
+|---|---|---|---|
+| Large, 23 to 45 kg | 18 | 56, 3.06 times the risk | 29, not a significant difference |
+| Giant, over 45 kg | 17 | 15, not a significant difference | 39, 2.29 times the risk |
+
+So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][30]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [23]. If you're unsure, ask your vet.
 
 **How tall should a cat's bowl be?**
 Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this.
@@ -52,7 +59,8 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Output | Formula | Evidence |
 |---|---|---|
 | Rim height | from elbow height down to 7.5 cm (3 in) below it | rule of thumb |
-| Large or giant breed | floor level or the rim height above; the studies disagree | cohort study [1], survey [30], review [2] |
+| Large breed, adults 23 to 45 kg | floor, or rim above 30.5 cm (1 ft) and up to elbow height | cohort study [1][31], review [2] |
+| Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][31], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
 | Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup | Pet Nutrition Alliance table [5] |
 | Capacity | cups per meal × 236.6 ml × 1.5 (× 2 for a slow feeder), rounded up to 50 ml | rule of thumb |
@@ -63,6 +71,8 @@ Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, and tested in
 const { recommend } = require("./bowlfit.js");
 recommend({ species: "dog", unit: "cm", elbow: 11, cupsPerMeal: 0.5, fastEater: true, shortLegs: true });
 // rim 3.5 to 11 cm off the floor, holds at least 250 ml, slow feeder worth trying
+recommend({ species: "dog", elbow: 65, size: "giant" });
+// on the floor, or raised no higher than 30.5 cm (1 ft)
 ```
 
 ## Use it with an AI agent
@@ -122,6 +132,7 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 28. FDA. Lead in Food and Foodwares. https://www.fda.gov/food/environmental-contaminants-food/lead-food-and-foodwares
 29. Cleveland-Cliffs. Type 201 stainless steel product data. https://d1io3yog0oux5.cloudfront.net/_464c1f648dd1e0c96c45d68cdce1cf31/clevelandcliffs/db/1190/10507/file/CLF_ProductData_201SS_052021.pdf
 30. Pipan M, et al. An Internet-based survey of risk factors for surgical gastric dilatation-volvulus in dogs. JAVMA, 2012. https://pubmed.ncbi.nlm.nih.gov/22657929/
+31. Glickman LT, et al. Incidence of and breed-related risk factors for gastric dilatation-volvulus in dogs. JAVMA, 2000. https://pubmed.ncbi.nlm.nih.gov/10638316/
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 

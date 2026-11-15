@@ -11,13 +11,29 @@
     },
     {
       "id": "large-breed-raised-bowl",
-      "applies_to": "large and giant breed dogs",
-      "rule": "Floor level or the usual rim height: the studies disagree. Dogs with megaesophagus are fed from a raised position on purpose (front legs higher than back legs, upright at least 10 to 15 minutes after meals)",
-      "evidence": "cohort study, more than 1,600 dogs: raised bowls linked to about 20% (large) and 52% (giant) of GDV cases; internet survey, 1,114 GDV cases: no clear effect of bowl height, no numbers published",
+      "applies_to": "large breed dogs (adults 23 to 45 kg)",
+      "rule": "Floor, or a rim above 30.5 cm (1 ft) and up to elbow height",
+      "evidence": "cohort study, 1,637 dogs: GDV per 1,000 dog-years, floor 18, raised 1 ft or less 56 (RR 3.06, 95% CI 1.60-5.87), raised more than 1 ft 29 (not significant)",
+      "note": "One study with 98 GDV cases, so a guide; an internet survey of 1,114 GDV cases found no clear effect of bowl height. Dogs with megaesophagus are fed from a raised position on purpose, on their vet's plan.",
       "sources": [
         "https://pubmed.ncbi.nlm.nih.gov/11128539/",
-        "https://pubmed.ncbi.nlm.nih.gov/22657929/",
+        "https://pubmed.ncbi.nlm.nih.gov/10638316/",
         "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf",
+        "https://pubmed.ncbi.nlm.nih.gov/22657929/",
+        "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals"
+      ]
+    },
+    {
+      "id": "giant-breed-raised-bowl",
+      "applies_to": "giant breed dogs (adults over 45 kg)",
+      "rule": "Floor, or a rim at 30.5 cm (1 ft) or lower",
+      "evidence": "same cohort: GDV per 1,000 dog-years, floor 17, raised 1 ft or less 15 (not significant), raised more than 1 ft 39 (RR 2.29, 95% CI 1.15-4.58)",
+      "note": "One study with 98 GDV cases, so a guide; an internet survey of 1,114 GDV cases found no clear effect of bowl height. Dogs with megaesophagus are fed from a raised position on purpose, on their vet's plan.",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/11128539/",
+        "https://pubmed.ncbi.nlm.nih.gov/10638316/",
+        "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf",
+        "https://pubmed.ncbi.nlm.nih.gov/22657929/",
         "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals"
       ]
     },

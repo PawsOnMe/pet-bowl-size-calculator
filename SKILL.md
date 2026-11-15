@@ -5,14 +5,16 @@ description: Work out whether a dog or cat should eat from a slow feeder or a re
 
 # Pet bowl size and height
 
-1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); food per meal in US cups; and whether the pet is a large or giant breed, eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
+1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); food per meal in US cups; whether the dog is a large breed (adults 23–45 kg, 50–99 lb) or a giant breed (over 45 kg, 99 lb); and whether the pet eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
 2. Work it out, or run `bowlfit.js`:
    - Rim height: from elbow height down to 7.5 cm (3 in) below it.
-   - Large or giant breed dogs: give both options, a floor bowl or the rim height above, and say the studies disagree (see "Which bowl", point 3).
+   - Large breed: a floor bowl, or a rim above 30.5 cm (1 ft) and up to elbow height. If the elbow is 30.5 cm or lower, floor only.
+   - Giant breed: a floor bowl, or a rim no higher than 30.5 cm (1 ft), even when the elbow rule says higher.
+   - 1 ft = 12 in × 2.54 = 30.48 cm, shown as 30.5 cm. The cut-off comes from the one study that measured bowl height (see "Which bowl", point 3).
    - Capacity: cups per meal × 236.6 ml × 1.5, or × 2 for a slow feeder, rounded up to the next 50 ml.
    - Cats: a dish at least as wide as the whisker span.
    - Food per meal, if the owner doesn't know it: 70 × (weight in kg)^0.75 kcal a day × life-stage factor (dog: 1.6 spayed or neutered adult, 1.8 intact, 1.2–1.4 inactive, 2–3 puppy; cat: 1.2, 1.4, 1.0, 2–3), divided by the kcal per cup on the bag and by the number of meals. Say it is a starting point and to adjust to body condition (Pet Nutrition Alliance).
-3. Say how solid each number is. Rim height and capacity are rules of thumb. For large breeds, a cohort study of more than 1,600 dogs linked raised bowls to bloat (Glickman et al., JAVMA 2000), but an internet survey of 2,551 dogs found no clear effect of bowl height (Pipan et al., JAVMA 2012). Whisker-friendly dishes made no measurable difference in a 38-cat study (Slovak and Foster, 2021).
+3. Say how solid each number is. Rim height and capacity are rules of thumb. The 1 ft cut-off for large and giant breeds comes from one cohort study of 1,637 dogs with 98 bloat cases (Glickman et al., JAVMA 2000; numbers as summarised by Buckley, Veterinary Evidence 2017), so call it a guide, not proof; an internet survey of 2,551 dogs found no clear effect of bowl height (Pipan et al., JAVMA 2012). Whisker-friendly dishes made no measurable difference in a 38-cat study (Slovak and Foster, 2021).
 4. Don't diagnose. If the pet has a medical condition, tell the owner to follow their vet's feeding plan.
 5. In code: `node -e "console.log(require('./bowlfit.js').recommend({species:'dog',unit:'cm',elbow:30,cupsPerMeal:1,fastEater:true}))"`
 
@@ -26,9 +28,17 @@ Use this when someone asks whether their dog or cat needs a slow feeder or a reg
    - Eating fast was a bloat (GDV) risk factor in two Purdue studies [Glickman 1997] [Glickman 2000] and is on Merck's list [Merck-GDV], but it showed no link in a study of 74 Irish setters with bloat [Elwood 1998]. No trial has shown that a slow feeder prevents bloat or vomiting.
    - Choose ridges the dog can manage. Flat-faced dogs usually do better with low, shallow ones. This is a practical tip, not a study result.
    - Give it about twice the meal volume, because the ridges take up space (our rule of thumb, see capacity above).
-3. **Raised bowls for large or giant breeds: the studies disagree.** Give both sides and let the owner decide with their vet.
-   - In 1,637 dogs of 11 large and giant breeds, a raised bowl was linked to about 20% of bloat cases in the large breeds and 52% in the giant breeds [Glickman 2000].
-   - An internet survey with 1,114 bloat cases found no clear effect of bowl height, but it published no numbers on this. A review of both studies called their findings conflicting, found none showing that a raised bowl lowers the risk, and advised floor feeding for at-risk dogs [Pipan 2012] [Buckley 2017-raised].
+3. **Raised bowls for large or giant breeds: go by height.** The one study that measured bowl height found the extra bloat risk at different heights for large and giant breeds. Use it to recommend a height, say where it comes from, and let the owner decide with their vet.
+   - The study followed 1,637 dogs of 11 large and giant breeds. Owners said whether the bowl was not raised, raised 1 ft (30.5 cm) or less, or raised more than 1 ft. Large means the study's 7 breeds of 23–45 kg (50–99 lb), giant its 4 breeds over 45 kg (99 lb) [Glickman 2000] [Glickman 2000-breeds]. Overall, a raised bowl was linked to about 20% of bloat cases in the large breeds and 52% in the giant breeds [Glickman 2000], but the risky height differed by size. Bloat cases per 1,000 dog-years (95% range), from the review's summary of the paper [Buckley 2017-raised]:
+
+     | Breed size | Floor | Raised 1 ft (30.5 cm) or less | Raised more than 1 ft |
+     |---|---|---|---|
+     | Large, 23–45 kg | 18 (12–24), 625 dogs | 56 (26–86), 105 dogs: 3.06 times the risk (1.60–5.87, P = 0.002) | 29 (−11 to 47), 144 dogs: not a significant difference |
+     | Giant, over 45 kg | 17 (7–27), 341 dogs | 15 (−6 to 36), 60 dogs: not a significant difference | 39 (25–53), 324 dogs: 2.29 times the risk (1.15–4.58, P = 0.02) |
+
+   - Recommendation: a floor bowl, or a raised bowl above 30.5 cm for a large breed and at 30.5 cm or lower for a giant breed.
+   - How solid: 98 bloat cases split into small groups, so the review says the height results could be chance; the authors didn't explain why the risky height differs by size; bowl height was asked once at the start and dogs were followed for up to about five years [Buckley 2017-raised]. Not significant isn't the same as no risk: large breeds above 1 ft had 29 cases against 18 on the floor, but the range was too wide to call it a difference. The questionnaire asked for "the height of the food bowl" without saying rim or stand; this tool compares the rim height.
+   - Other evidence: an internet survey with 1,114 bloat cases found no clear effect of bowl height, but it published no numbers on this. A review of both studies called their findings conflicting, found none showing that a raised bowl lowers the risk, and advised floor feeding for at-risk dogs [Pipan 2012] [Buckley 2017-raised].
    - Merck's advice for owners of high-risk breeds: avoid raised bowls, feed several small meals instead of one big one, limit exercise before and after meals and keep mealtimes calm [Merck-GDV]. Cornell's canine health center also says to avoid raised bowls [Cornell-GDV].
 4. **When a raised bowl helps, with the vet's plan.**
    - Megaesophagus: the dog eats with its front legs higher than its back legs and stays that way for at least 10–15 minutes after eating, so gravity carries the food to the stomach. Frequent small meals work best for most dogs [Merck-ME]. A raised bowl alone isn't enough. In 12 dogs fed upright in Bailey chairs, food cleared at very different speeds, and 9 of them had their food texture, time upright or medicine changed after an X-ray video test [Haines 2019].
@@ -52,6 +62,7 @@ Use this when someone asks whether their dog or cat needs a slow feeder or a reg
 - [Buckley 2016] Buckley and Lees, Veterinary Evidence Today poster, 2016, 10 pet dogs, slow feeder vs plain bowl. https://hau.repository.guildhe.ac.uk/id/eprint/15072/
 - [Glickman 1997] Glickman et al., JAAHA 1997, GDV risk factors, 101 cases and 101 controls. https://pubmed.ncbi.nlm.nih.gov/9138229/
 - [Glickman 2000] Glickman et al., JAVMA 2000, non-dietary GDV risk factors, cohort of 1,637 large and giant breed dogs. https://pubmed.ncbi.nlm.nih.gov/11128539/
+- [Glickman 2000-breeds] Glickman et al., JAVMA 2000, incidence and breed-related risk factors for GDV in the same 11 breeds: 7 large of 23–45 kg, 4 giant over 45 kg. https://pubmed.ncbi.nlm.nih.gov/10638316/
 - [Elwood 1998] Elwood, Journal of Small Animal Practice 1998, risk factors in 74 Irish setters with bloat. https://pubmed.ncbi.nlm.nih.gov/9577760/
 - [Pipan 2012] Pipan et al., JAVMA 2012, internet survey of 2,551 dogs. https://pubmed.ncbi.nlm.nih.gov/22657929/
 - [Buckley 2017-raised] Buckley, Veterinary Evidence 2017, knowledge summary on raised bowls and GDV. https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf

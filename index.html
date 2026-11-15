@@ -45,8 +45,8 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Pet Bowl Size Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonme.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMe","url":"https://www.etsy.com/shop/PawsOnMePet"}},
 {"@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor."}},
-{"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"The studies disagree. In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds (Glickman et al., 2000). An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this (Pipan et al., 2012; Buckley, 2017). Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals (Merck Veterinary Manual). If you're unsure, ask your vet."}},
+{"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
+{"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
 {"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
 {"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml."}},
 {"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag and adjust to body condition."}},
@@ -73,6 +73,13 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
+<div class="field dog-only"><label for="size">Breed size</label>
+<select id="size" name="size">
+<option value="">Small or medium</option>
+<option value="large">Large: adults 23 to 45 kg (50 to 99 lb)</option>
+<option value="giant">Giant: adults over 45 kg (99 lb)</option>
+</select>
+<span class="hint">Large and giant breeds get a separate height rule, from a study of 1,637 dogs.</span></div>
 <div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
 <input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Tip to tip, across the face.</span></div>
@@ -96,7 +103,6 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <input id="meals" name="meals" type="number" min="1" step="1" value="2" inputmode="numeric"></div>
 </details>
 <fieldset class="checks"><legend>Anything that applies</legend>
-<label class="dog-only"><input type="checkbox" name="largeBreed"> Large or giant breed</label>
 <label class="dog-only"><input type="checkbox" name="shortLegs"> Short legs, long back (dachshund, corgi, basset)</label>
 <label><input type="checkbox" name="fastEater"> Eats very fast or throws up after meals</label>
 <label><input type="checkbox" name="flatFace"> Flat face (pug, Persian)</label>
@@ -110,9 +116,14 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <section>
 <h2>Quick answers</h2>
 <h3>How high should my dog's food bowl be?</h3>
-<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice.</p>
+<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
 <h3>Are raised bowls safe for large dogs?</h3>
-<p>The studies disagree. In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds [1]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][9]. A review of both found none showing that raised bowls lower the risk [2]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [8]. If you're unsure, ask your vet.</p>
+<p>It depends on the height and on how big the breed is. A study followed 1,637 dogs of 11 large and giant breeds and asked whether the bowl was on the floor, raised 1 ft (30.5 cm) or less, or raised more than 1 ft [1][2]. In this study, large meant breeds of 23 to 45 kg (50 to 99 lb) and giant meant over 45 kg (99 lb) [10]. Bloat (GDV) cases per 1,000 dog-years:</p>
+<ul>
+<li>Large breeds: floor 18, raised 1 ft or less 56 (3.06 times the risk), raised more than 1 ft 29 (not a significant difference).</li>
+<li>Giant breeds: floor 17, raised 1 ft or less 15 (not a significant difference), raised more than 1 ft 39 (2.29 times the risk).</li>
+</ul>
+<p>So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][9]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [8]. If you're unsure, ask your vet.</p>
 <h3>How tall should a cat's bowl be?</h3>
 <p>Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this, so treat it as a comfort tweak.</p>
 <h3>How wide should a cat's bowl be? Is whisker fatigue real?</h3>
@@ -141,6 +152,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <li>Whole Dog Journal. In the Fine Print: Nutritional Adequacy Statements. <a href="https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/">Article</a></li>
 <li>Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals">Merck</a></li>
 <li>Pipan M, et al. An Internet-based survey of risk factors for surgical gastric dilatation-volvulus in dogs. JAVMA, 2012. <a href="https://pubmed.ncbi.nlm.nih.gov/22657929/">PubMed</a></li>
+<li>Glickman LT, et al. Incidence of and breed-related risk factors for gastric dilatation-volvulus in dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/10638316/">PubMed</a></li>
 </ol>
 </section>
 
@@ -157,7 +169,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
   function vals() {
     var d = new FormData(f), dog = d.get("species") === "dog";
     return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
-      cupsPerMeal: d.get("cups"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), largeBreed: dog && d.has("largeBreed"), shortLegs: dog && d.has("shortLegs"),
+      cupsPerMeal: d.get("cups"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
       fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
   }
   function render() {
