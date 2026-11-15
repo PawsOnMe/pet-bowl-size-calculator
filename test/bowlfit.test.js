@@ -70,3 +70,13 @@ assert.ok(r.tips.some((t) => t.includes("large size dogs")));
 r = recommend({ species: "dog", weight: 10, kcalPerCup: 400, cupsPerMeal: 2 });
 assert.strictEqual(r.capacityMl, 750);                    // 2 x 236.6 x 1.5 = 709.8 -> 750
 console.log("feeding tests passed");
+
+// Grams: 200 g a meal, 100 g in one level cup -> 2 cups -> 2 x 236.6 x 1.5 = 709.8 -> 750 ml
+r = recommend({ species: "dog", elbow: 40, foodUnit: "g", gramsPerMeal: 200, gramsPerCup: 100 });
+assert.strictEqual(r.capacityMl, 750);
+// Grams without the weight of one cup: no bowl size yet, and the page asks for it
+r = recommend({ species: "dog", elbow: 40, foodUnit: "g", gramsPerMeal: 200 });
+assert.ok(r.capacityMl === null && r.needGramsPerCup === true);
+// Grams feeding: 10 kg neutered dog, 3,500 kcal/kg -> 70 x 10^0.75 x 1.6 = 629.8 kcal -> 180 g a day, 90 g a meal
+r = recommend({ species: "dog", weight: 10, stage: "neutered", foodUnit: "g", kcalPerKg: 3500, mealsPerDay: 2 });
+assert.deepStrictEqual([r.feeding.gDayLo, r.feeding.gDayHi, r.feeding.gMeal], [180, 180, 90]);

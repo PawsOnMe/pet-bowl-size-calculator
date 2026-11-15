@@ -37,10 +37,10 @@ In a study of 38 cats, whisker-friendly dishes made no difference to time spent 
 In a study of 10 pet dogs, a slow feeder made them eat more slowly. They got quicker with practice but stayed slower than with a plain bowl, and they preferred the plain bowl when given the choice [4]. Eating fast was a bloat (GDV) risk factor in two Purdue studies [1][20] but not in a study of 74 Irish setters [21]. No trial has shown that slow feeders prevent bloat.
 
 **How big should the bowl be?**
-Big enough for one meal with room to spare: 1.5 times the meal volume for a regular bowl, 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. This is our rule of thumb.
+Big enough for one meal with room to spare: 1.5 times the meal volume for a regular bowl, 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume. This is our rule of thumb.
 
 **How much should I feed my dog or cat?**
-Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)^0.75 kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag, then pick a bowl that holds one meal with room to spare. Pets can differ from these estimates by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.
+Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)^0.75 kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. Pets can differ from these estimates by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.
 
 **What should I feed?**
 A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].
@@ -62,8 +62,8 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Large breed, adults 23 to 45 kg | floor, or rim above 30.5 cm (1 ft) and up to elbow height | cohort study [1][31], review [2] |
 | Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][31], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
-| Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup | Pet Nutrition Alliance table [5] |
-| Capacity | cups per meal × 236.6 ml × 1.5 (× 2 for a slow feeder), rounded up to 50 ml | rule of thumb |
+| Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup, or for grams by kcal per kg × 1,000 | Pet Nutrition Alliance table [5] |
+| Capacity | cups per meal × 236.6 ml × 1.5 (× 2 for a slow feeder), rounded up to 50 ml; for grams, cups per meal = grams per meal ÷ grams in one cup | rule of thumb |
 
 Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, and tested in [`test/`](test). The rules and sources are also in [`data/guidance.json`](data/guidance.json).
 

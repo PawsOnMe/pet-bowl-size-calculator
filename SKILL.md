@@ -5,15 +5,15 @@ description: Work out whether a dog or cat should eat from a slow feeder or a re
 
 # Pet bowl size and height
 
-1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); food per meal in US cups; whether the dog is a large breed (adults 23–45 kg, 50–99 lb) or a giant breed (over 45 kg, 99 lb); and whether the pet eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
+1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); food per meal in US cups or grams (for grams, also the weight of one level US cup of that food); whether the dog is a large breed (adults 23–45 kg, 50–99 lb) or a giant breed (over 45 kg, 99 lb); and whether the pet eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
 2. Work it out, or run `bowlfit.js`:
    - Rim height: from elbow height down to 7.5 cm (3 in) below it.
    - Large breed: a floor bowl, or a rim above 30.5 cm (1 ft) and up to elbow height. If the elbow is 30.5 cm or lower, floor only.
    - Giant breed: a floor bowl, or a rim no higher than 30.5 cm (1 ft), even when the elbow rule says higher.
    - 1 ft = 12 in × 2.54 = 30.48 cm, shown as 30.5 cm. The cut-off comes from the one study that measured bowl height (see "Which bowl", point 3).
-   - Capacity: cups per meal × 236.6 ml × 1.5, or × 2 for a slow feeder, rounded up to the next 50 ml.
+   - Capacity: cups per meal × 236.6 ml × 1.5, or × 2 for a slow feeder, rounded up to the next 50 ml. For grams: cups per meal = grams per meal ÷ grams in one cup.
    - Cats: a dish at least as wide as the whisker span.
-   - Food per meal, if the owner doesn't know it: 70 × (weight in kg)^0.75 kcal a day × life-stage factor (dog: 1.6 spayed or neutered adult, 1.8 intact, 1.2–1.4 inactive, 2–3 puppy; cat: 1.2, 1.4, 1.0, 2–3), divided by the kcal per cup on the bag and by the number of meals. Say it is a starting point and to adjust to body condition (Pet Nutrition Alliance).
+   - Food per meal, if the owner doesn't know it: 70 × (weight in kg)^0.75 kcal a day × life-stage factor (dog: 1.6 spayed or neutered adult, 1.8 intact, 1.2–1.4 inactive, 2–3 puppy; cat: 1.2, 1.4, 1.0, 2–3), divided by the kcal per cup on the bag (for grams: kcal a day ÷ kcal per kg × 1,000) and by the number of meals. Say it is a starting point and to adjust to body condition (Pet Nutrition Alliance).
 3. Say how solid each number is. Rim height and capacity are rules of thumb. The 1 ft cut-off for large and giant breeds comes from one cohort study of 1,637 dogs with 98 bloat cases (Glickman et al., JAVMA 2000; numbers as summarised by Buckley, Veterinary Evidence 2017), so call it a guide, not proof; an internet survey of 2,551 dogs found no clear effect of bowl height (Pipan et al., JAVMA 2012). Whisker-friendly dishes made no measurable difference in a 38-cat study (Slovak and Foster, 2021).
 4. Don't diagnose. If the pet has a medical condition, tell the owner to follow their vet's feeding plan.
 5. In code: `node -e "console.log(require('./bowlfit.js').recommend({species:'dog',unit:'cm',elbow:30,cupsPerMeal:1,fastEater:true}))"`

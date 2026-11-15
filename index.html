@@ -31,6 +31,7 @@ legend{font-weight:600;margin-bottom:6px}
 .checks label{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
 .checks input{margin-top:5px;accent-color:var(--accent)}
 body[data-species=cat] .dog-only,body[data-species=dog] .cat-only{display:none}
+body[data-food=cups] .g-only,body[data-food=g] .cups-only{display:none}
 dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
 dt{color:var(--muted)}dd{margin:0;font-weight:600}
 .caution{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0 0}
@@ -48,8 +49,8 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 {"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
 {"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
-{"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml."}},
-{"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag and adjust to body condition."}},
+{"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume."}},
+{"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag, or by the kcal per kg and multiply by 1,000 for grams, and adjust to body condition."}},
 {"@type":"Question","name":"What should I feed my puppy?","acceptedAnswer":{"@type":"Answer","text":"A food labelled complete and balanced for growth or all life stages. For a puppy that will be a large dog, the label should say it includes growth of large size dogs."}},
 {"@type":"Question","name":"Do slow feeder bowls work?","acceptedAnswer":{"@type":"Answer","text":"A small study of 10 pet dogs found a slow feeder lowered eating speed. No trial has shown that slow feeders prevent bloat."}}
 ]}]}
@@ -70,6 +71,9 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <fieldset><legend>Units</legend><div class="pills">
 <label><input type="radio" name="unit" value="cm" checked> Metric (cm, kg)</label>
 <label><input type="radio" name="unit" value="in"> US (inches, lb)</label></div></fieldset>
+<fieldset><legend>Food measured in</legend><div class="pills">
+<label><input type="radio" name="food" value="cups" checked> Cups (US)</label>
+<label><input type="radio" name="food" value="g"> Grams</label></div></fieldset>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
@@ -83,9 +87,15 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
 <input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Tip to tip, across the face.</span></div>
-<div class="field"><label for="cups">Food per meal (US cups)</label>
+<div class="field cups-only"><label for="cups">Food per meal (US cups)</label>
 <input id="cups" name="cups" type="number" min="0" step="0.05" inputmode="decimal">
 <span class="hint">The amount on the food bag, split by the number of meals.</span></div>
+<div class="field g-only"><label for="grams">Food per meal (g)</label>
+<input id="grams" name="grams" type="number" min="0" step="1" inputmode="decimal">
+<span class="hint">Weighed on a kitchen scale, or the bag's amount in grams split by the number of meals.</span></div>
+<div class="field g-only"><label for="gcup">Grams in one cup of this food</label>
+<input id="gcup" name="gcup" type="number" min="0" step="1" inputmode="decimal">
+<span class="hint">Weigh one level US cup (236.6 ml) of the food. The bowl size depends on volume, so grams need this.</span></div>
 <details class="calc"><summary>Not sure how much per meal? Work it out</summary>
 <div class="field"><label for="weight">Weight (<span id="u3">kg</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
@@ -96,9 +106,12 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <option value="inactive">Adult, not very active or gains weight easily</option>
 <option value="young">Puppy or kitten</option>
 </select></div>
-<div class="field"><label for="kcal">Calories per cup (kcal/cup)</label>
+<div class="field cups-only"><label for="kcal">Calories per cup (kcal/cup)</label>
 <input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
 <span class="hint">Printed on the food bag as kcal/cup.</span></div>
+<div class="field g-only"><label for="kcalkg">Calories per kg (kcal/kg)</label>
+<input id="kcalkg" name="kcalkg" type="number" min="0" step="1" inputmode="numeric">
+<span class="hint">Printed on the food bag as kcal/kg.</span></div>
 <div class="field"><label for="meals">Meals a day</label>
 <input id="meals" name="meals" type="number" min="1" step="1" value="2" inputmode="numeric"></div>
 </details>
@@ -131,9 +144,9 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <h3>Do slow feeder bowls work?</h3>
 <p>In a small study of 10 pet dogs, a slow feeder lowered eating speed [4]. Eating fast was one of the bloat risk factors in the large-breed study [1]. No trial has shown that slow feeders prevent bloat.</p>
 <h3>How big should the bowl be?</h3>
-<p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. This is our rule of thumb.</p>
+<p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume. This is our rule of thumb.</p>
 <h3>How much should I feed my dog or cat?</h3>
-<p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag, then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
+<p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
 <h3>What should I feed?</h3>
 <p>A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].</p>
 <h3>Short legs, long ears or a flat face?</h3>
@@ -169,20 +182,21 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
   function vals() {
     var d = new FormData(f), dog = d.get("species") === "dog";
     return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
-      cupsPerMeal: d.get("cups"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
+      cupsPerMeal: d.get("cups"), foodUnit: d.get("food"), gramsPerMeal: d.get("grams"), gramsPerCup: d.get("gcup"), kcalPerKg: d.get("kcalkg"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
       fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
   }
   function render() {
     var v = vals(), r = BowlFit.recommend(v);
     document.body.setAttribute("data-species", v.species);
+    document.body.setAttribute("data-food", v.foodUnit);
     document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
     document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
     var h = "<h2>Your numbers</h2><dl>";
     h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
     if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
     var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
-    if (fd) h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd><dt>Food a day</dt><dd>" + rng(fd.cupsDayLo, fd.cupsDayHi) + " cups in " + fd.meals + " meals</dd>";
-    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)" : "Add the food per meal.") + "</dd>";
+    if (fd) h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd><dt>Food a day</dt><dd>" + (fd.grams ? rng(fd.gDayLo, fd.gDayHi) + " g in " : rng(fd.cupsDayLo, fd.cupsDayHi) + " cups in ") + fd.meals + " meals</dd>";
+    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)" : (r.needGramsPerCup ? "Add the grams in one cup." : "Add the food per meal.")) + "</dd>";
     h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";
     r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
     if (r.tips.length) h += '<ul class="tips">' + r.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";

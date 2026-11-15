@@ -44,14 +44,21 @@
 
   // How much to feed: calories a day from weight and life stage, then cups from the bag's kcal per cup.
   function feeding(i) {
-    var w = num(i.weight), kcalCup = num(i.kcalPerCup);
-    if (!w || !kcalCup) return null;
+    var grams = i.foodUnit === "g";                // weighing food: use kcal per kg instead of kcal per cup
+    var w = num(i.weight), energy = grams ? num(i.kcalPerKg) : num(i.kcalPerCup);
+    if (!w || !energy) return null;
     var kg = i.unit === "in" ? w * LB_KG : w;     // unit "in" means US units: inches and pounds
     var table = MER[i.species === "cat" ? "cat" : "dog"], f = table[i.stage] || table.neutered;
     var rer = 70 * Math.pow(kg, 0.75), meals = num(i.mealsPerDay) || 2;
-    return { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]),
-             cupsDayLo: r2(rer * f[0] / kcalCup), cupsDayHi: r2(rer * f[1] / kcalCup),
-             meals: meals, cupsMeal: r2(rer * f[1] / kcalCup / meals) };
+    var res = { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]), meals: meals, grams: grams };
+    if (grams) {                                   // grams a day = kcal a day / kcal per kg x 1000
+      res.gDayLo = Math.round(rer * f[0] / energy * 1000); res.gDayHi = Math.round(rer * f[1] / energy * 1000);
+      res.gMeal = Math.round(rer * f[1] / energy * 1000 / meals);
+    } else {
+      res.cupsDayLo = r2(rer * f[0] / energy); res.cupsDayHi = r2(rer * f[1] / energy);
+      res.cupsMeal = r2(rer * f[1] / energy / meals);
+    }
+    return res;
   }
 
   function recommend(input) {
@@ -61,8 +68,11 @@
     var elbow = cm(i.elbow, unit);
     var whisker = dog ? null : cm(i.whisker, unit);
     var feed = feeding(i);
-    var cups = num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null);
-    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, slowFeeder: !!i.fastEater,
+    var grams = i.foodUnit === "g";
+    // The bowl size depends on volume: grams per meal / grams in one cup of that food = cups per meal
+    var gMeal = grams ? (num(i.gramsPerMeal) || (feed ? feed.gMeal : null)) : null, gCup = grams ? num(i.gramsPerCup) : null;
+    var cups = grams ? (gMeal && gCup ? gMeal / gCup : null) : (num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null));
+    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
                 tips: [], cautions: [], products: [], productNote: "", shop: SHOP };
 
     // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
