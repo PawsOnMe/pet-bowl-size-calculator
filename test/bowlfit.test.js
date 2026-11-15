@@ -10,9 +10,9 @@ assert.ok(names(r).includes("Lilac flower slow feeder on a pedestal"));
 assert.ok(!names(r).includes("Sage green raised tilted slow feeder")); // 200 ml < 250 ml
 assert.ok(!names(r).includes("Two-tone raised tilted flower slow feeder")); // 200 ml < 250 ml
 
-// Large breed: floor, caution, no products
+// Large breed: floor or the elbow range (studies disagree), one note, no products
 r = recommend({ species: "dog", elbow: 50, largeBreed: true, cupsPerMeal: 2 });
-assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 0);
+assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1 && r.products.length === 0);
 
 // Inches: elbow 10 in = 25.4 cm -> 17.9 to 25.4 cm, too tall for our bowls
 r = recommend({ species: "dog", unit: "in", elbow: 10, cupsPerMeal: 1 });

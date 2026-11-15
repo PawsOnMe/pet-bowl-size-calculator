@@ -53,11 +53,14 @@
     var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, slowFeeder: !!i.fastEater,
                 tips: [], cautions: [], products: [], productNote: "", shop: SHOP };
 
+    var lo = elbow ? Math.max(0, elbow - BELOW_ELBOW_CM) : null, hi = elbow;
     if (dog && i.largeBreed) {
-      out.height = { floor: true, text: "Floor level, unless your vet says otherwise." };
-      out.cautions.push("In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds. Ask your vet before raising your dog's bowl. Megaesophagus is one exception: dogs with it eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals, on their vet's plan.");
+      // The studies disagree for large and giant breeds, so both options are shown.
+      out.height = elbow
+        ? { floor: true, minCm: r1(lo), maxCm: r1(hi), text: "On the floor, or between " + show(lo) + " and " + show(hi) + " off the floor." }
+        : { floor: true, text: "On the floor, or raised. Add the elbow height for a raised range." };
+      out.cautions.push("The studies disagree on raised bowls for large and giant breeds. One study of more than 1,600 dogs linked them to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds; an internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals. If you're unsure, ask your vet.");
     } else if (elbow) {
-      var lo = Math.max(0, elbow - BELOW_ELBOW_CM), hi = elbow;
       out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor." };
       if (lo < 3) out.tips.push("A flat plate on the floor already sits in this range.");
       if (i.senior) out.tips.push("Older or stiff: aim for the higher end, so the head doesn't have to drop as far.");

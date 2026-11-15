@@ -9,16 +9,16 @@ Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and sma
 ## Quick answers
 
 **Slow feeder or regular bowl, raised or not: which one?**
-A plain bowl on the floor suits most healthy dogs and cats. We found no vet guideline saying they need more. A slow feeder suits dogs that gulp [4], and for cats a vet consensus recommends food puzzles and several small meals a day [22]. Skip raised bowls for large and giant breeds unless your vet says otherwise [1][2][23]. A raised bowl does help some dogs, on a vet's plan: dogs with megaesophagus eat with their front legs up and stay upright for at least 10 to 15 minutes after meals [24], and an arthritis site run by a veterinary surgeon and rehab specialist suggests about shoulder height for dogs with front-leg or neck arthritis, which is expert advice rather than a study result [25]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
+A plain bowl on the floor suits most healthy dogs and cats. We found no vet guideline saying they need more. A slow feeder suits dogs that gulp [4], and for cats a vet consensus recommends food puzzles and several small meals a day [22]. For large and giant breeds, the studies on raised bowls disagree [1][2][30]. A raised bowl does help some dogs, on a vet's plan: dogs with megaesophagus eat with their front legs up and stay upright for at least 10 to 15 minutes after meals [23], and an arthritis site run by a veterinary surgeon and rehab specialist suggests about shoulder height for dogs with front-leg or neck arthritis, which is expert advice rather than a study result [24]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
 
 **Ceramic, stainless steel (304), titanium or plastic?**
-How you wash the bowl matters more than what it's made of. On 68 dog dishes, a week of FDA's hygiene steps cut bacteria, and water hotter than 71 °C (160 °F) beat cold or lukewarm water [26]. Studies on material disagree: in 96 dog bowls from homes, metal carried more bacteria than plastic [27], while in a small test of new water bowls plastic ended with the highest average count, though not significantly, and ceramic had the most kinds of bacteria [28]. With ceramic, the glaze touches the food, and FDA says lead in pottery may leach into food [29], so pick ceramic sold as food safe with a lead and cadmium test. With steel, ask the grade: type 201 has less nickel and more manganese and was first made to save nickel [30]. We found no study on titanium pet bowls.
+How you wash the bowl matters more than what it's made of. On 68 dog dishes, a week of FDA's hygiene steps cut bacteria, and water hotter than 71 °C (160 °F) beat cold or lukewarm water [25]. Studies on material disagree: in 96 dog bowls from homes, metal carried more bacteria than plastic [26], while in a small test of new water bowls plastic ended with the highest average count, though not significantly, and ceramic had the most kinds of bacteria [27]. With ceramic, the glaze touches the food, and FDA says lead in pottery may leach into food [28], so pick ceramic sold as food safe with a lead and cadmium test. With steel, ask the grade: type 201 has less nickel and more manganese and was first made to save nickel [29]. We found no study on titanium pet bowls.
 
 **How high should my dog's food bowl be?**
 No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs.
 
 **Are raised bowls safe for large dogs?**
-In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds [1]. A later evidence review found no study showing raised bowls lower that risk [2]. Ask your vet before raising a large or giant breed's bowl. Megaesophagus is one exception: dogs with it eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals, on their vet's plan [24].
+The studies disagree. In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds [1]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][30]. A review of both found none showing that raised bowls lower the risk [2]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [23]. If you're unsure, ask your vet.
 
 **How tall should a cat's bowl be?**
 Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this.
@@ -52,7 +52,7 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Output | Formula | Evidence |
 |---|---|---|
 | Rim height | from elbow height down to 7.5 cm (3 in) below it | rule of thumb |
-| Large or giant breed | floor level unless a vet advises otherwise | cohort study [1], review [2] |
+| Large or giant breed | floor level or the rim height above; the studies disagree | cohort study [1], survey [30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
 | Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup | Pet Nutrition Alliance table [5] |
 | Capacity | cups per meal × 236.6 ml × 1.5 (× 2 for a slow feeder), rounded up to 50 ml | rule of thumb |
@@ -114,14 +114,14 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 20. Glickman LT, et al. Multiple risk factors for the gastric dilatation-volvulus syndrome in dogs: a practitioner/owner case-control study. JAAHA, 1997. https://pubmed.ncbi.nlm.nih.gov/9138229/
 21. Elwood CM. Risk factors for gastric dilatation in Irish setter dogs. Journal of Small Animal Practice, 1998. https://pubmed.ncbi.nlm.nih.gov/9577760/
 22. Sadek T, et al. Feline feeding programs: addressing behavioural needs to improve feline health and wellbeing. AAFP consensus statement, Journal of Feline Medicine and Surgery, 2018. https://pmc.ncbi.nlm.nih.gov/articles/PMC11343346/
-23. Merck Veterinary Manual. Gastric Dilation and Volvulus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-stomach-and-intestines-in-small-animals/gastric-dilation-and-volvulus-in-small-animals
-24. Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals
-25. Canine Arthritis Resources and Education (CARE). Food bowls: How can I make it easier for my dog to eat? https://caninearthritis.org/article/food-bowls-raised-feeding-stations/
-26. Luisana E, et al. Survey evaluation of dog owners' feeding practices and dog bowls' hygiene assessment in domestic settings. PLOS ONE, 2022. https://pubmed.ncbi.nlm.nih.gov/35385485/
-27. Raspa F, et al. Pet feeding habits and the microbiological contamination of dog food bowls: effect of feed type, cleaning method and bowl material. BMC Veterinary Research, 2023. https://pmc.ncbi.nlm.nih.gov/articles/PMC10701922/
-28. Wright C, Carroll A. Microbiological assessment of canine drinking water and the impact of bowl construction material. Poster, 69th Annual Meeting of the European Federation of Animal Science, 2018. https://pure.hartpury.ac.uk/en/publications/microbiological-assessment-of-canine-drinking-water-and-the-impac/
-29. FDA. Lead in Food and Foodwares. https://www.fda.gov/food/environmental-contaminants-food/lead-food-and-foodwares
-30. Cleveland-Cliffs. Type 201 stainless steel product data. https://d1io3yog0oux5.cloudfront.net/_464c1f648dd1e0c96c45d68cdce1cf31/clevelandcliffs/db/1190/10507/file/CLF_ProductData_201SS_052021.pdf
+23. Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals
+24. Canine Arthritis Resources and Education (CARE). Food bowls: How can I make it easier for my dog to eat? https://caninearthritis.org/article/food-bowls-raised-feeding-stations/
+25. Luisana E, et al. Survey evaluation of dog owners' feeding practices and dog bowls' hygiene assessment in domestic settings. PLOS ONE, 2022. https://pubmed.ncbi.nlm.nih.gov/35385485/
+26. Raspa F, et al. Pet feeding habits and the microbiological contamination of dog food bowls: effect of feed type, cleaning method and bowl material. BMC Veterinary Research, 2023. https://pmc.ncbi.nlm.nih.gov/articles/PMC10701922/
+27. Wright C, Carroll A. Microbiological assessment of canine drinking water and the impact of bowl construction material. Poster, 69th Annual Meeting of the European Federation of Animal Science, 2018. https://pure.hartpury.ac.uk/en/publications/microbiological-assessment-of-canine-drinking-water-and-the-impac/
+28. FDA. Lead in Food and Foodwares. https://www.fda.gov/food/environmental-contaminants-food/lead-food-and-foodwares
+29. Cleveland-Cliffs. Type 201 stainless steel product data. https://d1io3yog0oux5.cloudfront.net/_464c1f648dd1e0c96c45d68cdce1cf31/clevelandcliffs/db/1190/10507/file/CLF_ProductData_201SS_052021.pdf
+30. Pipan M, et al. An Internet-based survey of risk factors for surgical gastric dilatation-volvulus in dogs. JAVMA, 2012. https://pubmed.ncbi.nlm.nih.gov/22657929/
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 

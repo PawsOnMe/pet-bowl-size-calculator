@@ -12,10 +12,11 @@
     {
       "id": "large-breed-raised-bowl",
       "applies_to": "large and giant breed dogs",
-      "rule": "Floor level unless a vet advises otherwise, for example for megaesophagus, where dogs eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals",
-      "evidence": "cohort study, more than 1,600 dogs: raised bowls linked to about 20% (large) and 52% (giant) of GDV cases",
+      "rule": "Floor level or the usual rim height: the studies disagree. Dogs with megaesophagus are fed from a raised position on purpose (front legs higher than back legs, upright at least 10 to 15 minutes after meals)",
+      "evidence": "cohort study, more than 1,600 dogs: raised bowls linked to about 20% (large) and 52% (giant) of GDV cases; internet survey, 1,114 GDV cases: no clear effect of bowl height, no numbers published",
       "sources": [
         "https://pubmed.ncbi.nlm.nih.gov/11128539/",
+        "https://pubmed.ncbi.nlm.nih.gov/22657929/",
         "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf",
         "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals"
       ]
