@@ -12,11 +12,12 @@
     {
       "id": "large-breed-raised-bowl",
       "applies_to": "large and giant breed dogs",
-      "rule": "Floor level unless a vet advises otherwise",
+      "rule": "Floor level unless a vet advises otherwise, for example for megaesophagus, where dogs eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals",
       "evidence": "cohort study, more than 1,600 dogs: raised bowls linked to about 20% (large) and 52% (giant) of GDV cases",
       "sources": [
         "https://pubmed.ncbi.nlm.nih.gov/11128539/",
-        "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf"
+        "https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf",
+        "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals"
       ]
     },
     {
@@ -38,7 +39,7 @@
       "id": "slow-feeder",
       "applies_to": "pets that gulp their food",
       "rule": "A slow feeder lengthens the meal",
-      "evidence": "five-dog study showed slower eating; no trial shows bloat prevention",
+      "evidence": "10-dog study showed slower eating; no trial shows bloat prevention",
       "sources": [
         "https://hau.repository.guildhe.ac.uk/id/eprint/15072/"
       ]

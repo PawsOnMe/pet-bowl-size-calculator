@@ -4,12 +4,12 @@
 
 ## Key answers
 - Dog bowl height: rim between elbow height and 5 to 7.5 cm (2 to 3 in) below it. Rule of thumb; no veterinary guideline sets a height.
-- Large and giant breed dogs: raised bowls were linked to about 20% (large) and 52% (giant) of bloat (GDV) cases in a cohort of more than 1,600 dogs (Glickman et al., JAVMA 2000). Ask a vet before raising the bowl.
+- Large and giant breed dogs: raised bowls were linked to about 20% (large) and 52% (giant) of bloat (GDV) cases in a cohort of more than 1,600 dogs (Glickman et al., JAVMA 2000). Ask a vet before raising the bowl. Megaesophagus is one exception: dogs with it eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals, on their vet's plan (Merck Veterinary Manual).
 - Cats: most eat fine from the floor. Whisker-friendly dishes made no difference to eating in a 38-cat study, though 63% of owners said their cat preferred them (Slovak and Foster, JFMS 2021).
 - Capacity: 1.5 times the meal volume, 2 times for a slow feeder. 1 US cup = 236.6 ml. Rule of thumb.
 - How much to feed: resting energy = 70 x (weight in kg)^0.75 kcal a day; multiply by 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by kcal per cup on the bag; adjust to body condition.
 - What to feed: a food labelled complete and balanced for the life stage; puppies that will be large dogs need a growth food that includes large size dogs.
-- Slow feeders lowered eating speed in a small five-dog study. No trial shows they prevent bloat.
+- Slow feeders lowered eating speed in a small study of 10 pet dogs. No trial shows they prevent bloat.
 
 ## Second skill
 - Low-fat and copper-restricted diet math for dogs (skills/dog-diet-fat-copper): RER = 70 x kg^0.75; fat line 24 g per 1000 kcal (Today's Veterinary Practice), AAFCO fat minimum 13.8 g per 1000 kcal; copper target for copper-associated hepatopathy < 1.2 mg per 1000 kcal (Today's Veterinary Practice 2025), AAFCO copper minimum 1.83 mg per 1000 kcal.

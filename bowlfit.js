@@ -55,7 +55,7 @@
 
     if (dog && i.largeBreed) {
       out.height = { floor: true, text: "Floor level, unless your vet says otherwise." };
-      out.cautions.push("In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds. Ask your vet before raising your dog's bowl.");
+      out.cautions.push("In a study of more than 1,600 large and giant breed dogs, raised bowls were linked to about 20% of bloat (GDV) cases in large breeds and 52% in giant breeds. Ask your vet before raising your dog's bowl. Megaesophagus is one exception: dogs with it eat with their front legs higher than their back legs and stay upright for at least 10 to 15 minutes after meals, on their vet's plan.");
     } else if (elbow) {
       var lo = Math.max(0, elbow - BELOW_ELBOW_CM), hi = elbow;
       out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor." };

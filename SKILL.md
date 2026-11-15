@@ -8,7 +8,7 @@ description: Work out whether a dog or cat should eat from a slow feeder or a re
 1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); food per meal in US cups; and whether the pet is a large or giant breed, eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
 2. Work it out, or run `bowlfit.js`:
    - Rim height: from elbow height down to 7.5 cm (3 in) below it.
-   - Large or giant breed dogs: floor level unless their vet says otherwise.
+   - Large or giant breed dogs: floor level unless their vet says otherwise, for example for megaesophagus (see "Which bowl", point 4).
    - Capacity: cups per meal × 236.6 ml × 1.5, or × 2 for a slow feeder, rounded up to the next 50 ml.
    - Cats: a dish at least as wide as the whisker span.
    - Food per meal, if the owner doesn't know it: 70 × (weight in kg)^0.75 kcal a day × life-stage factor (dog: 1.6 spayed or neutered adult, 1.8 intact, 1.2–1.4 inactive, 2–3 puppy; cat: 1.2, 1.4, 1.0, 2–3), divided by the kcal per cup on the bag and by the number of meals. Say it is a starting point and to adjust to body condition (Pet Nutrition Alliance).
