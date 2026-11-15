@@ -1,6 +1,6 @@
 ---
 name: pet-bowl-size
-description: Work out whether a dog or cat should eat from a plain bowl, a slow feeder or a raised bowl, how high and how big the bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older, arthritis, megaesophagus), how many calories and cups of food a dog of any breed needs a day, and which kind of food fits (dry, wet, freeze-dried, fresh, raw or homemade, and whether to add water to kibble), and say how solid each answer is. Use when someone asks whether their dog or cat needs a slow feeder or a raised bowl, what size or height of bowl to get, how much to feed, or what type of food to choose. Made by PawsOnMe.
+description: Work out whether a dog or cat should eat from a slow feeder or a regular bowl, raised or not, and of what material (ceramic, stainless steel such as 304, titanium or plastic), how high and how big the bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older, arthritis, megaesophagus), how many calories and cups of food a dog of any breed needs a day, and which kind of food fits (dry, wet, freeze-dried, fresh, raw or homemade, and whether to add water to kibble), and say how solid each answer is. Use when someone asks whether their dog or cat needs a slow feeder or a raised bowl, which bowl material is best, what size or height of bowl to get, how much to feed, or what type of food to choose. Made by PawsOnMe.
 ---
 
 # Pet bowl size and height
@@ -16,9 +16,9 @@ description: Work out whether a dog or cat should eat from a plain bowl, a slow 
 4. Don't diagnose. If the pet has a medical condition, tell the owner to follow their vet's feeding plan.
 5. In code: `node -e "console.log(require('./bowlfit.js').recommend({species:'dog',unit:'cm',elbow:30,cupsPerMeal:1,fastEater:true}))"`
 
-## Which bowl: plain, slow feeder or raised
+## Which bowl: slow feeder or regular, raised or not, and what material
 
-Use this when someone asks whether their dog or cat needs a slow feeder, a raised bowl or just a plain bowl. Give the reason and say how solid it is. The tags in brackets point to the sources at the end of this section.
+Use this when someone asks whether their dog or cat needs a slow feeder or a regular bowl, a raised bowl or not, or which material to pick (ceramic, stainless steel such as 304, titanium or plastic). Give the reason and say how solid it is. The tags in brackets point to the sources at the end of this section.
 
 1. **A plain bowl on the floor is the default.** We found no veterinary guideline that says a healthy dog or cat needs a slow feeder or a raised bowl. Size the bowl to the meal (see capacity above) and wash it with soap and hot water after each use [FDA-handling].
 2. **Slow feeder: for dogs that gulp.**
@@ -33,12 +33,18 @@ Use this when someone asks whether their dog or cat needs a slow feeder, a raise
 4. **When a raised bowl helps, with the vet's plan.**
    - Megaesophagus: the dog eats with its front legs higher than its back legs and stays that way for at least 10–15 minutes after eating, so gravity carries the food to the stomach. Frequent small meals work best for most dogs [Merck-ME]. A raised bowl alone isn't enough. In 12 dogs fed upright in Bailey chairs, food cleared at very different speeds, and 9 of them had their food texture, time upright or medicine changed after an X-ray video test [Haines 2019].
    - Arthritis in the front legs, shoulders or neck: an arthritis site founded by a board-certified veterinary surgeon and rehabilitation specialist suggests raising the bowl to about shoulder height, so the neck stays level and less weight goes on the front legs [CARE]. This is expert advice, not a trial result. Shoulder height is higher than this tool's rim rule (elbow height down to 7.5 cm below it), so let the vet or rehab vet set it, and for a large or giant breed ask the vet first because of the bloat finding above.
-5. **Cats.**
+5. **Material: ceramic, stainless steel, titanium or plastic.**
+   - How the bowl is washed matters more than what it's made of. On 68 dog dishes, a week of FDA's bowl hygiene steps cut bacteria, and washing in water hotter than 71 °C (160 °F) beat cold or lukewarm water [Luisana 2022]. Two minutes in warm soapy water plus scrubbing fully removed ringworm spores from metal, plastic and glass bowls [Moriello 2019].
+   - Studies on material disagree. In 96 dog bowls from Italian homes, metal bowls carried more bacteria than plastic ones, and bowls used for wet food more than dry [Raspa 2023]. In a 14-day test of new water bowls, total bacteria didn't differ significantly by material; plastic ended with the highest average count, and the ceramic bowl had the most kinds of bacteria. That was a conference poster [Wright 2018].
+   - Ceramic: the glaze is what touches the food. FDA says lead in pottery may leach into food, and it keeps an import alert for lead and cadmium in ceramicware [FDA-lead]. In lab tests of 18 glazes, acids and higher temperatures increased how much metal came out [Demont 2012]. Pick ceramic sold as food safe, with a lead and cadmium release test.
+   - Stainless steel: ask which grade it is, such as 304. Type 201 is a stainless steel with less nickel and more manganese (3.5–5.5% nickel, 5.5–7.5% manganese), first made to save nickel, and its maker rates it for mild environments [CLF-201]. We found no study comparing pet bowls by steel grade.
+   - Titanium: we found no study on titanium pet bowls, and nothing showing they are safer for pets than stainless steel or glazed ceramic.
+6. **Cats.**
    - The AAFP feeding consensus says to split the day's food into several small meals and use puzzle feeders when possible, because they increase activity and help weight control. Two of its six authors consult for pet food companies [AAFP 2018].
    - Case reports from vet behaviour practices describe weight loss and calmer cats after food puzzles were added along with other changes. One older cat lost 6.4% of its body weight in 3.5 months. These are case reports, not a trial [Dantas 2016].
    - Whisker-friendly wide dishes made no difference to time spent eating, food dropped or food eaten in 38 cats, though 24 of the owners (63%) said their cat preferred the wider dish [Slovak 2021].
    - We found no study on raised or tilted bowls for cats.
-6. **Signs that need a vet, not a new bowl.** Retching without bringing anything up, drooling, restlessness or a swelling belly can mean bloat (GDV), which is an emergency [Merck-GDV]. Bringing food back up can be regurgitation, the main sign of megaesophagus [Merck-ME], so see a vet before changing bowls.
+7. **Signs that need a vet, not a new bowl.** Retching without bringing anything up, drooling, restlessness or a swelling belly can mean bloat (GDV), which is an emergency [Merck-GDV]. Bringing food back up can be regurgitation, the main sign of megaesophagus [Merck-ME], so see a vet before changing bowls.
 
 ### Sources for this section
 
@@ -57,6 +63,13 @@ Use this when someone asks whether their dog or cat needs a slow feeder, a raise
 - [AAFP 2018] Sadek et al., AAFP consensus statement, Feline feeding programs, JFMS 2018. https://pmc.ncbi.nlm.nih.gov/articles/PMC11343346/
 - [Dantas 2016] Dantas et al., Food puzzles for cats, JFMS 2016. https://pmc.ncbi.nlm.nih.gov/articles/PMC11148901/
 - [Slovak 2021] Slovak and Foster, Evaluation of whisker stress in cats, JFMS 2021, 38 cats. https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/
+- [Luisana 2022] Luisana et al., PLOS ONE 2022, 417 dog owner surveys and 68 dog dishes, FDA hygiene steps. https://pubmed.ncbi.nlm.nih.gov/35385485/
+- [Moriello 2019] Moriello, Veterinary Dermatology 2019, washing metal, plastic and glass bowls contaminated with ringworm spores. https://pubmed.ncbi.nlm.nih.gov/31313876/
+- [Raspa 2023] Raspa et al., BMC Veterinary Research 2023, 96 dog food bowls from Italian homes. https://pmc.ncbi.nlm.nih.gov/articles/PMC10701922/
+- [Wright 2018] Wright and Carroll, poster, 69th Annual Meeting of the European Federation of Animal Science, 2018, plastic, ceramic and stainless steel water bowls. https://pure.hartpury.ac.uk/en/publications/microbiological-assessment-of-canine-drinking-water-and-the-impac/
+- [FDA-lead] FDA, Lead in food and foodwares. https://www.fda.gov/food/environmental-contaminants-food/lead-food-and-foodwares
+- [Demont 2012] Demont et al., Food and Chemical Toxicology 2012, metal release from 18 ceramic glazes. https://pubmed.ncbi.nlm.nih.gov/22265939/
+- [CLF-201] Cleveland-Cliffs, Type 201 stainless steel product data. https://d1io3yog0oux5.cloudfront.net/_464c1f648dd1e0c96c45d68cdce1cf31/clevelandcliffs/db/1190/10507/file/CLF_ProductData_201SS_052021.pdf
 
 ## Which kind of food: dry, wet, freeze-dried, fresh, raw or homemade
 

@@ -8,8 +8,11 @@ Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and sma
 
 ## Quick answers
 
-**Plain bowl, slow feeder or raised bowl: which one?**
+**Slow feeder or regular bowl, raised or not: which one?**
 A plain bowl on the floor suits most healthy dogs and cats. We found no vet guideline saying they need more. A slow feeder suits dogs that gulp [4], and for cats a vet consensus recommends food puzzles and several small meals a day [22]. Skip raised bowls for large and giant breeds unless your vet says otherwise [1][2][23]. A raised bowl does help some dogs, on a vet's plan: dogs with megaesophagus eat with their front legs up and stay upright for 10 to 15 minutes after meals [24], and an arthritis site run by a veterinary surgeon and rehab specialist suggests about shoulder height for dogs with front-leg or neck arthritis, which is expert advice rather than a study result [25]. More detail, with sources, is in [`SKILL.md`](SKILL.md).
+
+**Ceramic, stainless steel (304), titanium or plastic?**
+How you wash the bowl matters more than what it's made of. On 68 dog dishes, a week of FDA's hygiene steps cut bacteria, and water hotter than 71 °C (160 °F) beat cold or lukewarm water [26]. Studies on material disagree: in 96 dog bowls from homes, metal carried more bacteria than plastic [27], while in a small test of new water bowls plastic ended with the highest average count, though not significantly, and ceramic had the most kinds of bacteria [28]. With ceramic, the glaze touches the food, and FDA says lead in pottery may leach into food [29], so pick ceramic sold as food safe with a lead and cadmium test. With steel, ask the grade: type 201 has less nickel and more manganese and was first made to save nickel [30]. We found no study on titanium pet bowls.
 
 **How high should my dog's food bowl be?**
 No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs.
@@ -114,6 +117,11 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 23. Merck Veterinary Manual. Gastric Dilation and Volvulus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-stomach-and-intestines-in-small-animals/gastric-dilation-and-volvulus-in-small-animals
 24. Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals
 25. Canine Arthritis Resources and Education (CARE). Food bowls: How can I make it easier for my dog to eat? https://caninearthritis.org/article/food-bowls-raised-feeding-stations/
+26. Luisana E, et al. Survey evaluation of dog owners' feeding practices and dog bowls' hygiene assessment in domestic settings. PLOS ONE, 2022. https://pubmed.ncbi.nlm.nih.gov/35385485/
+27. Raspa F, et al. Pet feeding habits and the microbiological contamination of dog food bowls: effect of feed type, cleaning method and bowl material. BMC Veterinary Research, 2023. https://pmc.ncbi.nlm.nih.gov/articles/PMC10701922/
+28. Wright C, Carroll A. Microbiological assessment of canine drinking water and the impact of bowl construction material. Poster, 69th Annual Meeting of the European Federation of Animal Science, 2018. https://pure.hartpury.ac.uk/en/publications/microbiological-assessment-of-canine-drinking-water-and-the-impac/
+29. FDA. Lead in Food and Foodwares. https://www.fda.gov/food/environmental-contaminants-food/lead-food-and-foodwares
+30. Cleveland-Cliffs. Type 201 stainless steel product data. https://d1io3yog0oux5.cloudfront.net/_464c1f648dd1e0c96c45d68cdce1cf31/clevelandcliffs/db/1190/10507/file/CLF_ProductData_201SS_052021.pdf
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 
