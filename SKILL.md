@@ -3,7 +3,7 @@ name: pet-bowl-size
 description: Work out whether a dog or cat should eat from a slow feeder or a regular bowl, raised or not, and of what material (ceramic, stainless steel such as 304, titanium or plastic), how high and how big the bowl should be from the pet's elbow height, meal size and needs (large breed, fast eater, short legs, long ears, flat face, older, arthritis, megaesophagus), how many calories and cups of food a dog of any breed needs a day, and which kind of food fits (dry, wet, freeze-dried, fresh, raw or homemade, and whether to add water to kibble), and say how solid each answer is. Use when someone asks whether their dog or cat needs a slow feeder or a raised bowl, which bowl material is best, what size or height of bowl to get, how much to feed, or what type of food to choose. Made by PawsOnMe.
 ---
 
-# Pet bowl size and height
+# Pet nutrition and bowl size
 
 1. Ask for: dog or cat; elbow height (floor to elbow, pet standing on a flat floor); what the pet eats in one meal: each food and how much, in US cups, grams, ounces or cans (nobody needs to weigh a cup of food: `foods.js` has the grams per cup of 69 foods, and a type for foods that aren't listed); whether the dog is a large breed (adults 23–45 kg, 50–99 lb) or a giant breed (over 45 kg, 99 lb); and whether the pet eats very fast, has short legs and a long back, long ears, a flat face, or is older. For cats the whisker span is optional.
 2. Work it out, or run `bowlfit.js`:

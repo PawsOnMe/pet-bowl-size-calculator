@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pet Bowl Size Calculator: bowl height, size and how much to feed</title>
-<meta name="description" content="Free calculator: how high and how big your dog's or cat's food bowl should be, from elbow height, weight and food. Sources cited. Made by PawsOnMe.">
+<title>Pet Nutrition & Bowl Calculator: how much to feed your dog or cat, and the right bowl</title>
+<meta name="description" content="Free nutrition calculator for dogs of any breed or mix, and cats: daily calories and how much to feed for dry, wet, fresh or freeze-dried food, plus the right bowl height and size. Sources cited. Made by PawsOnMe.">
 <link rel="canonical" href="https://pawsonme.github.io/pet-bowl-size-calculator/">
 <style>
 :root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6}
@@ -65,7 +65,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"WebApplication","name":"Pet Bowl Size Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonme.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMe","url":"https://www.etsy.com/shop/PawsOnMePet"}},
+{"@type":"WebApplication","name":"Pet Nutrition & Bowl Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonme.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMe","url":"https://www.etsy.com/shop/PawsOnMePet"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
@@ -81,8 +81,8 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <main>
 <header>
 <p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
-<h1>How high and how big should your pet's bowl be?</h1>
-<p class="lede">Measure your dog or cat once and get a rim height, dish width, capacity and a starting amount to feed. Every number says where it comes from.</p>
+<h1>Pet Nutrition & Bowl Calculator</h1>
+<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then the right bowl: rim height, width and capacity. Every number says where it comes from.</p>
 </header>
 
 <form id="f" class="card" autocomplete="off">
@@ -109,7 +109,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div id="foodRows"></div>
 <button type="button" id="addFood" class="add">+ Add another food</button>
 <span class="hint">Type the brand and pick the food, then how much goes in one meal: grams, ounces, cups or cans. Mixing foods? Add each one.</span></fieldset>
-<details class="calc"><summary>Not sure how much per meal? Work it out</summary>
+<details class="calc" open><summary>How much to feed each day</summary>
 <div class="field"><label for="weight">Weight (<span id="u3">kg</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
 <div class="field"><label for="stage">Life stage</label>
@@ -324,13 +324,12 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     kLabel.textContent = perCup ? "Calories per cup (kcal/cup)" : "Calories per kg (kcal/kg)";
     kHint.textContent = "Printed on the food bag as " + (perCup ? "kcal/cup." : "kcal/kg.");
     var h = "<h2>Your numbers</h2><dl>";
+    var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
+    // Nutrition first: calories and food a day, then the bowl
+    h += "<dt>Calories a day</dt><dd>" + (fd ? rng(fd.kcalLo, fd.kcalHi) + " kcal" : "Add your pet's weight.") + "</dd>";
+    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals</dd>";
     h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
     if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
-    var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
-    if (fd) {
-      h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd>";
-      if (fd.unit) h += "<dt>Food a day</dt><dd>" + rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals</dd>";
-    }
     h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)"
       : r.needFood ? "Pick the food from the list, so its weight can be turned into volume." : "Add the food per meal.") + "</dd>";
     h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";

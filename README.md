@@ -1,6 +1,6 @@
-# Pet Bowl Size Calculator
+# Pet Nutrition & Bowl Calculator
 
-How high and how big should your dog's or cat's food bowl be? Measure your pet once and this free calculator gives you a rim height, a dish width, a capacity and a starting amount to feed, and tells you where each number comes from.
+A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food, and this free calculator gives you daily calories and how much to feed, for any breed or mix, then the right bowl: a rim height, a dish width and a capacity. It tells you where each number comes from.
 
 **Use it:** https://pawsonme.github.io/pet-bowl-size-calculator/
 
