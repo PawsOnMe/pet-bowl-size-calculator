@@ -59,6 +59,18 @@ dt{color:var(--muted)}dd{margin:0;font-weight:600}
 .tips{margin:12px 0 0;padding-left:20px}
 .ours{background:var(--accent-soft);border-radius:10px;padding:12px;margin-top:14px}
 .ours p{margin:0}.ours ul{margin:8px 0;padding-left:20px}.ours span{color:var(--muted);font-size:.92rem}
+.ours ul.pcards{list-style:none;display:flex;gap:10px;margin:10px -12px 4px;padding:2px 12px 10px;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-left:12px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.ours ul.pcards li{flex:0 0 clamp(86px,calc((100% - 8px)/2.5),160px);display:flex;scroll-snap-align:start}
+.pcard{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);text-decoration:none;overflow:hidden}
+.pcard img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--bg)}
+.pcard .pt{display:flex;flex-direction:column;gap:3px;padding:8px 8px 10px}
+.pcard .pt strong{font-size:.86rem;line-height:1.25;color:var(--ink);margin-bottom:2px}
+.pcard .pt>span{font-size:.76rem;line-height:1.3}
+.pcard .pt .pn{color:var(--warn);margin-top:2px}
+.pcard .ext{position:absolute;top:6px;right:6px;width:22px;height:22px;padding:4px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+a.pcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a.pcard:active{border-color:var(--accent)}
+@media (hover:hover){a.pcard:hover{border-color:var(--accent)}}
 a{color:var(--accent)}
 .sources li{margin:6px 0;font-size:.92rem}
 footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
@@ -313,6 +325,9 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
       foods: foodRows(), labelKcal: d.get("kcal"), weight: d.get("weight"), stage: d.get("stage"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
       fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
   }
+  var EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+  // In the narrow cards a size may wrap, but never between a number and its unit: "3.5 cm" and "(1.4 in)" stay whole
+  function nb(t) { return esc(t).replace(/(\d) (cm|in|ml)\b/g, "$1&nbsp;$2"); }
   function render() {
     var v = vals(), r = BowlFit.recommend(v);
     document.body.setAttribute("data-species", v.species);
@@ -342,7 +357,16 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     var bt = r.tips.filter(function (t) { return nt.indexOf(t) < 0; });
     if (bt.length) h += '<ul class="tips">' + bt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
-    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span>" + (p.note ? "<br><span>" + esc(p.note) + "</span>" : "") + "</li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
+    // Our bowls as upright cards in a row that scrolls sideways (a phone shows two and a half): the listing's main
+    // photo on top, then the name and sizes, and the whole card opens that bowl on Etsy (owner 2026-11-16)
+    if (r.products.length) h += '<ul class="pcards">' + r.products.map(function (p) {
+      var body = (p.img ? '<img src="' + esc(p.img) + '" alt="" width="320" height="320" decoding="async">' : "") + (p.url ? EXT : "") +
+        '<span class="pt"><strong>' + esc(p.name) + "</strong>" +
+        (p.specs || [p.size]).map(function (t) { return "<span>" + nb(t) + "</span>"; }).join("") +
+        (p.note ? '<span class="pn">' + nb(p.note) + "</span>" : "") + "</span>";
+      return "<li>" + (p.url ? '<a class="pcard" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + body + '<span class="sr"> Opens on Etsy</span></a>'
+        : '<div class="pcard">' + body + "</div>") + "</li>";
+    }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
     out.innerHTML = h + "</div>";
   }
   document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });

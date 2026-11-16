@@ -42,12 +42,18 @@
   };
 
   // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = floor to rim.
+  // url = the bowl's own listing in our Etsy shop; img = that listing's main photo, copied into img/ (2026-11-16)
   var PRODUCTS = [
-    { name: "Lilac flower ceramic slow feeder plate", slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310 },
-    { name: "Butter yellow ceramic slow feeder plate, medium", slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400 },
-    { name: "Lilac flower slow feeder on a pedestal", slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310 },
-    { name: "Sage green raised tilted slow feeder", slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200 },
-    { name: "Two-tone raised tilted flower slow feeder", slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200 }
+    { name: "Lilac flower ceramic slow feeder plate", slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310,
+      url: "https://www.etsy.com/listing/4517774070/ceramic-slow-feeder-cat-bowl-lilac", img: "img/lilac-flower-plate.jpg" },
+    { name: "Butter yellow ceramic slow feeder plate, medium", slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400,
+      url: "https://www.etsy.com/listing/4517744488/ceramic-slow-feeder-cat-bowl-butter", img: "img/butter-yellow-plate.jpg" },
+    { name: "Lilac flower slow feeder on a pedestal", slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310,
+      url: "https://www.etsy.com/listing/4533246949/lilac-elevated-slow-feeder-ceramic-pet", img: "img/lilac-flower-pedestal.jpg" },
+    { name: "Sage green raised tilted slow feeder", slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200,
+      url: "https://www.etsy.com/listing/4517348136/sage-green-ceramic-slow-feeder-bowl", img: "img/sage-green-raised-tilted.jpg" },
+    { name: "Two-tone raised tilted flower slow feeder", slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200,
+      url: "https://www.etsy.com/listing/4504867658/raised-flower-ceramic-slow-feeder-bowl", img: "img/two-tone-raised-tilted-flower.jpg" }
   ];
 
   function num(v) { var n = parseFloat(v); return isFinite(n) && n > 0 ? n : null; }
@@ -218,7 +224,9 @@
     var fits = ranked.filter(function (r) { return r.score === 0; });
     out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) {
       return { name: r.p.name, size: show(r.p.widthCm) + " across, rim " + show(r.p.rimCm) + " high, holds " + r.p.ml + " ml",
-               note: r.notes.length ? r.notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "" };
+               note: r.notes.length ? r.notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "",
+               specs: [show(r.p.widthCm) + " across", "Rim " + show(r.p.rimCm) + " high", "Holds " + r.p.ml + " ml"],
+               url: r.p.url, img: r.p.img };
     });
     out.productNote = big ? "Our bowls are made for cats and small to medium dogs. The closest ones for yours:"
       : fits.length ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";

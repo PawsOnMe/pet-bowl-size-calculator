@@ -68,6 +68,19 @@ assert.deepStrictEqual(names(r), ["Butter yellow ceramic slow feeder plate, medi
 // and when nothing fits any more the wording changes to the closest ones
 r = recommend({ species: "cat", elbow: 20 });
 assert.ok(r.productNote.startsWith("The closest") && r.products.length === 3 && r.products.every((p) => p.note));
+// Each bowl is a card: it links to its own Etsy listing and shows that listing's main photo (owner 2026-11-16)
+const fs = require("fs"), path = require("path");
+const { PRODUCTS } = require("../bowlfit.js");
+PRODUCTS.forEach((p) => {
+  assert.ok(/^https:\/\/www\.etsy\.com\/listing\/\d{9,}\/[a-z0-9-]+$/.test(p.url), p.name + " url");
+  assert.ok(/^img\/[a-z0-9-]+\.jpg$/.test(p.img) && fs.statSync(path.join(__dirname, "..", p.img)).size > 5000, p.name + " img");
+});
+assert.strictEqual(new Set(PRODUCTS.map((p) => p.url)).size, PRODUCTS.length);
+assert.strictEqual(new Set(PRODUCTS.map((p) => p.img)).size, PRODUCTS.length);
+r = recommend({ species: "cat", elbow: 12 });
+assert.ok(r.products.length === 3 && r.products.every((p) => p.url && p.img));
+assert.deepStrictEqual(r.products[0].specs, ["14.8 cm (5.8 in) across", "Rim 8.5 cm (3.3 in) high", "Holds 310 ml"]);
+assert.strictEqual(r.products[0].url, "https://www.etsy.com/listing/4533246949/lilac-elevated-slow-feeder-ceramic-pet");
 // no result ever says "that fit"
 [{ species: "cat" }, { species: "cat", elbow: 12 }, { species: "dog", elbow: 11, cupsPerMeal: 0.5 }, { species: "dog", elbow: 50, size: "large" }]
   .forEach((v) => assert.ok(!/that fit\b/.test(recommend(v).productNote)));
