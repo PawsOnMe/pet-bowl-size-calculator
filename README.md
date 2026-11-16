@@ -45,7 +45,7 @@ Owners say the same in their own words, though these are personal reports, not r
 Mealtime also gets more interesting: in a small study of 4 dogs, a feeding toy made meals last longer and kept the dogs more active, and their stress hormone (cortisol) was lower after a week than on the first day [33]. No trial has yet tested whether a slow feeder prevents bloat itself; VCA lists it alongside smaller, more frequent meals [31].
 
 **How big should the bowl be?**
-Big enough for one meal with room to spare: 1.5 times the meal volume for a regular bowl, 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume. This is our rule of thumb.
+Big enough for one meal with room to spare: 1.5 times the meal volume for a regular bowl, 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume (see [Foods the calculator knows](#foods-the-calculator-knows)). The 1.5 and 2 are our rule of thumb.
 
 **How much should I feed my dog or cat?**
 Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)^0.75 kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. Pets can differ from these estimates by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.
@@ -71,9 +71,9 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
 | Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup, or for grams by kcal per kg × 1,000 | Pet Nutrition Alliance table [5] |
-| Capacity | cups per meal × 236.6 ml × 1.5 (× 2 for a slow feeder), rounded up to 50 ml; for grams, cups per meal = grams per meal ÷ grams in one cup | rule of thumb |
+| Capacity | meal volume × 1.5 (× 2 for a slow feeder), rounded up to 50 ml. Meal volume = cups × 236.6 ml, or grams ÷ the food's grams in one cup × 236.6 ml (1 oz = 28.35 g; a can is its net weight), added up over the foods in the meal | rule of thumb; grams per cup from the makers (below) |
 
-Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, and tested in [`test/`](test). The rules and sources are also in [`data/guidance.json`](data/guidance.json).
+Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, the foods are in [`foods.js`](foods.js), and both are tested in [`test/`](test). The rules and sources are also in [`data/guidance.json`](data/guidance.json).
 
 ```js
 const { recommend } = require("./bowlfit.js");
@@ -81,7 +81,28 @@ recommend({ species: "dog", unit: "cm", elbow: 11, cupsPerMeal: 0.5, fastEater: 
 // rim 3.5 to 11 cm off the floor, holds at least 250 ml, slow feeder worth trying
 recommend({ species: "dog", elbow: 65, size: "giant" });
 // on the floor, or raised no higher than 30.5 cm (1 ft)
+recommend({ species: "dog", unit: "in", elbow: 7.75, foods: [
+  { id: "hills-pd-id-low-fat-can-dog", amount: 180, unit: "g" },   // unit: "g", "oz", "cups" or "unit" (cans)
+  { id: "jffd-turkey-whole-wheat-macaroni", amount: 10, unit: "g" }] });
+// rim 12.2 to 19.7 cm off the floor, holds at least 300 ml
 ```
+
+## Foods the calculator knows
+
+The bowl size depends on volume, so a meal weighed in grams or ounces, or fed by the can, is turned into cups with the food's weight per cup. Nobody has to weigh a cup of food: pick the food, or its type if the brand isn't listed. [`foods.js`](foods.js) links every food to where its numbers came from, checked on the makers' US websites on 15 November 2026.
+
+| Food | Grams in one level US cup (236.6 ml) | Why |
+|---|---|---|
+| Dry food on the list | the maker's kcal per cup ÷ kcal per kg × 1,000, or the cup weight printed on the label | US labels state both calorie figures. Hill's also prints the weight of one cup, and it matches the calorie figures within 0.2% on all 14 Hill's dry foods listed. Purina labels that print grams per cup match too. |
+| Dry food not on the list | 86.1 g, the 10th percentile of the 50 listed dry foods (they range from 77 to 125 g) | Nine in ten weigh more per cup, so the bowl comes out a little big rather than too small. |
+| Wet food (can, pouch, tray) | 236.6 g, that is 1.0 g per ml | No maker we checked gives a cup weight for canned food; Hill's says cups are estimated from grams. Canned food is mostly water and weighs about 1.05 to 1.10 g per ml with no air in it (composition model of Choi and Okos [37]; Hill's i/d Low Fat canned at 75% water works out to 1.08). Rounding down to 1.0 allows for some air, so the bowl errs big. |
+| Fresh-cooked food on the list | from the maker: JustFoodForDogs' feeding guide gives cups next to ounces (165 to 181 g a cup), Nom Nom prints 188 g, Freshpet's kcal per cup ÷ kcal per kg gives 146.5 g | Chunks hold air, so fresh food weighs less per cup than water: 0.62 to 0.79 g per ml. |
+| Fresh-cooked, raw or homemade food not on the list | 146.5 g, the 10th percentile of the listed fresh foods | No raw food maker we could read gives a cup weight, so raw uses the fresh figure, which errs big for dense ground raw. |
+| Freeze-dried food | 45 g: Stella & Chewy's Meal Mixers, 4,440 kcal per kg and 50 kcal per ¼ cup | The one freeze-dried food whose maker gives calories per cup. This is dry from the bag; add any water you mix in as its own line. |
+| Water or broth mixed in | 236.6 g (1 g per ml) | |
+| One can, pouch or tray | its net weight from the maker; when only ounces are printed, × 28.35 g; when neither, kcal per can ÷ kcal per kg | |
+
+Foods aren't listed when the maker's own numbers disagree (Hill's k/d dry cat food: 408 kcal per cup, but a cup weighing 4.5 oz would hold 521 kcal), or when the maker's site gives no calorie statement or cup figure we could read (Instinct, Sheba, Fancy Feast adult pâté, The Farmer's Dog, Ollie, Primal). Pick the type for those.
 
 ## Use it with an AI agent
 
@@ -146,6 +167,7 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 34. Yuschak S. Mealtime Enrichment for Cats. Veterinary Partner (VIN), revised 2024. https://veterinarypartner.vin.com/default.aspx?pid=19239&catId=102901&Id=9956352
 35. Brooks W. Flatulence in Dogs. Veterinary Partner (VIN), revised 2026. https://veterinarypartner.vin.com/default.aspx?pid=19239&catId=254092&id=4952806
 36. r/dogs. Slow Feeders Everywhere. Reddit owner discussion, 166 comments, 2026. https://www.reddit.com/r/dogs/comments/1vjyw4w/
+37. Choi Y, Okos MR. Effects of temperature and composition on the thermal properties of foods. In: Food Engineering and Process Applications, vol. 1, 1986. Equations for density from water, protein, fat, carbohydrate, fiber and ash, as given in the ASHRAE Handbook chapter Thermal Properties of Foods (copy: https://www.slideshare.net/miguemeneses/thermophysical).
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 

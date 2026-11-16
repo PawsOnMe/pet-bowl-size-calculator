@@ -36,7 +36,23 @@ legend{font-weight:600;margin-bottom:6px}
 .checks label{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
 .checks input{margin-top:5px;accent-color:var(--accent)}
 body[data-species=cat] .dog-only,body[data-species=dog] .cat-only{display:none}
-body[data-food=cups] .g-only,body[data-food=g] .cups-only{display:none}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.frow{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:0 0 12px}
+@media (min-width:600px){.frow{grid-template-columns:minmax(0,1fr) auto;align-items:start}}
+.frow input,.frow select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.combo{position:relative}.combo input{width:100%}
+.famt{display:flex;gap:8px;align-items:center}.famt input{width:6.5em}
+.flist{position:absolute;z-index:5;left:0;right:0;top:100%;margin:4px 0 0;padding:4px;list-style:none;max-height:min(55vh,330px);overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.flist li{padding:8px 10px;border-radius:8px;cursor:pointer;line-height:1.3}
+.flist li small{display:block;color:var(--muted);font-size:.82rem}
+.flist li[aria-selected=true]{background:var(--accent-soft)}
+@media (hover:hover){.flist li[data-id]:hover{background:var(--accent-soft)}}
+.flist .grp{cursor:default;padding:10px 10px 4px;font-size:.82rem;color:var(--muted)}
+.rm{font:inherit;font-size:1.3rem;line-height:1;border:0;background:none;color:var(--muted);padding:8px 10px;cursor:pointer}
+.frow:only-child .rm{display:none}
+.add{font:inherit;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:999px;padding:8px 14px;margin:0 0 8px;cursor:pointer}
+fieldset>.hint{display:block}
 dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
 dt{color:var(--muted)}dd{margin:0;font-weight:600}
 .caution{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0 0}
@@ -54,7 +70,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 {"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
 {"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
-{"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume."}},
+{"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume."}},
 {"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag, or by the kcal per kg and multiply by 1,000 for grams, and adjust to body condition."}},
 {"@type":"Question","name":"What should I feed my puppy?","acceptedAnswer":{"@type":"Answer","text":"A food labelled complete and balanced for growth or all life stages. For a puppy that will be a large dog, the label should say it includes growth of large size dogs."}},
 {"@type":"Question","name":"Do slow feeder bowls work?","acceptedAnswer":{"@type":"Answer","text":"Yes, at slowing a fast eater down. In a study of 10 pet dogs, meals took significantly longer from a slow feeder than from a plain bowl, and the dogs were still slower after nine days of practice (Buckley and Lees, 2016). Eating fast was a bloat (GDV) risk factor in two Purdue studies (Glickman et al., 1997 and 2000), and VCA Animal Hospitals advises feeding large and giant dogs from the floor with a puzzle feeder or slow-down bowl. For cats, a feline vet consensus recommends frequent small meals from puzzle feeders, which it says increase activity and help weight control (AAFP, 2018). Veterinary Partner says small meals in feeders prevent gulping and may lessen vomiting in cats, and suggests puzzle feeding bowls for dogs that swallow air by eating quickly. Owners on Reddit report the same, though that is personal experience, not research. No trial has yet tested whether a slow feeder prevents bloat itself."}}
@@ -76,9 +92,6 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <fieldset><legend>Units</legend><div class="seg">
 <label><input type="radio" name="unit" value="cm" checked><span>Metric (cm, kg)</span></label>
 <label><input type="radio" name="unit" value="in"><span>US (inches, lb)</span></label></div></fieldset>
-<fieldset><legend>Food measured in</legend><div class="seg">
-<label><input type="radio" name="food" value="cups" checked><span>Cups (US)</span></label>
-<label><input type="radio" name="food" value="g"><span>Grams</span></label></div></fieldset>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
@@ -92,15 +105,10 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
 <input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Tip to tip, across the face.</span></div>
-<div class="field cups-only"><label for="cups">Food per meal (US cups)</label>
-<input id="cups" name="cups" type="number" min="0" step="0.05" inputmode="decimal">
-<span class="hint">The amount on the food bag, split by the number of meals.</span></div>
-<div class="field g-only"><label for="grams">Food per meal (g)</label>
-<input id="grams" name="grams" type="number" min="0" step="1" inputmode="decimal">
-<span class="hint">Weighed on a kitchen scale, or the bag's amount in grams split by the number of meals.</span></div>
-<div class="field g-only"><label for="gcup">Grams in one cup of this food</label>
-<input id="gcup" name="gcup" type="number" min="0" step="1" inputmode="decimal">
-<span class="hint">Weigh one level US cup (236.6 ml) of the food. The bowl size depends on volume, so grams need this.</span></div>
+<fieldset><legend>Food per meal</legend>
+<div id="foodRows"></div>
+<button type="button" id="addFood" class="add">+ Add another food</button>
+<span class="hint">Type the brand and pick the food, then how much goes in one meal: grams, ounces, cups or cans. Mixing foods? Add each one.</span></fieldset>
 <details class="calc"><summary>Not sure how much per meal? Work it out</summary>
 <div class="field"><label for="weight">Weight (<span id="u3">kg</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
@@ -111,12 +119,9 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <option value="inactive">Adult, not very active or gains weight easily</option>
 <option value="young">Puppy or kitten</option>
 </select></div>
-<div class="field cups-only"><label for="kcal">Calories per cup (kcal/cup)</label>
+<div class="field" id="kcalField"><label for="kcal" id="kcalLabel">Calories per cup (kcal/cup)</label>
 <input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
-<span class="hint">Printed on the food bag as kcal/cup.</span></div>
-<div class="field g-only"><label for="kcalkg">Calories per kg (kcal/kg)</label>
-<input id="kcalkg" name="kcalkg" type="number" min="0" step="1" inputmode="numeric">
-<span class="hint">Printed on the food bag as kcal/kg.</span></div>
+<span class="hint" id="kcalHint">Printed on the food bag as kcal/cup.</span></div>
 <div class="field"><label for="meals">Meals a day</label>
 <input id="meals" name="meals" type="number" min="1" step="1" value="2" inputmode="numeric"></div>
 </details>
@@ -156,7 +161,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <p>Owners say the same in their own words, though these are personal reports, not research. In a 2026 Reddit thread about slow feeders, a reply with 170 upvotes says the poster's small dog throws up without one, and another says it "immediately stopped the problem" for a dog that gulped its food and vomited [18].</p>
 <p>Mealtime also gets more interesting: in a small study of 4 dogs, a feeding toy made meals last longer and kept the dogs more active, and their stress hormone (cortisol) was lower after a week than on the first day [15]. No trial has yet tested whether a slow feeder prevents bloat itself; VCA lists it alongside smaller, more frequent meals [11].</p>
 <h3>How big should the bowl be?</h3>
-<p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh food in grams, weigh one level cup of it too, so grams can be turned into volume. This is our rule of thumb.</p>
+<p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume. This is our rule of thumb.</p>
 <h3>How much should I feed my dog or cat?</h3>
 <p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
 <h3>What should I feed?</h3>
@@ -194,29 +199,140 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <p>Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.</p>
 </footer>
 </main>
+<script src="foods.js"></script>
 <script src="bowlfit.js"></script>
 <script>
 (function () {
   var f = document.getElementById("f"), out = document.getElementById("result");
+  var box = document.getElementById("foodRows"), seq = 0;
+  var kField = document.getElementById("kcalField"), kLabel = document.getElementById("kcalLabel"), kHint = document.getElementById("kcalHint");
+  var FOODS = BowlFit.foods(), HAY = {};
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  // "Hill's i/d" and "hills id" should find the same food, and "pate" should find "Pâté"
+  function norm(s) {
+    return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+      .replace(/[\/'’`.]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  FOODS.forEach(function (x) { HAY[x.id] = norm([x.brand, x.name, x.alias].join(" ")); });
+  function title(x) { return x.generic ? x.name : x.brand + " " + x.name; }
+  function checked(name) { var c = f.querySelector('input[name="' + name + '"]:checked'); return c ? c.value : ""; }
+  // Until someone picks a unit, it follows the number: nobody feeds 180 cans or 1 g of kibble a meal.
+  function autoUnit(x, amount) {
+    var a = parseFloat(amount), big = isFinite(a) && a > 0;
+    if (x && x.unit) return big && a >= 5 ? "g" : "unit";
+    if (!x || x.form === "dry" || x.form === "freeze-dried") return big && a >= 8 ? "g" : "cups";
+    return "g";
+  }
+  function setUnits(row) {
+    var x = BowlFit.food(row.dataset.id), sel = row.querySelector(".fu"), keep = row.dataset.touched ? sel.value : "";
+    var opts = [["g", "g"], ["oz", "oz"], ["cups", "cups"]];
+    if (x && x.unit) opts.push(["unit", BowlFit.unitName("unit", x, 2)]);
+    var want = keep && opts.some(function (o) { return o[0] === keep; }) ? keep : autoUnit(x, row.querySelector(".fa").value);
+    sel.innerHTML = opts.map(function (o) { return '<option value="' + o[0] + '">' + esc(o[1]) + "</option>"; }).join("");
+    sel.value = want;
+  }
+  function hits(q) {
+    var words = norm(q).split(" ").filter(Boolean), pet = checked("species") || "dog";
+    return FOODS.filter(function (x) {
+      return !x.generic && x.species === pet && words.every(function (w) { return HAY[x.id].indexOf(w) >= 0; });
+    });
+  }
+  function option(row, x, k) {
+    return '<li role="option" id="' + row.id + "-" + k + '" data-id="' + esc(x.id) + '" aria-selected="false">' +
+      esc(x.name) + (x.generic ? "" : "<small>" + esc(x.brand) + "</small>") + "</li>";
+  }
+  function openList(row) {
+    var inp = row.querySelector(".fq"), ul = row.querySelector(".flist"), found = hits(inp.value), k = 0;
+    var html = found.map(function (x) { return option(row, x, k++); }).join("");
+    html += '<li class="grp" role="presentation">' + (found.length ? "Not in the list? Pick the type:" : "No match. Pick the type:") + "</li>";
+    html += FOODS.filter(function (x) { return x.generic; }).map(function (x) { return option(row, x, k++); }).join("");
+    ul.innerHTML = html; ul.hidden = false; ul.scrollTop = 0; row.act = -1;
+    inp.setAttribute("aria-expanded", "true"); inp.removeAttribute("aria-activedescendant");
+  }
+  function closeList(row) {
+    var inp = row.querySelector(".fq");
+    row.querySelector(".flist").hidden = true;
+    inp.setAttribute("aria-expanded", "false"); inp.removeAttribute("aria-activedescendant");
+  }
+  function move(row, d) {
+    var items = row.querySelectorAll('.flist li[role="option"]'), n = items.length;
+    if (!n) return;
+    row.act = row.act < 0 ? (d > 0 ? 0 : n - 1) : (row.act + d + n) % n;
+    [].forEach.call(items, function (li, k) { li.setAttribute("aria-selected", k === row.act ? "true" : "false"); });
+    items[row.act].scrollIntoView({ block: "nearest" });
+    row.querySelector(".fq").setAttribute("aria-activedescendant", items[row.act].id);
+  }
+  function pick(row, id) {
+    var x = BowlFit.food(id);
+    if (!x) return;
+    row.dataset.id = id; row.querySelector(".fq").value = title(x);
+    closeList(row); setUnits(row); render();
+    var a = row.querySelector(".fa");
+    if (!a.value) a.focus();
+  }
+  function addRow(focus) {
+    var n = ++seq, row = document.createElement("div");
+    row.className = "frow"; row.id = "food" + n;
+    row.innerHTML = '<div class="combo"><label class="sr" for="fq' + n + '">Food</label>' +
+      '<input id="fq' + n + '" class="fq" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="fl' + n + '" placeholder="Type a brand, like Hill\'s or Purina" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+      '<ul id="fl' + n + '" class="flist" role="listbox" aria-label="Foods" hidden></ul></div>' +
+      '<div class="famt"><label class="sr" for="fa' + n + '">Amount per meal</label>' +
+      '<input id="fa' + n + '" class="fa" type="number" min="0" step="any" inputmode="decimal" placeholder="Amount">' +
+      '<label class="sr" for="fu' + n + '">Unit</label><select id="fu' + n + '" class="fu"></select>' +
+      '<button type="button" class="rm" aria-label="Remove this food">×</button></div>';
+    box.appendChild(row); setUnits(row);
+    var inp = row.querySelector(".fq"), ul = row.querySelector(".flist");
+    inp.addEventListener("focus", function () { openList(row); });
+    inp.addEventListener("input", function () {
+      var x = BowlFit.food(row.dataset.id);
+      if (x && inp.value !== title(x)) { delete row.dataset.id; setUnits(row); }
+      openList(row);
+    });
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { if (ul.hidden) openList(row); move(row, e.key === "ArrowDown" ? 1 : -1); e.preventDefault(); }
+      else if (e.key === "Enter") { var items = ul.querySelectorAll('li[role="option"]'); if (!ul.hidden && row.act >= 0 && items[row.act]) pick(row, items[row.act].dataset.id); e.preventDefault(); }
+      else if (e.key === "Escape") closeList(row);
+    });
+    inp.addEventListener("blur", function () { setTimeout(function () { closeList(row); }, 150); });
+    ul.addEventListener("mousedown", function (e) { e.preventDefault(); });   // keep focus in the box while picking
+    ul.addEventListener("click", function (e) { var li = e.target.closest("li[data-id]"); if (li) pick(row, li.dataset.id); });
+    row.querySelector(".fa").addEventListener("input", function () { if (!row.dataset.touched) setUnits(row); });
+    row.querySelector(".fu").addEventListener("change", function () { row.dataset.touched = "1"; });
+    row.querySelector(".rm").addEventListener("click", function () { row.remove(); if (!box.children.length) addRow(false); render(); });
+    if (focus) inp.focus();
+    return row;
+  }
+  function foodRows() {
+    return [].map.call(box.querySelectorAll(".frow"), function (row) {
+      return { id: row.dataset.id || "", amount: row.querySelector(".fa").value, unit: row.querySelector(".fu").value };
+    });
+  }
   function vals() {
     var d = new FormData(f), dog = d.get("species") === "dog";
     return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
-      cupsPerMeal: d.get("cups"), foodUnit: d.get("food"), gramsPerMeal: d.get("grams"), gramsPerCup: d.get("gcup"), kcalPerKg: d.get("kcalkg"), weight: d.get("weight"), stage: d.get("stage"), kcalPerCup: d.get("kcal"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
+      foods: foodRows(), labelKcal: d.get("kcal"), weight: d.get("weight"), stage: d.get("stage"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
       fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
   }
   function render() {
     var v = vals(), r = BowlFit.recommend(v);
     document.body.setAttribute("data-species", v.species);
-    document.body.setAttribute("data-food", v.foodUnit);
     document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
     document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
+    // Calories from the label are only needed for a single food we don't have calories for.
+    var one = v.foods.length === 1 ? v.foods[0] : null, known = one && BowlFit.food(one.id), perCup = !!one && one.unit === "cups";
+    kField.hidden = !one || !!(known && known.kcalKg) || one.unit === "unit";
+    kLabel.textContent = perCup ? "Calories per cup (kcal/cup)" : "Calories per kg (kcal/kg)";
+    kHint.textContent = "Printed on the food bag as " + (perCup ? "kcal/cup." : "kcal/kg.");
     var h = "<h2>Your numbers</h2><dl>";
     h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
     if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
     var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
-    if (fd) h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd><dt>Food a day</dt><dd>" + (fd.grams ? rng(fd.gDayLo, fd.gDayHi) + " g in " : rng(fd.cupsDayLo, fd.cupsDayHi) + " cups in ") + fd.meals + " meals</dd>";
-    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)" : (r.needGramsPerCup ? "Add the grams in one cup." : "Add the food per meal.")) + "</dd>";
+    if (fd) {
+      h += "<dt>Calories a day</dt><dd>" + rng(fd.kcalLo, fd.kcalHi) + " kcal</dd>";
+      if (fd.unit) h += "<dt>Food a day</dt><dd>" + rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals</dd>";
+    }
+    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)"
+      : r.needFood ? "Pick the food from the list, so its weight can be turned into volume." : "Add the food per meal.") + "</dd>";
     h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";
     r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
     if (r.tips.length) h += '<ul class="tips">' + r.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
@@ -224,7 +340,11 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span></li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
     out.innerHTML = h + "</div>";
   }
-  f.addEventListener("input", render); f.addEventListener("change", render); render();
+  document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });
+  f.addEventListener("submit", function (e) { e.preventDefault(); });
+  f.addEventListener("input", render);
+  f.addEventListener("change", render);
+  addRow(false); render();
 })();
 </script>
 </body>

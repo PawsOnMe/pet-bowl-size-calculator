@@ -53,6 +53,13 @@
       "evidence": "rule of thumb"
     },
     {
+      "id": "meal-volume",
+      "applies_to": "dogs and cats",
+      "rule": "Meal volume = cups x 236.6 ml, or grams (1 oz = 28.35 g; a can is its net weight) / the food's grams in one level cup x 236.6 ml, added up over the foods. Grams in one cup: dry food = the maker's kcal per cup / kcal per kg x 1000, or the cup weight on the label; dry food not listed = 86.1 g, the 10th percentile of the 50 listed dry foods; wet food = 236.6 g (1.0 g per ml); fresh-cooked food from the maker (146.5 to 188 g), or 146.5 g when not listed, also for raw and homemade food; freeze-dried 45 g; water or broth 236.6 g",
+      "evidence": "maker calorie statements (foods.js, one source per food, checked 15 November 2026); density of mostly-water food about 1.05-1.10 g per ml without air (Choi and Okos 1986 composition model), rounded down so the bowl errs big",
+      "sources": ["foods.js", "https://www.slideshare.net/miguemeneses/thermophysical"]
+    },
+    {
       "id": "slow-feeder",
       "applies_to": "dogs and cats that eat fast",
       "rule": "A slow feeder or puzzle feeder lengthens the meal; vets suggest one for large and giant dogs and for pets that gulp and vomit, and puzzle feeders for cats",

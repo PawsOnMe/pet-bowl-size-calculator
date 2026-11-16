@@ -8,7 +8,20 @@
   var ROOM = { regular: 1.5, slow: 2 }; // rule of thumb: the bowl holds one meal with room to spare
   var SHOP = "https://www.etsy.com/shop/PawsOnMePet";
   var LB_KG = 0.45359237;
+  var OZ_G = 28.349523125;       // 1 oz in grams
   var FT_CM = 30.48;             // 1 ft = 12 in x 2.54 cm
+  // Foods people can pick instead of weighing a cup themselves (foods.js: grams in one level cup, calories,
+  // can sizes, and the source of each). Looked up when needed, so the script order on a page doesn't matter.
+  var FOOD_LIST = null;
+  function foods() {
+    if (FOOD_LIST) return FOOD_LIST;
+    var src = null;
+    if (typeof module !== "undefined" && module.exports) { try { src = require("./foods.js"); } catch (e) { src = null; } }
+    else src = root.BowlFitFoods || null;
+    if (src && src.FOODS) FOOD_LIST = src.FOODS;
+    return FOOD_LIST || [];
+  }
+  function food(id) { var l = foods(); for (var k = 0; k < l.length; k++) if (l[k].id === id) return l[k]; return null; }
   // Glickman et al., JAVMA 2000 (numbers as summarised by Buckley, Veterinary Evidence 2017): bloat (GDV) cases
   // per 1,000 dog-years by bowl height. Large breeds (23-45 kg): floor 18, raised 1 ft or less 56 (RR 3.06),
   // raised more than 1 ft 29 (not significant). Giant breeds (over 45 kg): floor 17, 1 ft or less 15 (not
@@ -61,18 +74,78 @@
     return res;
   }
 
+  // A food in the meal: { id, amount, unit }, unit "g", "oz", "cups" or "unit" (one can, pouch or tray of that food).
+  // Volume in ml: cups are volume already; a weight is divided by the food's grams in one level cup.
+  function rowMl(row) {
+    var a = num(row && row.amount);
+    if (!a) return 0;
+    if (row.unit === "cups") return a * CUP_ML;
+    var f = food(row.id);
+    if (!f || !f.gCup) return null;
+    var g = row.unit === "oz" ? a * OZ_G : row.unit === "unit" ? (f.unit ? a * f.unit.g : null) : a;
+    return g === null ? null : g / f.gCup * CUP_ML;
+  }
+  // Calories in one of the row's units: from the food list, or from the label the person typed
+  // (kcal per kg for grams and ounces, kcal per cup for cups).
+  function kcalPer(row, f, labelKcal) {
+    var u = row.unit;
+    if (f && f.kcalKg) {
+      if (u === "cups") return f.kcalCup || f.kcalKg * f.gCup / 1000;
+      if (u === "unit") return f.unit ? (f.unit.kcal || f.kcalKg * f.unit.g / 1000) : null;
+      return f.kcalKg / 1000 * (u === "oz" ? OZ_G : 1);
+    }
+    var k = num(labelKcal);
+    if (!k || u === "unit") return null;
+    return u === "cups" ? k : k / 1000 * (u === "oz" ? OZ_G : 1);
+  }
+  function unitName(u, f, n) {
+    if (u === "unit") { var w = f && f.unit ? f.unit.name : "can"; return n === 1 ? w : w + (/(ch|sh|s|x)$/.test(w) ? "es" : "s"); }
+    return u === "cups" ? (n === 1 ? "cup" : "cups") : u === "oz" ? "oz" : "g";
+  }
+  // How much to feed when the meal is one food: calories a day from weight and life stage, then that food's amount.
+  function feedingFoods(i, rows) {
+    var w = num(i.weight);
+    if (!w) return null;
+    var kg = i.unit === "in" ? w * LB_KG : w;
+    var table = MER[i.species === "cat" ? "cat" : "dog"], f = table[i.stage] || table.neutered;
+    var rer = 70 * Math.pow(kg, 0.75), meals = num(i.mealsPerDay) || 2;
+    var res = { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]), meals: meals };
+    var row = rows.length === 1 ? rows[0] : null, fd = row ? food(row.id) : null, per = row ? kcalPer(row, fd, i.labelKcal) : null;
+    if (per) {
+      var p = row.unit === "g" ? 1 : row.unit === "oz" ? 10 : 100, rd = function (x) { return Math.round(x * p) / p; };
+      res.unit = row.unit; res.dayLo = rd(rer * f[0] / per); res.dayHi = rd(rer * f[1] / per); res.meal = rd(rer * f[1] / per / meals);
+      res.unitName = unitName(row.unit, fd, res.dayHi);
+    }
+    return res;
+  }
+  // Round up to the next 50 ml; the rounding to 0.01 ml first keeps 300.00000000000006 at 300.
+  function up50(ml) { return Math.ceil(Math.round(ml * 100) / 100 / 50) * 50; }
+
   function recommend(input) {
     var i = input || {};
     var dog = i.species !== "cat";
     var unit = i.unit === "in" ? "in" : "cm";
     var elbow = cm(i.elbow, unit);
     var whisker = dog ? null : cm(i.whisker, unit);
-    var feed = feeding(i);
-    var grams = i.foodUnit === "g";
+    var rows = Array.isArray(i.foods) ? i.foods : null;   // the foods in one meal, each picked from foods.js
+    var feed = rows ? feedingFoods(i, rows) : feeding(i);
+    var grams = !rows && i.foodUnit === "g";
     // The bowl size depends on volume: grams per meal / grams in one cup of that food = cups per meal
     var gMeal = grams ? (num(i.gramsPerMeal) || (feed ? feed.gMeal : null)) : null, gCup = grams ? num(i.gramsPerCup) : null;
-    var cups = grams ? (gMeal && gCup ? gMeal / gCup : null) : (num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null));
-    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
+    var cups = rows ? null : grams ? (gMeal && gCup ? gMeal / gCup : null) : (num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null));
+    var mealMl = cups ? cups * CUP_ML : null, needFood = false;
+    if (rows) {
+      var sum = 0;
+      rows.forEach(function (row, k) {
+        // A typed amount wins; a one-food meal with no amount uses the amount worked out from calories.
+        var r = num(row && row.amount) ? row : (k === 0 && feed && feed.meal ? { id: row.id, unit: row.unit, amount: feed.meal } : null);
+        var ml = r ? rowMl(r) : 0;
+        if (ml === null) needFood = true; else sum += ml;
+      });
+      mealMl = needFood || !sum ? null : sum;
+    }
+    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood,
+                needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
                 tips: [], cautions: [], products: [], productNote: "", shop: SHOP };
 
     // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
@@ -114,7 +187,7 @@
     } else if (!dog) {
       out.tips.push("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.");
     }
-    if (cups) out.capacityMl = Math.ceil(cups * CUP_ML * (out.slowFeeder ? ROOM.slow : ROOM.regular) / 50) * 50;
+    if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
     if (feed) out.tips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
     if (big && i.stage === "young") out.tips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
     if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
@@ -143,6 +216,7 @@
     return out;
   }
 
-  var api = { recommend: recommend, feeding: feeding, MER: MER, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, SHOP: SHOP };
+  var api = { recommend: recommend, feeding: feeding, food: food, foods: foods, rowMl: rowMl, unitName: unitName,
+              MER: MER, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.BowlFit = api;
 })(this);
