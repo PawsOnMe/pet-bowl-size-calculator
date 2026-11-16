@@ -337,7 +337,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
     if (r.tips.length) h += '<ul class="tips">' + r.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
-    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span></li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
+    if (r.products.length) h += "<ul>" + r.products.map(function (p) { return "<li><strong>" + esc(p.name) + "</strong><br><span>" + esc(p.size) + "</span>" + (p.note ? "<br><span>" + esc(p.note) + "</span>" : "") + "</li>"; }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
     out.innerHTML = h + "</div>";
   }
   document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });

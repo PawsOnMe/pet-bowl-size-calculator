@@ -124,7 +124,7 @@ The calculator also checks your numbers against the bowls we make. Sizes as list
 | Sage green raised tilted slow feeder | 14.8 cm (5.8 in) | 11 cm (4.3 in) | 200 ml |
 | Two-tone raised tilted flower slow feeder | 14.5 cm (5.7 in) | 10.5 cm (4.1 in) | 200 ml |
 
-They're made for cats and small to medium dogs. When none of them fits, the calculator says so. Take the measurements and shop anywhere.
+They're made for cats and small to medium dogs. When none fits exactly, the calculator shows the three closest and how far each one is from your numbers. For a large breed it only suggests the flat plates, because raised bowls of 1 ft or less were linked to bloat [1].
 
 Shop: https://www.etsy.com/shop/PawsOnMePet
 

@@ -10,6 +10,7 @@
   var LB_KG = 0.45359237;
   var OZ_G = 28.349523125;       // 1 oz in grams
   var FT_CM = 30.48;             // 1 ft = 12 in x 2.54 cm
+  var FLOOR_RIM_CM = 5;          // a flat plate on the floor counts as a floor bowl
   // Foods people can pick instead of weighing a cup themselves (foods.js: grams in one level cup, calories,
   // can sizes, and the source of each). Looked up when needed, so the script order on a page doesn't matter.
   var FOOD_LIST = null;
@@ -196,24 +197,39 @@
     if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
     if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");
 
-    if (big) {
-      out.productNote = "We only make bowls for cats and small to medium dogs, so none of ours is the right size for a large or giant breed.";
-      return out;
-    }
-    var picks = PRODUCTS.filter(function (p) {
-      if (out.height && (p.rimCm < out.height.minCm || p.rimCm > out.height.maxCm)) return false;
-      if (out.capacityMl && p.ml < out.capacityMl) return false;
-      if (out.minWidthCm && p.widthCm < out.minWidthCm) return false;
-      if (out.slowFeeder && !p.slow) return false;
-      return true;
+    // Always end with our bowls: the ones that fit, or else the closest ones and how far each is from the numbers.
+    // Never a dead end with no bowl (owner 2026-11-16).
+    var ranked = rankProducts(out, size, i.flatFace || i.longEars);
+    var fits = ranked.filter(function (r) { return r.score === 0; });
+    out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) {
+      return { name: r.p.name, size: show(r.p.widthCm) + " across, rim " + show(r.p.rimCm) + " high, holds " + r.p.ml + " ml",
+               note: r.notes.length ? r.notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "" };
     });
-    if (i.flatFace || i.longEars) picks.sort(function (a, b) { return (b.tilted ? 1 : 0) - (a.tilted ? 1 : 0); });
-    out.products = picks.slice(0, 3).map(function (p) {
-      return { name: p.name, size: show(p.widthCm) + " across, rim " + show(p.rimCm) + " high, holds " + p.ml + " ml" };
-    });
-    out.productNote = picks.length ? "PawsOnMe bowls that fit these numbers:"
-      : "None of our bowls fits these numbers. Take the measurements above with you and shop anywhere.";
+    out.productNote = big ? "Our bowls are made for cats and small to medium dogs. The closest ones for yours:"
+      : fits.length ? "PawsOnMe bowls that fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
     return out;
+  }
+
+  // Our bowls ranked by how far each is from the numbers: 0 = fits. A rim 5 cm off counts like a bowl that holds
+  // nothing extra; capacity and width count by the share that's missing. Large breeds only get the flat plates,
+  // because raised bowls of 1 ft or less carried 3.06 times the bloat risk; giant breeds anything up to 1 ft.
+  function rankProducts(out, size, tiltFirst) {
+    var h = out.height, need = out.capacityMl, w = out.minWidthCm;
+    return PRODUCTS.map(function (p, k) {
+      var notes = [], score = 0, d;
+      if (size) {
+        if (p.rimCm > FLOOR_RIM_CM && (size !== "giant" || p.rimCm > FT_CM)) return null;
+      } else if (h && h.minCm !== undefined) {
+        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push("rim " + show(d) + " lower than the range"); }
+        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push("rim " + show(d) + " higher than the range"); }
+      }
+      if (need && p.ml < need) { score += (need - p.ml) / need; notes.push("holds " + (need - p.ml) + " ml less than suggested"); }
+      if (w && p.widthCm < w) { d = w - p.widthCm; score += d / w; notes.push(show(d) + " narrower than the whisker span"); }
+      if (out.slowFeeder && !p.slow) { score += 1; notes.push("not a slow feeder"); }
+      return { p: p, k: k, score: score, notes: notes };
+    }).filter(Boolean).sort(function (a, b) {
+      return (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0) || (a.k - b.k);
+    });
   }
 
   var api = { recommend: recommend, feeding: feeding, food: food, foods: foods, rowMl: rowMl, unitName: unitName,

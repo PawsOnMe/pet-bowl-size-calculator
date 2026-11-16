@@ -12,7 +12,10 @@ assert.ok(!names(r).includes("Two-tone raised tilted flower slow feeder")); // 2
 
 // Large breed (23-45 kg): floor, or above 1 ft (30.5 cm) up to the elbow; one note; no products
 r = recommend({ species: "dog", elbow: 50, size: "large", cupsPerMeal: 2 });
-assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1 && r.products.length === 0);
+assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1);
+// Never a dead end: the closest bowls, and for a large breed only the flat plates (raised 1 ft or less = 3.06x bloat risk)
+assert.deepStrictEqual(names(r), ["Butter yellow ceramic slow feeder plate, medium", "Lilac flower ceramic slow feeder plate"]);
+assert.ok(r.products[0].note.includes("350 ml less"));        // 750 - 400
 r = recommend({ species: "dog", elbow: 35, size: "large" });
 assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [30.5, 35]);   // elbow rule 27.5-35 cm, cut at 30.5
 r = recommend({ species: "dog", elbow: 28, size: "large" });
@@ -20,17 +23,19 @@ assert.ok(r.height.floor && r.height.minCm === undefined);              // whole
 
 // Giant breed (over 45 kg): floor, or raised no higher than 1 ft (30.5 cm), even with a tall elbow
 r = recommend({ species: "dog", elbow: 65, size: "giant" });
-assert.ok(r.height.floor && r.height.maxCm === 30.5 && r.height.minCm === undefined && r.cautions.length === 1 && r.products.length === 0);
+assert.ok(r.height.floor && r.height.maxCm === 30.5 && r.height.minCm === undefined && r.cautions.length === 1 && r.products.length === 3);
 
 // Old flag largeBreed (size unknown): both cut-offs explained, no products
 r = recommend({ species: "dog", elbow: 50, largeBreed: true });
-assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 0);
+assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 2 && r.products.every((p) => /ceramic slow feeder plate/.test(p.name)));
 
 // Inches: elbow 10 in = 25.4 cm -> 17.9 to 25.4 cm, too tall for our bowls
 r = recommend({ species: "dog", unit: "in", elbow: 10, cupsPerMeal: 1 });
 assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [17.9, 25.4]);
 assert.strictEqual(r.capacityMl, 400);               // 1 x 236.6 x 1.5 = 354.9 -> 400
-assert.strictEqual(r.products.length, 0);
+// None fits, so the 3 closest, each saying how far off it is: the tallest rims first
+assert.deepStrictEqual(names(r), ["Sage green raised tilted slow feeder", "Two-tone raised tilted flower slow feeder", "Lilac flower slow feeder on a pedestal"]);
+assert.ok(r.productNote.startsWith("The closest") && r.products[0].note.startsWith("Rim 6.9 cm (2.7 in) lower than the range"));
 
 // Cat: elbow 12, whisker 14, a third of a cup, flat face -> tilted first
 r = recommend({ species: "cat", elbow: 12, whisker: 14, cupsPerMeal: 0.33, flatFace: true });
