@@ -134,7 +134,7 @@
     // The bowl size depends on volume: grams per meal / grams in one cup of that food = cups per meal
     var gMeal = grams ? (num(i.gramsPerMeal) || (feed ? feed.gMeal : null)) : null, gCup = grams ? num(i.gramsPerCup) : null;
     var cups = rows ? null : grams ? (gMeal && gCup ? gMeal / gCup : null) : (num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null));
-    var mealMl = cups ? cups * CUP_ML : null, needFood = false;
+    var mealMl = cups ? cups * CUP_ML : null, needFood = false, fedKcalDay = null;
     if (rows) {
       var sum = 0;
       rows.forEach(function (row, k) {
@@ -144,10 +144,21 @@
         if (ml === null) needFood = true; else sum += ml;
       });
       mealMl = needFood || !sum ? null : sum;
+      // What the pet eats now, from the amounts typed: each food's amount x its calories x meals a day.
+      // Only when every food with an amount has known calories (from foods.js, or the label for a single food).
+      var meals = num(i.mealsPerDay) || 2, fed = 0, known = true, typed = false;
+      rows.forEach(function (row) {
+        var a = num(row && row.amount);
+        if (!a) return;
+        typed = true;
+        var per = kcalPer(row, food(row.id), rows.length === 1 ? i.labelKcal : null);
+        if (per) fed += a * per; else known = false;
+      });
+      fedKcalDay = typed && known ? Math.round(fed * meals) : null;
     }
-    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood,
+    var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood, fedKcalDay: fedKcalDay,
                 needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
-                tips: [], cautions: [], products: [], productNote: "", shop: SHOP };
+                tips: [], nutritionTips: [], cautions: [], products: [], productNote: "", shop: SHOP };
 
     // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
     var size = !dog ? "" : (i.size === "large" || i.size === "giant") ? i.size : (i.largeBreed ? "both" : "");
@@ -189,8 +200,10 @@
       out.tips.push("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.");
     }
     if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
-    if (feed) out.tips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
-    if (big && i.stage === "young") out.tips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
+    // Nutrition tips also go in nutritionTips, so a page can show them with the calories
+    if (feed) out.nutritionTips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
+    if (big && i.stage === "young") out.nutritionTips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
+    out.tips = out.tips.concat(out.nutritionTips);
     if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
       : "A slow feeder or puzzle feeder spreads the meal out. A feline vet consensus recommends small meals from puzzle feeders, partly because cats that gorge may vomit.");
     if (i.flatFace) out.tips.push("Flat face: a wide, shallow or tilted bowl is easier to eat from.");

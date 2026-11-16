@@ -71,6 +71,7 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
 | Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup, or for grams by kcal per kg × 1,000 | Pet Nutrition Alliance table [5] |
+| What your pet eats now | each food's amount × its calories (the maker's figures) × meals a day, shown next to the calories a day | maker calorie statements |
 | Capacity | meal volume × 1.5 (× 2 for a slow feeder), rounded up to 50 ml. Meal volume = cups × 236.6 ml, or grams ÷ the food's grams in one cup × 236.6 ml (1 oz = 28.35 g; a can is its net weight), added up over the foods in the meal | rule of thumb; grams per cup from the makers (below) |
 
 Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, the foods are in [`foods.js`](foods.js), and both are tested in [`test/`](test). The rules and sources are also in [`data/guidance.json`](data/guidance.json).

@@ -78,4 +78,11 @@ assert.ok(["any-fresh", "any-raw", "homemade"].every((id) => food(id).gCup === 1
 assert.strictEqual(food("any-freeze-dried").gCup, 45);
 // 30 g of freeze-dried = 30 / 45 cups = 157.7 ml, plus 60 g of water = 60 ml -> 217.7 x 1.5 = 326.6 -> 350 ml
 assert.strictEqual(recommend({ species: "dog", foods: [{ id: "stella-chewys-chicken-meal-mixers", amount: 30, unit: "g" }, { id: "water", amount: 60, unit: "g" }] }).capacityMl, 350);
+// What the pet eats now: 3 meals of 180 g Hill's i/d Low Fat canned (887 kcal/kg) + 10 g JFFD Turkey (1741 kcal/kg)
+// = 3 x (159.7 + 17.4) = 531 kcal a day; the meal is in US units, so 20.5 lb = 9.3 kg, and a spayed/neutered
+// dog's estimate is 70 x 9.3^0.75 x 1.6 = 596
+r = recommend({ ...mixed, weight: 20.5, stage: "neutered", mealsPerDay: 3 });
+assert.deepStrictEqual([r.fedKcalDay, r.feeding.kcalHi], [531, 596]);
+// Unknown calories for a food with an amount: no total rather than a wrong one
+assert.strictEqual(recommend({ species: "dog", foods: [{ id: "any-dry", amount: 1, unit: "cups" }, { id: "any-wet", amount: 50, unit: "g" }] }).fedKcalDay, null);
 console.log("foods tests passed (" + FOODS.length + " foods)");
