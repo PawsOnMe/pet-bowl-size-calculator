@@ -47,6 +47,30 @@ assert.strictEqual(names(r)[1], "Two-tone raised tilted flower slow feeder"); //
 r = recommend({ species: "cat" });
 assert.strictEqual(r.height, null);
 assert.ok(r.tips.length >= 2);
+
+// The bowl list is there before anything is typed, and it says "may fit", never "fit" (owner 2026-11-15)
+const MAY = "PawsOnMe bowls that may fit these numbers:";
+assert.strictEqual(r.productNote, MAY);
+assert.deepStrictEqual(names(r), ["Lilac flower ceramic slow feeder plate", "Butter yellow ceramic slow feeder plate, medium", "Lilac flower slow feeder on a pedestal"]);
+// It re-ranks with every input. A low elbow keeps the two flat plates:
+r = recommend({ species: "cat", elbow: 6 });
+assert.deepStrictEqual(names(r), ["Lilac flower ceramic slow feeder plate", "Butter yellow ceramic slow feeder plate, medium"]);
+// a higher elbow swaps in the raised ones (range 4.5 to 12 cm, the 3.5 and 4 cm plates are below it):
+r = recommend({ species: "cat", elbow: 12 });
+assert.strictEqual(r.productNote, MAY);
+assert.deepStrictEqual(names(r), ["Lilac flower slow feeder on a pedestal", "Sage green raised tilted slow feeder", "Two-tone raised tilted flower slow feeder"]);
+// older or stiff: same three, the higher rims first (11, 10.5, 8.5 cm)
+r = recommend({ species: "cat", elbow: 12, senior: true });
+assert.deepStrictEqual(names(r), ["Sage green raised tilted slow feeder", "Two-tone raised tilted flower slow feeder", "Lilac flower slow feeder on a pedestal"]);
+// a bigger meal drops the 200 ml bowls: 1 cup x 236.6 x 1.5 = 354.9 -> 400 ml, only the 400 ml plate holds it, and its rim (4 cm) is in 0 to 7 cm
+r = recommend({ species: "cat", elbow: 7, cupsPerMeal: 1 });
+assert.deepStrictEqual(names(r), ["Butter yellow ceramic slow feeder plate, medium"]);
+// and when nothing fits any more the wording changes to the closest ones
+r = recommend({ species: "cat", elbow: 20 });
+assert.ok(r.productNote.startsWith("The closest") && r.products.length === 3 && r.products.every((p) => p.note));
+// no result ever says "that fit"
+[{ species: "cat" }, { species: "cat", elbow: 12 }, { species: "dog", elbow: 11, cupsPerMeal: 0.5 }, { species: "dog", elbow: 50, size: "large" }]
+  .forEach((v) => assert.ok(!/that fit\b/.test(recommend(v).productNote)));
 console.log("all bowlfit tests passed");
 
 // Feeding: 10 kg spayed/neutered dog, 400 kcal per cup, 2 meals

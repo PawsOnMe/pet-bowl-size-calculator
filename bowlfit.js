@@ -210,23 +210,27 @@
     if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
     if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");
 
-    // Always end with our bowls: the ones that fit, or else the closest ones and how far each is from the numbers.
-    // Never a dead end with no bowl (owner 2026-11-16).
-    var ranked = rankProducts(out, size, i.flatFace || i.longEars);
+    // Always end with our bowls: the ones that may fit, or else the closest ones and how far each is from the numbers.
+    // Never a dead end with no bowl (owner 2026-11-16). The list is there before anything is typed and re-ranks with
+    // every input; it says "may fit", never "fit" (owner 2026-11-15).
+    var ranked = rankProducts(out, size, i.flatFace || i.longEars,
+                              !!i.senior && !size && !!out.height && out.height.minCm !== undefined);
     var fits = ranked.filter(function (r) { return r.score === 0; });
     out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) {
       return { name: r.p.name, size: show(r.p.widthCm) + " across, rim " + show(r.p.rimCm) + " high, holds " + r.p.ml + " ml",
                note: r.notes.length ? r.notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "" };
     });
     out.productNote = big ? "Our bowls are made for cats and small to medium dogs. The closest ones for yours:"
-      : fits.length ? "PawsOnMe bowls that fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
+      : fits.length ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
     return out;
   }
 
   // Our bowls ranked by how far each is from the numbers: 0 = fits. A rim 5 cm off counts like a bowl that holds
   // nothing extra; capacity and width count by the share that's missing. Large breeds only get the flat plates,
   // because raised bowls of 1 ft or less carried 3.06 times the bloat risk; giant breeds anything up to 1 ft.
-  function rankProducts(out, size, tiltFirst) {
+  // Ties follow what was ticked: tilted bowls first for a flat face or long ears; for an older or stiff pet the
+  // higher rims first, as the tip says to aim for the higher end of the range.
+  function rankProducts(out, size, tiltFirst, highFirst) {
     var h = out.height, need = out.capacityMl, w = out.minWidthCm;
     return PRODUCTS.map(function (p, k) {
       var notes = [], score = 0, d;
@@ -241,7 +245,8 @@
       if (out.slowFeeder && !p.slow) { score += 1; notes.push("not a slow feeder"); }
       return { p: p, k: k, score: score, notes: notes };
     }).filter(Boolean).sort(function (a, b) {
-      return (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0) || (a.k - b.k);
+      return (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0)
+        || (highFirst ? b.p.rimCm - a.p.rimCm : 0) || (a.k - b.k);
     });
   }
 
