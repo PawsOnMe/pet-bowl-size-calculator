@@ -20,6 +20,9 @@
      homemade food use the fresh-cooked figure.
    - A can, pouch or tray (unit): the maker's net weight and calories. When only ounces are printed,
      1 oz = 28.35 g; when neither, the weight is kcal per can / kcal per kg.
+   - Water or broth mixed in, and homemade bone broth: 1 g per ml, and 0 kcal. A broth's calories are not kept
+     here: the page looks up what the person types at USDA FoodData Central, or takes the calories in one cup
+     that the person types for a homemade broth, and passes them on the row as kcal100.
    Calories, sizes and links checked on the makers' US websites on 15 November 2026. */
 (function (root) {
   "use strict";
@@ -34,6 +37,7 @@
     { id: "any-freeze-dried", generic: true, species: "both", form: "freeze-dried", name: "Freeze-dried food, dry from the bag, brand not in the list" },
     { id: "homemade", generic: true, species: "both", form: "homemade", name: "Homemade cooked food" },
     { id: "water", generic: true, species: "both", form: "water", name: "Water or broth mixed in", gCup: 236.6 },
+    { id: "homemade-broth", generic: true, species: "both", form: "water", name: "Homemade bone broth", gCup: 236.6 },
 
     // Dog, dry: Hill's
     { id: "hills-sd-adult-chicken-barley-dry", species: "dog", form: "dry", brand: "Hill's Science Diet", name: "Adult Chicken & Barley Recipe, dry",

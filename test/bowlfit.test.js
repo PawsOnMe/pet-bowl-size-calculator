@@ -122,3 +122,50 @@ assert.ok(r.capacityMl === null && r.needGramsPerCup === true);
 // Grams feeding: 10 kg neutered dog, 3,500 kcal/kg -> 70 x 10^0.75 x 1.6 = 629.8 kcal -> 180 g a day, 90 g a meal
 r = recommend({ species: "dog", weight: 10, stage: "neutered", foodUnit: "g", kcalPerKg: 3500, mealsPerDay: 2 });
 assert.deepStrictEqual([r.feeding.gDayLo, r.feeding.gDayHi, r.feeding.gMeal], [180, 180, 90]);
+
+// Energy behind the calories (Pet Nutrition Alliance, Merck, National Research Council, Mullis et al. 2015).
+// 10 kg dog: RER = 70 x 10^0.75 = 393.6 -> 394 kcal a day
+r = recommend({ species: "dog", weight: 10, stage: "intact", kcalPerCup: 400 });
+assert.deepStrictEqual([r.energy.rer, r.energy.key, r.feeding.kcalHi], [394, "intact", 709]);   // x 1.8
+assert.deepStrictEqual(r.energy.levels.filter((l) => l.on).map((l) => l.who), ["Adult, not spayed or neutered"]);
+assert.strictEqual(r.energy.levels.length, 11);
+// Activity: low 1.2-1.4 = 472-551; high (NRC active adult) 1.86 = 732; working 2.0 = 787
+r = recommend({ species: "dog", weight: 10, stage: "neutered", activity: "low", kcalPerCup: 400 });
+assert.deepStrictEqual([r.feeding.kcalLo, r.feeding.kcalHi, r.energy.key], [472, 551, "inactive"]);
+r = recommend({ species: "dog", weight: 10, stage: "neutered", activity: "active", kcalPerCup: 400 });
+assert.deepStrictEqual([r.feeding.kcalHi, r.energy.key], [732, "active"]);
+r = recommend({ species: "dog", weight: 10, stage: "intact", activity: "working", kcalPerCup: 400 });
+assert.deepStrictEqual([r.feeding.kcalHi, r.energy.key], [787, "working"]);
+// Growth sets the level for a puppy whatever the activity; both puppy rows light up
+r = recommend({ species: "dog", weight: 10, stage: "young", activity: "working", kcalPerCup: 400 });
+assert.deepStrictEqual([r.feeding.kcalLo, r.feeding.kcalHi, r.energy.levels.filter((l) => l.on).length], [787, 1181, 2]);
+// The old stage "inactive" still works
+assert.strictEqual(recommend({ species: "dog", weight: 10, stage: "inactive", kcalPerCup: 400 }).energy.key, "inactive");
+// Cats have no "active" or "working" level: 4 kg neutered cat, RER 198, x 1.2 = 238
+r = recommend({ species: "cat", weight: 4, stage: "neutered", activity: "working", kcalPerCup: 400 });
+assert.deepStrictEqual([r.energy.rer, r.feeding.kcalHi, r.energy.key, r.energy.levels.length, r.energy.after], [198, 238, "neutered", 7, null]);
+// No weight: the levels are still there, without calories
+r = recommend({ species: "dog" });
+assert.ok(r.energy.rer === null && r.energy.levels.length === 11 && r.energy.levels.every((l) => l.kcalLo === null));
+// Health conditions add what vet sources say; overweight also gives a starting point to lose weight
+// (Merck: 60% of the calories a day for dogs, 70% for cats): 630 x 0.6 = 378; cat 238 x 0.7 = 167
+r = recommend({ species: "dog", weight: 10, stage: "neutered", kcalPerCup: 400, conditions: ["overweight", "kidney", "lipids", "liver", "pancreatitis"] });
+assert.deepStrictEqual(r.conditionNotes.map((c) => c.key), ["kidney", "liver", "pancreatitis", "lipids", "overweight"]);
+assert.deepStrictEqual([r.feeding.lossLo, r.feeding.lossHi], [378, 378]);
+assert.ok(/under 20 g of fat per 1,000 kcal/i.test(r.conditionNotes[2].text));
+assert.deepStrictEqual(r.conditionNotes[3].src, ["weeth", "merck-pancreas"]);   // dogs: pancreatitis risk added
+assert.ok(/don't need less fat/.test(r.conditionNotes[1].text));                 // Merck: most liver disease needs no fat cut
+r = recommend({ species: "cat", weight: 4, stage: "neutered", kcalPerCup: 400, conditions: ["pancreatitis", "lipids", "overweight"] });
+assert.ok(/moderately less fat/i.test(r.conditionNotes[0].text) && r.conditionNotes[1].src.length === 1);
+assert.deepStrictEqual([r.feeding.lossHi], [167]);
+assert.ok(/hepatic lipidosis/.test(r.conditionNotes[2].text));
+// Older dogs: a note from the National Research Council's guide
+assert.ok(recommend({ species: "dog", weight: 10, stage: "neutered", kcalPerCup: 400, senior: true }).nutritionTips.some((t) => /1\.5 × RER/.test(t)));
+// Every source named by a level or a condition is listed
+const B = require("../bowlfit.js");
+const ids = new Set();
+Object.values(B.LEVELS).forEach((ls) => ls.forEach((l) => l.src.forEach((id) => ids.add(id))));
+Object.values(B.CONDITIONS).forEach((c) => { c.src.forEach((id) => ids.add(id)); if (c.dogExtra) c.dogExtra.src.forEach((id) => ids.add(id)); });
+ids.add("loftus");
+ids.forEach((id) => assert.ok(B.SOURCES[id] && /^https:\/\//.test(B.SOURCES[id].url), "source " + id));
+console.log("energy and condition tests passed");

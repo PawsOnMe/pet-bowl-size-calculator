@@ -96,10 +96,13 @@
     {
       "id": "daily-calories",
       "applies_to": "dogs and cats",
-      "rule": "RER = 70 x kg^0.75 kcal/day; MER = RER x factor (dog: neutered 1.6, intact 1.8, inactive 1.2-1.4, growth 2-3; cat: neutered 1.2, intact 1.4, inactive 1.0, growth 2-3); cups = MER / kcal per cup",
+      "rule": "RER = 70 x kg^0.75 kcal/day; MER = RER x factor (dog: neutered 1.6, intact 1.8, inactive 1.2-1.4, active adult 1.86, working detection dog 2.0, growth 2-3; cat: neutered 1.2, intact 1.4, inactive 1.0, growth 2-3); cups = MER / kcal per cup",
       "evidence": "Pet Nutrition Alliance table; estimates only, pets can vary by as much as 50%, adjust to body condition",
       "sources": [
-        "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf"
+        "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf",
+        "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals",
+        "https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/"
       ]
     },
     {

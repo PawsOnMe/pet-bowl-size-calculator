@@ -30,13 +30,13 @@ assert.ok(dry.filter((g) => g >= food("any-dry").gCup).length / dry.length >= 0.
 // Hill's Science Diet Adult Chicken & Barley: 365 / 3675 x 1000 = 99.3 g a cup
 assert.strictEqual(food("hills-sd-adult-chicken-barley-dry").gCup, 99.3);
 
-// A mixed meal, 180 g Hill's i/d Low Fat canned + 10 g JFFD Turkey & Whole Wheat Macaroni, elbow 7.75 in:
-// 190 g at 1.0 g/ml = 190 ml -> x 1.5 = 285 -> 300 ml; slow feeder x 2 = 380 -> 400 ml
-const mixed = { species: "dog", unit: "in", elbow: 7.75, foods: [
-  { id: "hills-pd-id-low-fat-can-dog", amount: 180, unit: "g" },
-  { id: "jffd-turkey-whole-wheat-macaroni", amount: 10, unit: "g" }] };
-assert.strictEqual(recommend(mixed).capacityMl, 300);
-assert.strictEqual(recommend({ ...mixed, fastEater: true }).capacityMl, 400);
+// A mixed meal, 150 g Hill's i/d Turkey canned + 40 g Nom Nom Turkey Fare, elbow 9 in: 150 g at 1.0 g/ml = 150 ml,
+// 40 g / 188 g a cup x 236.6 = 50.3 ml -> 200.3 ml x 1.5 = 300.5 -> 350 ml; slow feeder x 2 = 400.7 -> 450 ml
+const mixed = { species: "dog", unit: "in", elbow: 9, foods: [
+  { id: "hills-pd-id-turkey-can-dog", amount: 150, unit: "g" },
+  { id: "nomnom-turkey-fare", amount: 40, unit: "g" }] };
+assert.strictEqual(recommend(mixed).capacityMl, 350);
+assert.strictEqual(recommend({ ...mixed, fastEater: true }).capacityMl, 450);
 
 // Cups need no food: 1 cup x 236.6 x 1.5 = 354.9 -> 400 ml
 assert.strictEqual(recommend({ species: "dog", foods: [{ amount: 1, unit: "cups" }] }).capacityMl, 400);
@@ -78,11 +78,35 @@ assert.ok(["any-fresh", "any-raw", "homemade"].every((id) => food(id).gCup === 1
 assert.strictEqual(food("any-freeze-dried").gCup, 45);
 // 30 g of freeze-dried = 30 / 45 cups = 157.7 ml, plus 60 g of water = 60 ml -> 217.7 x 1.5 = 326.6 -> 350 ml
 assert.strictEqual(recommend({ species: "dog", foods: [{ id: "stella-chewys-chicken-meal-mixers", amount: 30, unit: "g" }, { id: "water", amount: 60, unit: "g" }] }).capacityMl, 350);
-// What the pet eats now: 3 meals of 180 g Hill's i/d Low Fat canned (887 kcal/kg) + 10 g JFFD Turkey (1741 kcal/kg)
-// = 3 x (159.7 + 17.4) = 531 kcal a day; the meal is in US units, so 20.5 lb = 9.3 kg, and a spayed/neutered
-// dog's estimate is 70 x 9.3^0.75 x 1.6 = 596
-r = recommend({ ...mixed, weight: 20.5, stage: "neutered", mealsPerDay: 3 });
-assert.deepStrictEqual([r.fedKcalDay, r.feeding.kcalHi], [531, 596]);
+// What the pet eats now: 2 meals of 150 g Hill's i/d Turkey canned (1013 kcal/kg) + 40 g Nom Nom Turkey Fare (1298 kcal/kg)
+// = 2 x (151.95 + 51.92) = 408 kcal a day; the meal is in US units, so 30 lb = 13.6 kg, and a spayed/neutered
+// dog's estimate is 70 x 13.6^0.75 x 1.6 = 794
+r = recommend({ ...mixed, weight: 30, stage: "neutered", mealsPerDay: 2 });
+assert.deepStrictEqual([r.fedKcalDay, r.feeding.kcalHi], [408, 794]);
 // Unknown calories for a food with an amount: no total rather than a wrong one
 assert.strictEqual(recommend({ species: "dog", foods: [{ id: "any-dry", amount: 1, unit: "cups" }, { id: "any-wet", amount: 50, unit: "g" }] }).fedKcalDay, null);
+// Water or broth mixed in counts as 0 kcal: the same meal with 60 g of it still eats 408 kcal,
+// and the bowl counts its 60 ml: (200.3 + 60) x 1.5 = 390.5 -> 400 ml
+const day = { ...mixed, weight: 30, stage: "neutered", mealsPerDay: 2 };
+r = recommend({ ...day, foods: [...mixed.foods, { id: "water", amount: 60, unit: "g" }] });
+assert.deepStrictEqual([r.fedKcalDay, r.capacityMl], [408, 400]);
+// A broth found online carries its calories per 100 ml: 60 ml x 16 kcal per 100 ml x 2 meals = 19.2,
+// so 407.7 + 19.2 = 426.9 -> 427. In cups: 0.5 cup = 118.3 ml x 0.16 x 2 = 37.9, so 407.7 + 37.9 = 445.6 -> 446
+r = recommend({ ...day, foods: [...mixed.foods, { id: "water", amount: 60, unit: "g", kcal100: 16 }] });
+assert.strictEqual(r.fedKcalDay, 427);
+r = recommend({ ...day, foods: [...mixed.foods, { id: "water", amount: 0.5, unit: "cups", kcal100: 16 }] });
+assert.strictEqual(r.fedKcalDay, 446);
+// Homemade bone broth at 40 kcal a cup: 60 ml x 40 / 236.6 x 2 meals = 20.3, so 407.7 + 20.3 = 428.0 -> 428
+r = recommend({ ...day, foods: [...mixed.foods, { id: "homemade-broth", amount: 60, unit: "g", kcal100: 40 / 236.6 * 100 }] });
+assert.strictEqual(r.fedKcalDay, 428);
+// One food plus water is still a one-food meal, so how much to feed stays, whichever row comes first:
+// 793.5 kcal / 1.013 kcal per g = 783 g a day. A 16 kcal broth, 60 ml x 2 meals = 19.2 kcal, comes off first:
+// 774.3 / 1.013 = 764 g. No food amount typed, so there is no "eats now".
+const hills = { id: "hills-pd-id-turkey-can-dog", unit: "g" }, pet = { species: "dog", unit: "in", weight: 30, stage: "neutered", mealsPerDay: 2 };
+r = recommend({ ...pet, foods: [hills, { id: "water", amount: 60, unit: "g" }] });
+assert.deepStrictEqual([r.feeding.dayHi, r.feeding.unit, r.fedKcalDay], [783, "g", null]);
+r = recommend({ ...pet, foods: [{ id: "water", amount: 60, unit: "g", kcal100: 16 }, hills] });
+assert.strictEqual(r.feeding.dayHi, 764);
+// Water alone never reads as "eats 0 kcal"
+assert.strictEqual(recommend({ species: "dog", weight: 10, foods: [{ id: "water", amount: 100, unit: "g" }] }).fedKcalDay, null);
 console.log("foods tests passed (" + FOODS.length + " foods)");

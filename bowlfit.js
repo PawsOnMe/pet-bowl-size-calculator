@@ -34,11 +34,103 @@
     giant: "Height matters for giant breeds (adults over 45 kg). In the one study that measured it, bloat (GDV) cases per 1,000 dog-years were 17 with a floor bowl, 15 with a bowl raised 1 ft (30.5 cm) or less, which was not a significant difference, and 39 above 1 ft, which is 2.29 times the risk. " + GUIDE + MEGA,
     both: "Height matters, and differently by size. In the one study that measured it, large breeds (23 to 45 kg) had 3.06 times the bloat (GDV) risk with a bowl raised 1 ft (30.5 cm) or less and no significant difference above it; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at or below it. " + GUIDE + MEGA
   };
-  // Pet Nutrition Alliance, "Calculating Calories Based on Pet Needs":
-  // RER (kcal/day) = 70 x kg^0.75, MER = factor x RER. Estimates only; pets can vary by as much as 50%.
+  // Calories a day = a factor x the resting energy requirement (RER), and RER = 70 x kg^0.75 kcal a day: the energy
+  // a pet burns at rest. Every factor is an estimate; pets can vary by as much as 50% (Pet Nutrition Alliance).
+  // - Pet Nutrition Alliance (PNA), "Calculating Calories Based on Pet Needs": dogs 1.0 weight loss or in hospital,
+  //   1.2-1.4 overweight-prone or inactive, 1.6 neutered adult, 1.8 intact adult, 1.6-2.0 gestation, 2-6 lactation,
+  //   2-3 growth; cats 0.8-1.0 weight loss, 1.0 overweight-prone or inactive, 1.2 neutered, 1.4 intact,
+  //   2-3 gestation, 2-6 lactation, 2-3 growth.
+  // - Merck Veterinary Manual, "Nutritional Requirements of Small Animals", same factors, with puppies split into
+  //   3 (under 4 months) and 2 (older), and kittens 2.5.
+  // - National Research Council, "Your Dog's Nutritional Needs" (2006), calories a day by weight: active adult dogs
+  //   130 x kg^0.75 = 1.86 x RER, inactive dogs 95 x kg^0.75 = 1.36, older active dogs 105 x kg^0.75 = 1.5, young
+  //   adult active dogs 140 x kg^0.75 = 2.0 (at 30 lb: 922, 674, 745 and 993 kcal, against an RER of 496).
+  // - Working detection dogs: about 2 x RER (Mullis, Witzel and Price, PeerJ 2015, 20 dogs over six months).
   var MER = {
-    dog: { young: [2, 3], neutered: [1.6, 1.6], intact: [1.8, 1.8], inactive: [1.2, 1.4] },
+    dog: { young: [2, 3], neutered: [1.6, 1.6], intact: [1.8, 1.8], inactive: [1.2, 1.4], active: [1.86, 1.86], working: [2, 2] },
     cat: { young: [2, 3], neutered: [1.2, 1.2], intact: [1.4, 1.4], inactive: [1.0, 1.0] }
+  };
+  var BASIS = { young: "growth, as a puppy or kitten", neutered: "an adult, spayed or neutered, usual activity",
+    intact: "an adult, not spayed or neutered, usual activity", inactive: "a pet that isn't very active or gains weight easily",
+    active: "an active adult dog", working: "a working dog" };
+  // Which factor applies. stage: "neutered", "intact" or "young" ("inactive" is still accepted); activity: "usual",
+  // "low", or for dogs "active" or "working". Growth sets the level for puppies and kittens whatever the activity.
+  function factorKey(i) {
+    var a = i.activity || "usual";
+    if (i.stage === "young") return "young";
+    if (i.stage === "inactive" || a === "low") return "inactive";
+    if (i.species !== "cat" && (a === "active" || a === "working")) return a;
+    return i.stage === "intact" ? "intact" : "neutered";
+  }
+  function factor(i) { var t = MER[i.species === "cat" ? "cat" : "dog"]; return t[factorKey(i)] || t.neutered; }
+
+  // The levels in the page's table, lowest first. key marks the levels a calculation can use; src names the sources
+  // in SOURCES below.
+  var LEVELS = {
+    dog: [
+      { lo: 1, hi: 1, who: "At rest, as in hospital, or losing weight", src: ["pna"] },
+      { lo: 1.2, hi: 1.4, who: "Not very active, or gains weight easily", key: "inactive", src: ["pna"] },
+      { lo: 1.5, hi: 1.5, who: "Older active dogs", src: ["nrc"] },
+      { lo: 1.6, hi: 1.6, who: "Adult, spayed or neutered", key: "neutered", src: ["pna", "merck-req"] },
+      { lo: 1.6, hi: 2, who: "Pregnant", src: ["pna"] },
+      { lo: 1.8, hi: 1.8, who: "Adult, not spayed or neutered", key: "intact", src: ["pna", "merck-req"] },
+      { lo: 1.86, hi: 1.86, who: "Active adult dogs, like those with a big yard or other dogs at home", key: "active", src: ["nrc"] },
+      { lo: 2, hi: 2, who: "Puppies from 4 months until grown", key: "young", src: ["merck-req"] },
+      { lo: 2, hi: 2, who: "Working dogs, such as detection dogs", key: "working", src: ["mullis"] },
+      { lo: 3, hi: 3, who: "Puppies under 4 months", key: "young", src: ["merck-req"] },
+      { lo: 2, hi: 6, who: "Nursing mothers", src: ["pna"] }
+    ],
+    cat: [
+      { lo: 0.8, hi: 1, who: "Losing weight", src: ["pna"] },
+      { lo: 1, hi: 1, who: "Not very active, or gains weight easily", key: "inactive", src: ["pna", "merck-req"] },
+      { lo: 1.2, hi: 1.2, who: "Adult, spayed or neutered", key: "neutered", src: ["pna", "merck-req"] },
+      { lo: 1.4, hi: 1.4, who: "Adult, not spayed or neutered", key: "intact", src: ["pna", "merck-req"] },
+      { lo: 2, hi: 3, who: "Kittens (Merck uses 2.5)", key: "young", src: ["pna", "merck-req"] },
+      { lo: 2, hi: 3, who: "Pregnant", src: ["pna"] },
+      { lo: 2, hi: 6, who: "Nursing mothers", src: ["pna"] }
+    ]
+  };
+  var SLED = { text: "Racing sled dogs: about 9,000 to 13,800 kcal a day in the Yukon Quest race.", src: ["loftus"] };
+
+  // Health conditions a person can tick, and what vet sources say about feeding with each. text is per species
+  // where the advice differs. A vet's own plan comes first.
+  var CONDITIONS = {
+    kidney: { title: "Kidney disease", src: ["merck-renal"],
+      text: "From stage 2 on, a kidney (renal) diet: less phosphorus, a modest amount of good protein. Pets on one live longer." },
+    liver: { title: "Liver disease", src: ["merck-liver"],
+      text: "Most don't need less fat. Cut protein only if your vet finds hepatic encephalopathy. Copper building up in the liver calls for a low-copper liver diet. Small, frequent meals help." },
+    pancreatitis: { title: "Pancreatitis", src: ["merck-pancreas"],
+      dog: "Under 20 g of fat per 1,000 kcal. Treatment depends on it.",
+      cat: "Moderately less fat is enough." },
+    lipids: { title: "High triglycerides or cholesterol", src: ["weeth"],
+      text: "24 g of fat per 1,000 kcal or less (about 20% of calories). If it stays high, ask your vet about fiber or fish oil.",
+      dogExtra: { text: "Triglycerides of 500 mg/dL and up also raise the risk of pancreatitis.", src: ["merck-pancreas"] } },
+    overweight: { title: "Overweight", src: ["merck-obesity"],
+      dog: "Start at about 60% of the calories a day and aim to lose about 1% of body weight a week, on a weight-loss food.",
+      cat: "Start at about 70% and aim to lose about 1% a week. Never starve a cat: it can cause hepatic lipidosis." }
+  };
+  var LOSS_SHARE = { dog: 0.6, cat: 0.7 };   // Merck: start weight loss at 60% of MER for dogs, 70% for cats
+  function conditionNotes(species, list) {
+    var cat = species === "cat", out = [];
+    ["kidney", "liver", "pancreatitis", "lipids", "overweight"].forEach(function (k) {
+      if (!list || list.indexOf(k) < 0) return;
+      var c = CONDITIONS[k], text = c.text || (cat ? c.cat : c.dog), src = c.src.slice();
+      if (!cat && c.dogExtra) { text += " " + c.dogExtra.text; src = src.concat(c.dogExtra.src); }
+      out.push({ key: k, title: c.title, text: text, src: src });
+    });
+    return out;
+  }
+  var SOURCES = {
+    "pna": { title: "Pet Nutrition Alliance. Calculating Calories Based on Pet Needs.", url: "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf" },
+    "merck-req": { title: "Merck Veterinary Manual. Nutritional Requirements of Small Animals.", url: "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals" },
+    "nrc": { title: "National Research Council. Your Dog's Nutritional Needs: A Science-Based Guide for Pet Owners. National Academies Press, 2006.", url: "https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf" },
+    "mullis": { title: "Mullis RA, Witzel AL, Price J. Maintenance energy requirements of odor detection, explosive detection and human detection working dogs. PeerJ, 2015.", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/" },
+    "loftus": { title: "Loftus JP, et al. Energy requirements for racing endurance sled dogs. Journal of Nutritional Science, 2014.", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4473159/" },
+    "merck-renal": { title: "Merck Veterinary Manual. Renal Dysfunction in Dogs and Cats.", url: "https://www.merckvetmanual.com/urinary-system/noninfectious-diseases-of-the-urinary-system-in-small-animals/renal-dysfunction-in-dogs-and-cats" },
+    "merck-liver": { title: "Merck Veterinary Manual. Nutrition in Hepatic Disease in Small Animals.", url: "https://www.merckvetmanual.com/digestive-system/hepatic-disease-in-small-animals/nutrition-in-hepatic-disease-in-small-animals" },
+    "merck-pancreas": { title: "Merck Veterinary Manual. Pancreatitis in Dogs and Cats.", url: "https://www.merckvetmanual.com/digestive-system/the-exocrine-pancreas/pancreatitis-in-dogs-and-cats" },
+    "weeth": { title: "Weeth LP. Nutritional Management of Hyperlipidemia. Today's Veterinary Practice, 2022.", url: "https://todaysveterinarypractice.com/nutrition/nutritional-management-of-hyperlipidemia/" },
+    "merck-obesity": { title: "Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity.", url: "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals" }
   };
 
   // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = floor to rim.
@@ -68,7 +160,7 @@
     var w = num(i.weight), energy = grams ? num(i.kcalPerKg) : num(i.kcalPerCup);
     if (!w || !energy) return null;
     var kg = i.unit === "in" ? w * LB_KG : w;     // unit "in" means US units: inches and pounds
-    var table = MER[i.species === "cat" ? "cat" : "dog"], f = table[i.stage] || table.neutered;
+    var f = factor(i);
     var rer = 70 * Math.pow(kg, 0.75), meals = num(i.mealsPerDay) || 2;
     var res = { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]), meals: meals, grams: grams };
     if (grams) {                                   // grams a day = kcal a day / kcal per kg x 1000
@@ -92,10 +184,14 @@
     var g = row.unit === "oz" ? a * OZ_G : row.unit === "unit" ? (f.unit ? a * f.unit.g : null) : a;
     return g === null ? null : g / f.gCup * CUP_ML;
   }
+  function isWater(row) { var f = food(row && row.id); return !!f && f.form === "water"; }
   // Calories in one of the row's units: from the food list, or from the label the person typed
-  // (kcal per kg for grams and ounces, kcal per cup for cups).
+  // (kcal per kg for grams and ounces, kcal per cup for cups). null means not known.
+  // Water or broth mixed in counts as 0 kcal, unless the row carries a broth's calories per 100 ml (kcal100),
+  // looked up from the brand the person typed (owner 2026-11-16). 1 g of water or broth is 1 ml.
   function kcalPer(row, f, labelKcal) {
     var u = row.unit;
+    if (f && f.form === "water") return u === "unit" ? null : (num(row.kcal100) || 0) / 100 * (u === "cups" ? CUP_ML : u === "oz" ? OZ_G : 1);
     if (f && f.kcalKg) {
       if (u === "cups") return f.kcalCup || f.kcalKg * f.gCup / 1000;
       if (u === "unit") return f.unit ? (f.unit.kcal || f.kcalKg * f.unit.g / 1000) : null;
@@ -109,18 +205,27 @@
     if (u === "unit") { var w = f && f.unit ? f.unit.name : "can"; return n === 1 ? w : w + (/(ch|sh|s|x)$/.test(w) ? "es" : "s"); }
     return u === "cups" ? (n === 1 ? "cup" : "cups") : u === "oz" ? "oz" : "g";
   }
+  // The one food of the meal, if there is just one. Water or broth mixed in doesn't count as a food here.
+  function oneFood(rows) {
+    var real = rows.filter(function (r) { return !isWater(r); });
+    return real.length === 1 ? real[0] : null;
+  }
   // How much to feed when the meal is one food: calories a day from weight and life stage, then that food's amount.
+  // A broth with known calories takes its share of the day first (its amount x its calories x meals a day).
   function feedingFoods(i, rows) {
     var w = num(i.weight);
     if (!w) return null;
     var kg = i.unit === "in" ? w * LB_KG : w;
-    var table = MER[i.species === "cat" ? "cat" : "dog"], f = table[i.stage] || table.neutered;
+    var f = factor(i);
     var rer = 70 * Math.pow(kg, 0.75), meals = num(i.mealsPerDay) || 2;
     var res = { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]), meals: meals };
-    var row = rows.length === 1 ? rows[0] : null, fd = row ? food(row.id) : null, per = row ? kcalPer(row, fd, i.labelKcal) : null;
+    var row = oneFood(rows), fd = row ? food(row.id) : null, per = row ? kcalPer(row, fd, i.labelKcal) : null;
     if (per) {
+      var broth = 0;
+      rows.forEach(function (r) { if (isWater(r) && num(r.amount)) broth += num(r.amount) * (kcalPer(r, food(r.id)) || 0) * meals; });
+      var lo = Math.max(0, rer * f[0] - broth), hi = Math.max(0, rer * f[1] - broth);
       var p = row.unit === "g" ? 1 : row.unit === "oz" ? 10 : 100, rd = function (x) { return Math.round(x * p) / p; };
-      res.unit = row.unit; res.dayLo = rd(rer * f[0] / per); res.dayHi = rd(rer * f[1] / per); res.meal = rd(rer * f[1] / per / meals);
+      res.unit = row.unit; res.dayLo = rd(lo / per); res.dayHi = rd(hi / per); res.meal = rd(hi / per / meals);
       res.unitName = unitName(row.unit, fd, res.dayHi);
     }
     return res;
@@ -142,29 +247,49 @@
     var cups = rows ? null : grams ? (gMeal && gCup ? gMeal / gCup : null) : (num(i.cupsPerMeal) || (feed ? feed.cupsMeal : null));
     var mealMl = cups ? cups * CUP_ML : null, needFood = false, fedKcalDay = null;
     if (rows) {
-      var sum = 0;
-      rows.forEach(function (row, k) {
+      var sum = 0, one = oneFood(rows);
+      rows.forEach(function (row) {
         // A typed amount wins; a one-food meal with no amount uses the amount worked out from calories.
-        var r = num(row && row.amount) ? row : (k === 0 && feed && feed.meal ? { id: row.id, unit: row.unit, amount: feed.meal } : null);
+        var r = num(row && row.amount) ? row : (row === one && feed && feed.meal ? { id: row.id, unit: row.unit, amount: feed.meal } : null);
         var ml = r ? rowMl(r) : 0;
         if (ml === null) needFood = true; else sum += ml;
       });
       mealMl = needFood || !sum ? null : sum;
       // What the pet eats now, from the amounts typed: each food's amount x its calories x meals a day.
       // Only when every food with an amount has known calories (from foods.js, or the label for a single food).
+      // Water or broth mixed in is known: 0 kcal, or the calories of the broth that was looked up. It needs a
+      // food with an amount next to it, so water alone never reads as "eats 0 kcal".
       var meals = num(i.mealsPerDay) || 2, fed = 0, known = true, typed = false;
       rows.forEach(function (row) {
         var a = num(row && row.amount);
         if (!a) return;
-        typed = true;
-        var per = kcalPer(row, food(row.id), rows.length === 1 ? i.labelKcal : null);
-        if (per) fed += a * per; else known = false;
+        if (!isWater(row)) typed = true;
+        var per = kcalPer(row, food(row.id), row === one ? i.labelKcal : null);
+        if (per === null) known = false; else fed += a * per;
       });
       fedKcalDay = typed && known ? Math.round(fed * meals) : null;
     }
     var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood, fedKcalDay: fedKcalDay,
                 needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
                 tips: [], nutritionTips: [], cautions: [], products: [], productNote: "", shop: SHOP };
+
+    // The energy behind the calories: resting energy, the factor used and why, and the table of levels for this
+    // pet (kcal only when the weight is known). Then what the ticked health conditions mean for feeding.
+    var sp = dog ? "dog" : "cat", key = factorKey(i), fx = factor(i), wkg = num(i.weight);
+    var kgE = wkg ? (unit === "in" ? wkg * LB_KG : wkg) : null, rerE = kgE ? 70 * Math.pow(kgE, 0.75) : null;
+    out.energy = { kg: kgE ? r1(kgE) : null, rer: rerE ? Math.round(rerE) : null, key: key, lo: fx[0], hi: fx[1], basis: BASIS[key],
+      fedTimesRer: rerE && fedKcalDay ? r1(fedKcalDay / rerE) : null,
+      levels: LEVELS[sp].map(function (l) {
+        return { lo: l.lo, hi: l.hi, who: l.who, src: l.src, on: l.key === key,
+                 kcalLo: rerE ? Math.round(rerE * l.lo) : null, kcalHi: rerE ? Math.round(rerE * l.hi) : null };
+      }),
+      after: dog ? SLED : null };
+    var conds = Array.isArray(i.conditions) ? i.conditions : [];
+    out.conditionNotes = conditionNotes(sp, conds);
+    if (feed && conds.indexOf("overweight") >= 0) {
+      feed.lossShare = LOSS_SHARE[sp];
+      feed.lossLo = Math.round(feed.kcalLo * LOSS_SHARE[sp]); feed.lossHi = Math.round(feed.kcalHi * LOSS_SHARE[sp]);
+    }
 
     // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
     var size = !dog ? "" : (i.size === "large" || i.size === "giant") ? i.size : (i.largeBreed ? "both" : "");
@@ -207,7 +332,12 @@
     }
     if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
     // Nutrition tips also go in nutritionTips, so a page can show them with the calories
-    if (feed) out.nutritionTips.push("The calories are a starting point. Pets can differ from these estimates by as much as 50%, so check your pet's body condition every few weeks and adjust.");
+    if (feed) out.nutritionTips.push("These calories are a starting point. Pets can differ by up to 50%, so check body condition every few weeks.");
+    // Older adult dogs (the "older" box): National Research Council, older active dogs 105 x kg^0.75 = 1.5 x RER,
+    // young adult active dogs 140 x kg^0.75 = 2.0 x RER, so a quarter less.
+    if (feed && dog && i.senior && key !== "young") out.nutritionTips.push("Older dogs need less: about 1.5 × RER for older active dogs (National Research Council).");
+    // Merck: breed differences affect calories independent of body size, eg Newfoundlands need fewer than Great Danes.
+    if (feed && dog) out.nutritionTips.push("Breed matters too: Newfoundlands seem to need fewer calories than Great Danes of the same size (Merck).");
     if (big && i.stage === "young") out.nutritionTips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
     out.tips = out.tips.concat(out.nutritionTips);
     if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
@@ -259,6 +389,6 @@
   }
 
   var api = { recommend: recommend, feeding: feeding, food: food, foods: foods, rowMl: rowMl, unitName: unitName,
-              MER: MER, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP };
+              MER: MER, LEVELS: LEVELS, CONDITIONS: CONDITIONS, SOURCES: SOURCES, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.BowlFit = api;
 })(this);

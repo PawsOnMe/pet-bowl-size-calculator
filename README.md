@@ -70,8 +70,9 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Large breed, adults 23 to 45 kg | floor, or rim above 30.5 cm (1 ft) and up to elbow height | cohort study [1][30], review [2] |
 | Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
-| Calories a day | 70 × kg^0.75 × life-stage factor (dog 1.6 / 1.8 / 1.2–1.4 / 2–3; cat 1.2 / 1.4 / 1.0 / 2–3 for spayed or neutered, intact, inactive, young), divided by kcal per cup, or for grams by kcal per kg × 1,000 | Pet Nutrition Alliance table [5] |
-| What your pet eats now | each food's amount × its calories (the maker's figures) × meals a day, shown next to the calories a day | maker calorie statements |
+| Calories a day | resting energy (RER) = 70 × kg^0.75, times a factor set by life stage and activity: dog 1.6 spayed or neutered, 1.8 intact, 1.2–1.4 not very active, 1.86 active adult, 2.0 working, 2–3 growing; cat 1.2, 1.4, 1.0, 2–3. Divided by kcal per cup, or for grams by kcal per kg × 1,000. A tap-to-open table on the page lists every level with the calories for the pet | Pet Nutrition Alliance [5]; Merck [38]; National Research Council [39] (its calories by weight work out to 1.36 × RER inactive, 1.86 active adult, 1.5 older active, 2.0 young adult active); working detection dogs [40]; racing sled dogs [41] |
+| Health conditions (optional, folded away) | what vet sources say about feeding with kidney disease (renal diet from stage 2) [42], liver disease (most need no fat cut; protein cut only with hepatic encephalopathy; low-copper diet for copper build-up) [43], pancreatitis (dogs under 20 g fat per 1,000 kcal; cats moderately less fat) [44], high triglycerides or cholesterol (no more than 24 g fat per 1,000 kcal) [45], and overweight (start at 60% of the calories for dogs, 70% for cats; lose about 1% of body weight a week) [46] | as listed |
+| What your pet eats now | each food's amount × its calories (the maker's figures) × meals a day, shown next to the calories a day. Water or broth mixed in counts as 0 kcal. For a broth, type which one in the box under that line: if USDA FoodData Central has a ready-to-serve broth that matches, its calories are counted (amount × kcal per 100 ml × meals a day) and the entry is named and linked. If nothing matches, pick "Homemade bone broth" and type the calories in one cup | maker calorie statements; broth calories from [USDA FoodData Central](https://fdc.nal.usda.gov/), branded foods, with a link to the entry used |
 | Capacity | meal volume × 1.5 (× 2 for a slow feeder), rounded up to 50 ml. Meal volume = cups × 236.6 ml, or grams ÷ the food's grams in one cup × 236.6 ml (1 oz = 28.35 g; a can is its net weight), added up over the foods in the meal | rule of thumb; grams per cup from the makers (below) |
 
 Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, the foods are in [`foods.js`](foods.js), and both are tested in [`test/`](test). The rules and sources are also in [`data/guidance.json`](data/guidance.json).
@@ -82,10 +83,10 @@ recommend({ species: "dog", unit: "cm", elbow: 11, cupsPerMeal: 0.5, fastEater: 
 // rim 3.5 to 11 cm off the floor, holds at least 250 ml, slow feeder worth trying
 recommend({ species: "dog", elbow: 65, size: "giant" });
 // on the floor, or raised no higher than 30.5 cm (1 ft)
-recommend({ species: "dog", unit: "in", elbow: 7.75, foods: [
-  { id: "hills-pd-id-low-fat-can-dog", amount: 180, unit: "g" },   // unit: "g", "oz", "cups" or "unit" (cans)
-  { id: "jffd-turkey-whole-wheat-macaroni", amount: 10, unit: "g" }] });
-// rim 12.2 to 19.7 cm off the floor, holds at least 300 ml
+recommend({ species: "dog", unit: "in", elbow: 9, foods: [
+  { id: "hills-pd-id-turkey-can-dog", amount: 150, unit: "g" },   // unit: "g", "oz", "cups" or "unit" (cans)
+  { id: "nomnom-turkey-fare", amount: 40, unit: "g" }] });
+// rim 15.4 to 22.9 cm off the floor, holds at least 350 ml
 ```
 
 ## Foods the calculator knows
@@ -100,7 +101,8 @@ The bowl size depends on volume, so a meal weighed in grams or ounces, or fed by
 | Fresh-cooked food on the list | from the maker: JustFoodForDogs' feeding guide gives cups next to ounces (165 to 181 g a cup), Nom Nom prints 188 g, Freshpet's kcal per cup ÷ kcal per kg gives 146.5 g | Chunks hold air, so fresh food weighs less per cup than water: 0.62 to 0.79 g per ml. |
 | Fresh-cooked, raw or homemade food not on the list | 146.5 g, the 10th percentile of the listed fresh foods | No raw food maker we could read gives a cup weight, so raw uses the fresh figure, which errs big for dense ground raw. |
 | Freeze-dried food | 45 g: Stella & Chewy's Meal Mixers, 4,440 kcal per kg and 50 kcal per ¼ cup | The one freeze-dried food whose maker gives calories per cup. This is dry from the bag; add any water you mix in as its own line. |
-| Water or broth mixed in | 236.6 g (1 g per ml) | |
+| Water or broth mixed in | 236.6 g (1 g per ml) | Mostly water. It counts as 0 kcal unless the broth typed in is found at USDA FoodData Central. Only a ready-to-serve liquid broth counts as a match (a serving in ml, or of 100 g and up, at 60 kcal per 100 ml or less, with broth or stock in its name), not a powder or concentrate, because the amount typed is what goes in the bowl. |
+| Homemade bone broth | 236.6 g (1 g per ml) | Counts as 0 kcal until the calories in one cup are typed in. |
 | One can, pouch or tray | its net weight from the maker; when only ounces are printed, × 28.35 g; when neither, kcal per can ÷ kcal per kg | |
 
 Foods aren't listed when the maker's own numbers disagree (Hill's k/d dry cat food: 408 kcal per cup, but a cup weighing 4.5 oz would hold 521 kcal), or when the maker's site gives no calorie statement or cup figure we could read (Instinct, Sheba, Fancy Feast adult pâté, The Farmer's Dog, Ollie, Primal). Pick the type for those.
@@ -169,6 +171,15 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 35. Brooks W. Flatulence in Dogs. Veterinary Partner (VIN), revised 2026. https://veterinarypartner.vin.com/default.aspx?pid=19239&catId=254092&id=4952806
 36. r/dogs. Slow Feeders Everywhere. Reddit owner discussion, 166 comments, 2026. https://www.reddit.com/r/dogs/comments/1vjyw4w/
 37. Choi Y, Okos MR. Effects of temperature and composition on the thermal properties of foods. In: Food Engineering and Process Applications, vol. 1, 1986. Equations for density from water, protein, fat, carbohydrate, fiber and ash, as given in the ASHRAE Handbook chapter Thermal Properties of Foods (copy: https://www.slideshare.net/miguemeneses/thermophysical).
+38. Merck Veterinary Manual. Nutritional Requirements of Small Animals. https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals
+39. National Research Council. Your Dog's Nutritional Needs: A Science-Based Guide for Pet Owners. National Academies Press, 2006. https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf
+40. Mullis RA, Witzel AL, Price J. Maintenance energy requirements of odor detection, explosive detection and human detection working dogs. PeerJ, 2015. https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/
+41. Loftus JP, et al. Energy requirements for racing endurance sled dogs. Journal of Nutritional Science, 2014. https://pmc.ncbi.nlm.nih.gov/articles/PMC4473159/
+42. Merck Veterinary Manual. Renal Dysfunction in Dogs and Cats. https://www.merckvetmanual.com/urinary-system/noninfectious-diseases-of-the-urinary-system-in-small-animals/renal-dysfunction-in-dogs-and-cats
+43. Merck Veterinary Manual. Nutrition in Hepatic Disease in Small Animals. https://www.merckvetmanual.com/digestive-system/hepatic-disease-in-small-animals/nutrition-in-hepatic-disease-in-small-animals
+44. Merck Veterinary Manual. Pancreatitis in Dogs and Cats. https://www.merckvetmanual.com/digestive-system/the-exocrine-pancreas/pancreatitis-in-dogs-and-cats
+45. Weeth LP. Nutritional Management of Hyperlipidemia. Today's Veterinary Practice, 2022. https://todaysveterinarypractice.com/nutrition/nutritional-management-of-hyperlipidemia/
+46. Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity. https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 

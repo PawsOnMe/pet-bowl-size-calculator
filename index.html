@@ -7,8 +7,8 @@
 <meta name="description" content="Free nutrition calculator for dogs of any breed or mix, and cats: daily calories and how much to feed for dry, wet, fresh or freeze-dried food, plus the right bowl height and size. Sources cited. Made by PawsOnMe.">
 <link rel="canonical" href="https://pawsonme.github.io/pet-bowl-size-calculator/">
 <style>
-:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6}
-@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f}}
+:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6;--yellow:#8a6100}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f;--yellow:#f2c94c}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
@@ -39,8 +39,8 @@ body[data-species=cat] .dog-only,body[data-species=dog] .cat-only{display:none}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .frow{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:0 0 12px}
 @media (min-width:600px){.frow{grid-template-columns:minmax(0,1fr) auto;align-items:start}}
-.frow input,.frow select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-.combo{position:relative}.combo input{width:100%}
+.frow input,.frow select,.frow textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.combo{position:relative}.combo textarea{display:block;width:100%;resize:none;overflow:hidden}
 .famt{display:flex;gap:8px;align-items:center}.famt input{width:6.5em}
 .flist{position:absolute;z-index:5;left:0;right:0;top:100%;margin:4px 0 0;padding:4px;list-style:none;max-height:min(55vh,330px);overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
 .flist li{padding:8px 10px;border-radius:8px;cursor:pointer;line-height:1.3}
@@ -50,6 +50,26 @@ body[data-species=cat] .dog-only,body[data-species=dog] .cat-only{display:none}
 .flist .grp{cursor:default;padding:10px 10px 4px;font-size:.82rem;color:var(--muted)}
 .rm{font:inherit;font-size:1.3rem;line-height:1;border:0;background:none;color:var(--muted);padding:8px 10px;cursor:pointer}
 .frow:only-child .rm{display:none}
+.broth{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
+@media (min-width:600px){.broth{grid-column:1/-1}}
+.broth textarea{display:block;width:100%;resize:none;overflow:hidden}
+.broth input{max-width:11em}
+.bh.cant{color:var(--yellow)}
+.adv{margin:0 0 14px}.adv summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}
+.adv .hint{display:block;margin:2px 0 4px}
+table.rer{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:.92rem}
+table.rer caption{caption-side:top;text-align:left;font-weight:600;padding:0 0 6px}
+table.rer th,table.rer td{text-align:left;vertical-align:top;padding:6px 6px;border-bottom:1px solid var(--line)}
+table.rer th{color:var(--muted);font-weight:600}
+table.rer td:first-child,table.rer th:first-child{white-space:nowrap;padding-left:0}
+table.rer td:last-child,table.rer th:last-child{white-space:nowrap;text-align:right;padding-right:0}
+table.rer tr.on td{background:var(--accent-soft);font-weight:600}
+.fn{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.conds p{margin:8px 0 0}
+details.more{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line)}
+details.more>summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details.more table.rer{margin-top:8px}
+details.more .tips{margin-top:6px}
 .add{font:inherit;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:999px;padding:8px 14px;margin:0 0 8px;cursor:pointer}
 fieldset>.hint{display:block}
 .part{margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
@@ -111,8 +131,14 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <select id="stage" name="stage">
 <option value="neutered">Adult, spayed or neutered</option>
 <option value="intact">Adult, not spayed or neutered</option>
-<option value="inactive">Adult, not very active or gains weight easily</option>
 <option value="young">Puppy or kitten</option>
+</select></div>
+<div class="field"><label for="activity">Activity</label>
+<select id="activity" name="activity">
+<option value="usual">Usual: everyday walks or play</option>
+<option value="low">Low: mostly rests, or gains weight easily</option>
+<option value="active" class="dog-only">High: plenty of chances to run, like a big yard or other dogs at home</option>
+<option value="working" class="dog-only">Working dog, such as a detection dog</option>
 </select></div>
 <fieldset><legend>Food per meal</legend>
 <div id="foodRows"></div>
@@ -123,6 +149,15 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div class="field" id="kcalField"><label for="kcal" id="kcalLabel">Calories per cup (kcal/cup)</label>
 <input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
 <span class="hint" id="kcalHint">Printed on the food bag as kcal/cup.</span></div>
+<details class="adv"><summary>Health conditions (optional)</summary>
+<span class="hint">Tick any that a vet has diagnosed. The result then adds what vet sources say about feeding for each.</span>
+<div class="checks">
+<label><input type="checkbox" name="cond" value="kidney"> Kidney disease</label>
+<label><input type="checkbox" name="cond" value="liver"> Liver disease</label>
+<label><input type="checkbox" name="cond" value="pancreatitis"> Pancreatitis, now or in the past</label>
+<label><input type="checkbox" name="cond" value="lipids"> High triglycerides or cholesterol on blood tests</label>
+<label><input type="checkbox" name="cond" value="overweight"> Overweight and needs to lose weight</label>
+</div></details>
 <h2 class="part">Bowl</h2>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
@@ -189,7 +224,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <li>Buckley L. Are dogs that are fed from a raised bowl at an increased risk of gastric dilation volvulus compared with floor-fed dogs? Veterinary Evidence. <a href="https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf">PDF</a></li>
 <li>Slovak JE, Foster TE. Evaluation of whisker stress in cats. Journal of Feline Medicine and Surgery, 2021. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/">PMC</a></li>
 <li>Buckley L. "Go slow" feeding bowls: how effective are they? Conference poster, Harper Adams University, 2016. <a href="https://hau.repository.guildhe.ac.uk/id/eprint/15072/">Repository</a></li>
-<li>Pet Nutrition Alliance. Calculating Calories Based on Pet Needs. <a href="https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf">PDF</a></li>
+<li data-src="pna">Pet Nutrition Alliance. Calculating Calories Based on Pet Needs. <a href="https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf">PDF</a></li>
 <li>Merck Veterinary Manual. Dog and Cat Foods. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods">Merck</a></li>
 <li>Whole Dog Journal. In the Fine Print: Nutritional Adequacy Statements. <a href="https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/">Article</a></li>
 <li>Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals">Merck</a></li>
@@ -203,6 +238,15 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <li>Yuschak S. Mealtime Enrichment for Cats. Veterinary Partner (VIN), revised 2024. <a href="https://veterinarypartner.vin.com/default.aspx?pid=19239&amp;catId=102901&amp;Id=9956352">Veterinary Partner</a></li>
 <li>Brooks W. Flatulence in Dogs. Veterinary Partner (VIN), revised 2026. <a href="https://veterinarypartner.vin.com/default.aspx?pid=19239&amp;catId=254092&amp;id=4952806">Veterinary Partner</a></li>
 <li>r/dogs. Slow Feeders Everywhere. Reddit owner discussion, 166 comments, 2026. <a href="https://www.reddit.com/r/dogs/comments/1vjyw4w/">Reddit</a></li>
+<li data-src="merck-req">Merck Veterinary Manual. Nutritional Requirements of Small Animals. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals">Merck</a></li>
+<li data-src="nrc">National Research Council. Your Dog's Nutritional Needs: A Science-Based Guide for Pet Owners. National Academies Press, 2006. <a href="https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf">PDF</a></li>
+<li data-src="mullis">Mullis RA, Witzel AL, Price J. Maintenance energy requirements of odor detection, explosive detection and human detection working dogs. PeerJ, 2015. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/">PMC</a></li>
+<li data-src="loftus">Loftus JP, et al. Energy requirements for racing endurance sled dogs. Journal of Nutritional Science, 2014. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4473159/">PMC</a></li>
+<li data-src="merck-renal">Merck Veterinary Manual. Renal Dysfunction in Dogs and Cats. <a href="https://www.merckvetmanual.com/urinary-system/noninfectious-diseases-of-the-urinary-system-in-small-animals/renal-dysfunction-in-dogs-and-cats">Merck</a></li>
+<li data-src="merck-liver">Merck Veterinary Manual. Nutrition in Hepatic Disease in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/hepatic-disease-in-small-animals/nutrition-in-hepatic-disease-in-small-animals">Merck</a></li>
+<li data-src="merck-pancreas">Merck Veterinary Manual. Pancreatitis in Dogs and Cats. <a href="https://www.merckvetmanual.com/digestive-system/the-exocrine-pancreas/pancreatitis-in-dogs-and-cats">Merck</a></li>
+<li data-src="weeth">Weeth LP. Nutritional Management of Hyperlipidemia. Today's Veterinary Practice, 2022. <a href="https://todaysveterinarypractice.com/nutrition/nutritional-management-of-hyperlipidemia/">Article</a></li>
+<li data-src="merck-obesity">Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals">Merck</a></li>
 </ol>
 </section>
 
@@ -267,18 +311,84 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     inp.setAttribute("aria-expanded", "false"); inp.removeAttribute("aria-activedescendant");
   }
   function move(row, d) {
-    var items = row.querySelectorAll('.flist li[role="option"]'), n = items.length;
+    var items = row.querySelector(".flist").querySelectorAll('li[role="option"]'), n = items.length;   // the food list, not the broth list
     if (!n) return;
     row.act = row.act < 0 ? (d > 0 ? 0 : n - 1) : (row.act + d + n) % n;
     [].forEach.call(items, function (li, k) { li.setAttribute("aria-selected", k === row.act ? "true" : "false"); });
     items[row.act].scrollIntoView({ block: "nearest" });
     row.querySelector(".fq").setAttribute("aria-activedescendant", items[row.act].id);
   }
+  // The food box grows to as many lines as the name needs, so a long name shows in full instead of being cut
+  // off at the edge of the box (owner 2026-11-16). It is a textarea for that; Enter never adds a line.
+  function fit(inp) { inp.style.height = "auto"; inp.style.height = inp.scrollHeight + inp.offsetHeight - inp.clientHeight + "px"; }
+  // Water or broth mixed in counts as 0 kcal. For a broth there is one free text box: whatever is typed is
+  // looked up at USDA FoodData Central, and if a ready-to-serve broth matches, its calories are counted and
+  // the entry is named and linked under the box. Nothing to pick and no list (owner 2026-11-16). If nothing
+  // found is a broth, a yellow line under the box says so and points to "Homemade bone broth", where the
+  // calories are typed in. A match has to be a liquid (a serving in ml, or of 100 g and up, at 60 kcal per
+  // 100 ml or less), call itself a broth or stock, and carry most of the typed words.
+  // DEMO_KEY is USDA's public demo key, not a secret; it allows a few look-ups an hour for each visitor.
+  var FDC = "https://api.nal.usda.gov/fdc/v1/foods/search?dataType=Branded&pageSize=50&api_key=DEMO_KEY&query=", brothCache = {};
+  var OWN = 'Please select "Homemade bone broth" and enter its calories yourself.';
+  var BROTH = { none: "Water counts as 0 kcal. Using a broth? Type which one to count its calories.",
+    wait: "Looking it up…",
+    miss: "Couldn't identify this as a broth. " + OWN,
+    fail: "Couldn't look this up just now. " + OWN,
+    own: "Type the calories in one cup to count them. Left empty, it counts as 0 kcal." };
+  // The database prints names in capitals: "CHICKEN BONE BROTH" reads better as "Chicken Bone Broth"
+  function nice(s) { s = String(s || ""); return /[a-z]/.test(s) ? s : s.toLowerCase().replace(/(^|[\s(\/&-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+  function cupKcal(k100) { return Math.round(k100 * BowlFit.CUP_ML / 100); }
+  function brothFind(q, done) {
+    var key = norm(q), words = key.split(" ").filter(Boolean);
+    if (key in brothCache) return done(null, brothCache[key]);
+    var need = words.length === 1 ? 1 : Math.max(2, Math.ceil(words.length * 0.6));   // most of the typed words
+    fetch(FDC + encodeURIComponent(q))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        var best = null;
+        (d.foods || []).forEach(function (x) {
+          var e = (x.foodNutrients || []).filter(function (n) { return n.nutrientId === 1008; })[0];   // energy, kcal per 100 g or ml
+          var u = String(x.servingSizeUnit || "").toLowerCase(), ml = u === "ml" || u === "mlt";
+          if (!e || !(e.value >= 0) || e.value > 60 || !(ml || ((u === "g" || u === "grm") && x.servingSize >= 100))) return;
+          var brand = nice(x.brandName || x.brandOwner), name = nice(x.description), hay = norm(brand + " " + name);
+          if (!/broth|stock|bouillon|consomme/.test(norm(name))) return;
+          var hit = words.filter(function (w) { return hay.indexOf(w) >= 0; }).length;
+          if (hit >= need && (!best || hit > best.hit)) best = { name: name, brand: brand, kcal100: e.value, hit: hit, url: "https://fdc.nal.usda.gov/food-details/" + x.fdcId + "/nutrients" };
+        });
+        done(null, brothCache[key] = best);
+      })
+      .catch(function (err) { done(err || true, null); });
+  }
+  function brothHint(row, html, cant) { var h = row.querySelector(".bh"); h.innerHTML = html; h.classList.toggle("cant", !!cant); }
+  function syncBroth(row) {
+    var id = row.dataset.id, kind = id === "water" ? "water" : id === "homemade-broth" ? "own" : "";
+    if ((row.brothKind || "") === kind) return;
+    row.brothKind = kind; delete row.dataset.kcal100; row.brothQ = "";
+    var fb = row.querySelector(".fb"), fk = row.querySelector(".fk");
+    fb.value = ""; fk.value = ""; row.querySelector(".broth").hidden = !kind; fb.hidden = kind !== "water"; fk.hidden = kind !== "own";
+    if (kind) brothHint(row, esc(kind === "water" ? BROTH.none : BROTH.own));
+    if (kind === "water") fit(fb);
+  }
+  function brothLookup(row) {
+    var inp = row.querySelector(".fb"), q = inp.value.trim();
+    if (q === row.brothQ) return;
+    row.brothQ = q;
+    if (q.length < 3) return;
+    brothHint(row, esc(BROTH.wait));
+    brothFind(q, function (err, x) {
+      if (row.brothQ !== q || inp.value.trim() !== q) return;   // the text moved on while we waited
+      if (!x) { delete row.dataset.kcal100; brothHint(row, esc(err ? BROTH.fail : BROTH.miss), true); render(); return; }
+      row.dataset.kcal100 = x.kcal100;
+      brothHint(row, esc("Counted as " + x.name + (x.brand ? " (" + x.brand + ")" : "") + ": " + cupKcal(x.kcal100) + " kcal per cup. Source: ") +
+        '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">USDA FoodData Central</a>.');
+      render();
+    });
+  }
   function pick(row, id) {
     var x = BowlFit.food(id);
     if (!x) return;
-    row.dataset.id = id; row.querySelector(".fq").value = title(x);
-    closeList(row); setUnits(row); render();
+    row.dataset.id = id; row.querySelector(".fq").value = title(x); fit(row.querySelector(".fq"));
+    closeList(row); setUnits(row); syncBroth(row); render();
     var a = row.querySelector(".fa");
     if (!a.value) a.focus();
   }
@@ -286,18 +396,40 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     var n = ++seq, row = document.createElement("div");
     row.className = "frow"; row.id = "food" + n;
     row.innerHTML = '<div class="combo"><label class="sr" for="fq' + n + '">Food</label>' +
-      '<input id="fq' + n + '" class="fq" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="fl' + n + '" placeholder="Type a brand, like Hill\'s or Purina" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+      '<textarea id="fq' + n + '" class="fq" rows="1" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="fl' + n + '" placeholder="Type a brand, like Hill\'s or Purina" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>' +
       '<ul id="fl' + n + '" class="flist" role="listbox" aria-label="Foods" hidden></ul></div>' +
       '<div class="famt"><label class="sr" for="fa' + n + '">Amount per meal</label>' +
       '<input id="fa' + n + '" class="fa" type="number" min="0" step="any" inputmode="decimal" placeholder="Amount">' +
       '<label class="sr" for="fu' + n + '">Unit</label><select id="fu' + n + '" class="fu"></select>' +
-      '<button type="button" class="rm" aria-label="Remove this food">×</button></div>';
+      '<button type="button" class="rm" aria-label="Remove this food">×</button></div>' +
+      // Only for "Water or broth mixed in" (one free text box) and "Homemade bone broth" (its calories in one cup)
+      '<div class="broth" hidden><label class="sr" for="fb' + n + '">Which broth, optional</label>' +
+      '<textarea id="fb' + n + '" class="fb" rows="1" placeholder="Which broth?" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"></textarea>' +
+      '<label class="sr" for="fk' + n + '">Calories in one cup</label>' +
+      '<input id="fk' + n + '" class="fk" type="number" min="0" step="any" inputmode="decimal" placeholder="kcal per cup" hidden>' +
+      '<span class="hint bh" aria-live="polite"></span></div>';
     box.appendChild(row); setUnits(row);
     var inp = row.querySelector(".fq"), ul = row.querySelector(".flist");
+    var fb = row.querySelector(".fb"), fk = row.querySelector(".fk"), bt;
+    fb.addEventListener("input", function () {
+      if (/[\r\n]/.test(fb.value)) fb.value = fb.value.replace(/[\r\n]+/g, " ");
+      fit(fb);
+      delete row.dataset.kcal100; row.brothQ = null;   // edited: back to 0 kcal until it is looked up again
+      brothHint(row, esc(BROTH.none));
+      clearTimeout(bt); bt = setTimeout(function () { brothLookup(row); }, 900);
+    });
+    fb.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); clearTimeout(bt); brothLookup(row); } });
+    fb.addEventListener("change", function () { clearTimeout(bt); brothLookup(row); });
+    fk.addEventListener("input", function () {   // homemade broth: its calories in one cup, typed in
+      var k = parseFloat(fk.value);
+      if (isFinite(k) && k > 0) row.dataset.kcal100 = k / BowlFit.CUP_ML * 100; else delete row.dataset.kcal100;
+    });
     inp.addEventListener("focus", function () { openList(row); });
     inp.addEventListener("input", function () {
+      if (/[\r\n]/.test(inp.value)) inp.value = inp.value.replace(/[\r\n]+/g, " ");   // pasted text stays one name
+      fit(inp);
       var x = BowlFit.food(row.dataset.id);
-      if (x && inp.value !== title(x)) { delete row.dataset.id; setUnits(row); }
+      if (x && inp.value !== title(x)) { delete row.dataset.id; setUnits(row); syncBroth(row); }
       openList(row);
     });
     inp.addEventListener("keydown", function (e) {
@@ -316,37 +448,83 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
   }
   function foodRows() {
     return [].map.call(box.querySelectorAll(".frow"), function (row) {
-      return { id: row.dataset.id || "", amount: row.querySelector(".fa").value, unit: row.querySelector(".fu").value };
+      return { id: row.dataset.id || "", amount: row.querySelector(".fa").value, unit: row.querySelector(".fu").value, kcal100: row.dataset.kcal100 || "" };
     });
   }
   function vals() {
     var d = new FormData(f), dog = d.get("species") === "dog";
     return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
       foods: foodRows(), labelKcal: d.get("kcal"), weight: d.get("weight"), stage: d.get("stage"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
-      fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior") };
+      fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior"),
+      activity: d.get("activity"), conditions: d.getAll("cond") };
   }
+  // The "High" and "Working" activity levels are for dogs only; for a cat they are hidden and can't be chosen.
+  function syncActivity() {
+    var cat = (checked("species") || "dog") === "cat", sel = document.getElementById("activity");
+    [].forEach.call(sel.querySelectorAll("option.dog-only"), function (o) { o.hidden = o.disabled = cat; });
+    if (cat && sel.selectedOptions[0] && sel.selectedOptions[0].disabled) sel.value = "usual";
+  }
+  // Source numbers on the page come from the Sources list, so they stay right if the list changes.
+  function refs(ids) {
+    var items = document.querySelectorAll(".sources li"), n = [];
+    (ids || []).forEach(function (id) { for (var k = 0; k < items.length; k++) if (items[k].getAttribute("data-src") === id && n.indexOf(k + 1) < 0) n.push(k + 1); });
+    return n.sort(function (a, b) { return a - b; }).map(function (k) { return "[" + k + "]"; }).join("");
+  }
+  // A sentence with its sources before the full stop: "... help [24]."
+  function cite(text, ids) { return esc(String(text).replace(/\.$/, "")) + " " + refs(ids) + "."; }
+  function fx(lo, hi) { return lo === hi ? lo.toFixed(1) : lo.toFixed(1) + " to " + hi.toFixed(1); }
+  // A level in the table: 1.8, 1.2-1.4, 1.6-2.0, 2-6
+  function lvl(lo, hi) { return lo === hi ? lo.toFixed(1) : (lo % 1 || hi % 1) ? lo.toFixed(1) + "-" + hi.toFixed(1) : lo + "-" + hi; }
   var EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
   // In the narrow cards a size may wrap, but never between a number and its unit: "3.5 cm" and "(1.4 in)" stay whole
   function nb(t) { return esc(t).replace(/(\d) (cm|in|ml)\b/g, "$1&nbsp;$2"); }
+  var lastHtml = null;
   function render() {
+    syncActivity();
     var v = vals(), r = BowlFit.recommend(v);
     document.body.setAttribute("data-species", v.species);
     document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
     document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
     // Calories from the label are only needed for a single food we don't have calories for.
-    var one = v.foods.length === 1 ? v.foods[0] : null, known = one && BowlFit.food(one.id), perCup = !!one && one.unit === "cups";
+    // Water or broth mixed in doesn't count as a second food.
+    var real = v.foods.filter(function (x) { var fd = BowlFit.food(x.id); return !(fd && fd.form === "water"); });
+    var one = real.length === 1 ? real[0] : null, known = one && BowlFit.food(one.id), perCup = !!one && one.unit === "cups";
     kField.hidden = !one || !!(known && known.kcalKg) || one.unit === "unit";
     kLabel.textContent = perCup ? "Calories per cup (kcal/cup)" : "Calories per kg (kcal/kg)";
     kHint.textContent = "Printed on the food bag as " + (perCup ? "kcal/cup." : "kcal/kg.");
     var h = "<h2>Your numbers</h2><h3>Nutrition</h3><dl>";
     var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
     // Nutrition first: what the pet needs, how much to feed, what it eats now; then the bowl
-    h += "<dt>Calories a day</dt><dd>" + (fd ? rng(fd.kcalLo, fd.kcalHi) + " kcal" : "Add your pet's weight.") + "</dd>";
+    // Resting energy and the factor behind the calories, then a table of every level with its calories for this
+    // pet, the level in use highlighted; then what any ticked health conditions mean for feeding (owner 2026-11-16).
+    var en = r.energy, rerSay = en && en.rer ? " (" + fx(en.lo, en.hi) + "&nbsp;×&nbsp;RER for " + esc(en.basis) + ")" : "";
+    if (en && en.rer) h += "<dt>Resting energy</dt><dd>" + en.rer + " kcal a day, what a pet burns at rest: 70&nbsp;×&nbsp;(" + en.kg + "&nbsp;kg)<sup>0.75</sup></dd>";
+    h += "<dt>Calories a day</dt><dd>" + (fd ? rng(fd.kcalLo, fd.kcalHi) + " kcal" + rerSay : "Add your pet's weight.") + "</dd>";
+    if (fd && fd.lossLo) h += "<dt>To lose weight</dt><dd>" + rng(fd.lossLo, fd.lossHi) + " kcal a day, " + Math.round(fd.lossShare * 100) + "% of that</dd>";
     if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals</dd>";
-    if (r.fedKcalDay) h += "<dt>Eats now</dt><dd>About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") + "</dd>";
+    if (r.fedKcalDay) h += "<dt>Eats now</dt><dd>About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
+      (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : "") + "</dd>";
     h += "</dl>";
+    // The detail stays folded until tapped (owner 2026-11-16): the table of levels, the health notes and the tips.
+    function fold(key, summary, body) { return '<details class="more" data-k="' + key + '"><summary>' + summary + "</summary>" + body + "</details>"; }
+    if (en) {
+      var kc = !!en.rer, tb = "";
+      tb += '<table class="rer"><caption class="sr">Calories a day at each level</caption>' +
+        "<thead><tr><th>× RER</th><th>Who</th>" + (kc ? "<th>kcal a day</th>" : "") + "</tr></thead><tbody>" +
+        en.levels.map(function (l) {
+          return "<tr" + (l.on ? ' class="on"' : "") + "><td>" + lvl(l.lo, l.hi) + "</td><td>" + esc(l.who) + "</td>" +
+            (kc ? "<td>" + (l.kcalLo === l.kcalHi ? l.kcalLo : l.kcalLo + "-" + l.kcalHi) + "</td>" : "") + "</tr>";
+        }).join("") + "</tbody></table>";
+      var lv = [], seen = {};
+      en.levels.forEach(function (l) { l.src.forEach(function (id) { if (!seen[id]) { seen[id] = 1; lv.push(id); } }); });
+      tb += '<p class="fn">' + (en.after ? cite(en.after.text, en.after.src) + " " : "") + "Levels from " + refs(lv) + ".</p>";
+      h += fold("levels", "All energy levels" + (kc ? " for a " + en.kg + "&nbsp;kg " + (v.species === "cat" ? "cat" : "dog") : " (× RER)"), tb);
+    }
+    var cn = r.conditionNotes || [];
+    if (cn.length) h += fold("health", "Health notes (" + cn.length + ")", '<div class="conds">' + cn.map(function (c) { return "<p><strong>" + esc(c.title) + ":</strong> " + cite(c.text, c.src) + "</p>"; }).join("") +
+      "<p>Your vet's plan comes first.</p></div>");
     var nt = r.nutritionTips || [];
-    if (nt.length) h += '<ul class="tips">' + nt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    if (nt.length) h += fold("tips", "Tips (" + nt.length + ")", '<ul class="tips">' + nt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>");
     h += "<h3>Bowl</h3><dl>";
     h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
     if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
@@ -367,9 +545,18 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
       return "<li>" + (p.url ? '<a class="pcard" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + body + '<span class="sr"> Opens on Etsy</span></a>'
         : '<div class="pcard">' + body + "</div>") + "</li>";
     }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
-    out.innerHTML = h + "</div>";
+    // Only touch the result when it changed. Leaving a box fires "change" right as the next tap lands, and
+    // redrawing then would swallow a tap on a folded section. Opened sections stay open when it does redraw.
+    var html = h + "</div>";
+    if (html === lastHtml) return;
+    lastHtml = html;
+    var was = {};
+    [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { was[d.getAttribute("data-k")] = d.open; });
+    out.innerHTML = html;
+    [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { if (was[d.getAttribute("data-k")]) d.open = true; });
   }
   document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });
+  window.addEventListener("resize", function () { [].forEach.call(box.querySelectorAll(".fq"), fit); });   // a turned phone re-wraps the names
   f.addEventListener("submit", function (e) { e.preventDefault(); });
   f.addEventListener("input", render);
   f.addEventListener("change", render);
