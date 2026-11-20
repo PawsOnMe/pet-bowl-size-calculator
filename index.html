@@ -17,6 +17,10 @@ h1{font-size:1.75rem;line-height:1.2;margin:.3em 0 .4em}
 h2{font-size:1.2rem;margin:0 0 .6em}
 h3{font-size:1.02rem;margin:1.4em 0 .3em}
 .lede,.muted{color:var(--muted)}
+/* "Show a filled-in example" at the end of the intro, a purple text link (owner 2026-11-19). It never splits across two
+   lines, and the padding gives it a bigger tap area without moving the text around it. */
+.ex{display:inline-block;margin:-10px -4px;padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer}
+.ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:18px 0}
 fieldset{border:0;padding:0;margin:0 0 14px}
 legend{font-weight:600;margin-bottom:6px}
@@ -98,7 +102,9 @@ a.pcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 a.pcard:active{border-color:var(--accent)}
 @media (hover:hover){a.pcard:hover{border-color:var(--accent)}}
 a{color:var(--accent)}
-.sources li{margin:6px 0;font-size:.92rem}
+.sources li{margin:6px 0;font-size:.92rem;scroll-margin-top:12px}
+/* Source numbers like [5] link to their entry in the Sources list (owner 2026-11-19); the padding makes them easier to tap */
+a.cite{text-decoration:none;padding:6px 0}
 /* Sources fold away like the other expanders on the page, closed at first (owner 2026-11-19); the heading keeps its size */
 .srcs>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}
 .srcs>summary h2{display:inline;margin:0}
@@ -168,7 +174,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <header>
 <p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
 <h1>Pet Nutrition & Bowl Calculator</h1>
-<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from.</p>
+<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button></p>
 </header>
 
 <form id="f" class="card" autocomplete="off">
@@ -554,6 +560,42 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   }
   // A sentence with its sources before the full stop: "... help [24]."
   function cite(text, ids) { return esc(String(text).replace(/\.$/, "")) + " " + refs(ids) + "."; }
+  // Every source number on the page, like [5], is a link to that entry in the Sources list (owner 2026-11-19). A tap
+  // opens the folded Sources and the browser jumps to the entry; its Back button returns to the text. A link from
+  // elsewhere that ends in #source-5 opens the list at entry 5 the same way.
+  var srcList = document.querySelector(".sources details"), srcItems = document.querySelectorAll(".sources li");
+  [].forEach.call(srcItems, function (li, k) { li.id = "source-" + (k + 1); });
+  function linkCites(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), found = [], t;
+    while ((t = w.nextNode())) if (/\[\d+\]/.test(t.nodeValue) && !t.parentNode.closest("a,button,summary,textarea,select,script,style,.sources")) found.push(t);
+    found.forEach(function (t) {
+      var s = t.nodeValue, re = /\[(\d+)\]/g, m, last = 0, frag = document.createDocumentFragment();
+      while ((m = re.exec(s))) {
+        var k = +m[1];
+        if (!(k >= 1 && k <= srcItems.length)) continue;
+        if (m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+        var a = document.createElement("a");
+        a.className = "cite"; a.href = "#source-" + k; a.textContent = m[0]; a.setAttribute("aria-label", "Source " + k);
+        frag.appendChild(a); last = re.lastIndex;
+      }
+      if (!last) return;
+      if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+      t.parentNode.replaceChild(frag, t);
+    });
+  }
+  function openSource(hash) {   // opens the Sources list if the address points at one of its entries
+    var m = /^#source-(\d+)$/.exec(hash || ""), li = m ? document.getElementById("source-" + m[1]) : null;
+    if (li && srcList) srcList.open = true;
+    return li;
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a.cite");
+    if (a) openSource(a.getAttribute("href"));   // open first, so the browser's jump lands on the entry
+  });
+  window.addEventListener("hashchange", function () {   // an address typed or pasted while the list was folded
+    var was = srcList && srcList.open, li = openSource(location.hash);
+    if (li && !was) li.scrollIntoView({ block: "start" });
+  });
   function fx(lo, hi) { return lo === hi ? lo.toFixed(1) : lo.toFixed(1) + " to " + hi.toFixed(1); }
   // A level in the table: 1.8, 1.2-1.4, 1.6-2.0, 2-6
   function lvl(lo, hi) { return lo === hi ? lo.toFixed(1) : (lo % 1 || hi % 1) ? lo.toFixed(1) + "-" + hi.toFixed(1) : lo + "-" + hi; }
@@ -644,13 +686,72 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { was[d.getAttribute("data-k")] = d.open; });
     out.innerHTML = html;
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { if (was[d.getAttribute("data-k")]) d.open = true; });
+    linkCites(out);
   }
   document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });
   window.addEventListener("resize", function () { [].forEach.call(box.querySelectorAll(".fq"), fit); });   // a turned phone re-wraps the names
   f.addEventListener("submit", function (e) { e.preventDefault(); });
   f.addEventListener("input", render);
   f.addEventListener("change", render);
+  // "Show a filled-in example" at the end of the intro (owner 2026-11-19): one tap fills the form with an example dog,
+  // so a visitor sees a whole result before typing anything. The link then reads "Hide the example", and a second tap
+  // puts back exactly what was in the form before: the food lines are set aside as they were, nothing is retyped.
+  // Weight and elbow are kept in both unit systems, so the example uses the units already picked, and switching units
+  // while it shows keeps the same dog (9.3 kg doesn't turn into 9.3 lb). No broth in it: a broth is looked up at USDA,
+  // and each visitor only gets a few look-ups.
+  var EX = { weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
+    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["regurgitates", "emptyStomach"] };
+  var KEEP = ["weight", "stage", "activity", "meals", "kcal", "elbow", "size", "whisker"];
+  var exBtn = document.getElementById("example"), exShow = exBtn.textContent, exWas = null, exBusy = false;
+  function pickRadio(name, v) {
+    var r = f.querySelector('input[name="' + name + '"][value="' + v + '"]');
+    if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); }   // moves the toggle too
+  }
+  function tickBox(c, on) { if (c.checked !== on) { c.checked = on; c.dispatchEvent(new Event("change", { bubbles: true })); } }
+  function allBoxes() { return [].slice.call(f.querySelectorAll('input[type="checkbox"]')); }
+  function showExample() {
+    exWas = { species: checked("species"), unit: checked("unit"), rows: [].slice.call(box.children), val: {},
+      on: allBoxes().filter(function (c) { return c.checked; }) };
+    KEEP.forEach(function (n) { exWas.val[n] = document.getElementById(n).value; });
+    exBusy = true;
+    pickRadio("species", "dog"); syncActivity();
+    var u = checked("unit") === "in" ? "in" : "cm";
+    exWas.rows.forEach(function (row) { box.removeChild(row); });
+    EX.foods.forEach(function (x) {
+      var row = addRow(false), q = row.querySelector(".fq");
+      row.dataset.id = x[0]; q.value = title(BowlFit.food(x[0])); row.querySelector(".fa").value = x[1];
+      setUnits(row); fit(q);
+    });
+    var v = { weight: EX.weight[u], elbow: EX.elbow[u], stage: EX.stage, activity: EX.activity, meals: EX.meals, kcal: "", size: "", whisker: "" };
+    KEEP.forEach(function (n) { document.getElementById(n).value = v[n]; });
+    allBoxes().forEach(function (c) { tickBox(c, EX.ticks.indexOf(c.name) >= 0); });
+    exBusy = false;
+    exBtn.textContent = "Hide the example";
+    render();
+  }
+  function hideExample() {
+    var was = exWas;
+    exWas = null; exBusy = true;
+    [].slice.call(box.children).forEach(function (row) { box.removeChild(row); });
+    was.rows.forEach(function (row) { box.appendChild(row); fit(row.querySelector(".fq")); });
+    if (!box.children.length) addRow(false);
+    pickRadio("species", was.species); pickRadio("unit", was.unit); syncActivity();
+    KEEP.forEach(function (n) { document.getElementById(n).value = was.val[n]; });
+    allBoxes().forEach(function (c) { tickBox(c, was.on.indexOf(c) >= 0); });
+    exBusy = false;
+    exBtn.textContent = exShow;
+    render();
+  }
+  exBtn.addEventListener("click", function () { if (exWas) hideExample(); else showExample(); });
+  f.addEventListener("change", function (e) {   // units switched while the example shows: the same dog in the new units
+    if (!exWas || exBusy || e.target.name !== "unit") return;
+    var u = e.target.value === "in" ? "in" : "cm", old = u === "in" ? "cm" : "in";
+    ["weight", "elbow"].forEach(function (n) { var el = document.getElementById(n); if (el.value === EX[n][old]) el.value = EX[n][u]; });
+    render();
+  });
   addRow(false); render();
+  linkCites(document.querySelector("main"));   // the quick answers and anything else written into the page
+  if (openSource(location.hash)) window.addEventListener("load", function () { var li = openSource(location.hash); if (li) li.scrollIntoView({ block: "start" }); });
 })();
 </script>
 <script>
