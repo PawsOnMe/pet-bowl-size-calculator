@@ -1,6 +1,6 @@
 # Pet Nutrition & Bowl Calculator
 
-A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food, and this free calculator gives you daily calories and how much to feed, for any breed or mix, then the right bowl: a rim height, a dish width and a capacity. It tells you where each number comes from.
+A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food, and this free calculator gives you daily calories and how much to feed, for any breed or mix, then the right bowl: a bowl height (floor to the top edge), a dish width and a capacity. It tells you where each number comes from.
 
 **Use it:** https://pawsonme.github.io/pet-bowl-size-calculator/
 
@@ -15,7 +15,7 @@ A plain bowl on the floor suits most healthy dogs and cats. We found no vet guid
 How you wash the bowl matters more than what it's made of. On 68 dog dishes, a week of FDA's hygiene steps cut bacteria, and water hotter than 71 °C (160 °F) beat cold or lukewarm water [24]. Studies on material disagree: in 96 dog bowls from homes, metal carried more bacteria than plastic [25], while in a small test of new water bowls plastic ended with the highest average count, though not significantly, and ceramic had the most kinds of bacteria [26]. With ceramic, the glaze touches the food, and FDA says lead in pottery may leach into food [27], so pick ceramic sold as food safe with a lead and cadmium test. With steel, ask the grade: type 201 has less nickel and more manganese and was first made to save nickel [28]. We found no study on titanium pet bowls.
 
 **How high should my dog's food bowl be?**
-No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.
+No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the top edge of the bowl between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. A floor bowl is fine for most healthy dogs. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.
 
 **Are raised bowls safe for large dogs?**
 It depends on the height and on how big the breed is. A study followed 1,637 dogs of 11 large and giant breeds and asked whether the bowl was on the floor, raised 1 ft (30.5 cm) or less, or raised more than 1 ft [1][2]. In this study, large meant breeds of 23 to 45 kg (50 to 99 lb) and giant meant over 45 kg (99 lb) [30]. Bloat (GDV) cases per 1,000 dog-years:
@@ -28,7 +28,7 @@ It depends on the height and on how big the breed is. A study followed 1,637 dog
 So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][29]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [22]. If you're unsure, ask your vet.
 
 **How tall should a cat's bowl be?**
-Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this.
+Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift, with the top edge of the bowl a little below the elbow, can make meals easier. No study has measured this.
 
 **How wide should a cat's bowl be? Is whisker fatigue real?**
 In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish [3]. A wide, shallow dish at least as wide as the whisker span is a cheap thing to try.
@@ -66,13 +66,13 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 
 | Output | Formula | Evidence |
 |---|---|---|
-| Rim height | from elbow height down to 7.5 cm (3 in) below it | rule of thumb |
-| Large breed, adults 23 to 45 kg | floor, or rim above 30.5 cm (1 ft) and up to elbow height | cohort study [1][30], review [2] |
-| Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
+| Bowl height (floor to the top edge) | from elbow height down to 7.5 cm (3 in) below it | rule of thumb |
+| Large breed, adults 23 to 45 kg | floor, or a bowl whose top edge is above 30.5 cm (1 ft) and up to elbow height | cohort study [1][30], review [2] |
+| Giant breed, adults over 45 kg | floor, or a bowl whose top edge is at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
 | Calories a day | resting energy (RER) = 70 × kg^0.75, times a factor set by life stage and activity: dog 1.6 spayed or neutered, 1.8 intact, 1.2–1.4 not very active, 1.86 active adult, 2.0 working, 2–3 growing; cat 1.2, 1.4, 1.0, 1.6 very active or outdoors, 2–3. Divided by kcal per cup, or for grams by kcal per kg × 1,000. A tap-to-open table on the page lists every level with the calories for the pet | Pet Nutrition Alliance [5]; Merck [38]; National Research Council [39] (its calories by weight work out to 1.36 × RER inactive, 1.86 active adult, 1.5 older active, 2.0 young adult active); working detection dogs [40]; racing sled dogs [41]; very active cats [51]: 100 kcal per kg^0.67 against 75 for indoor or neutered cats, a third more, so 1.2 × 4/3 = 1.6 |
 | Anything your vet is watching (optional, folded away) | what vet sources say about feeding for kidney values to watch (renal diet from stage 2) [42], liver values to watch (most need no fat cut; protein cut only with hepatic encephalopathy; low-copper diet for copper build-up) [43], pancreatitis (dogs under 20 g fat per 1,000 kcal; cats moderately less fat) [44], high triglycerides or cholesterol (no more than 24 g fat per 1,000 kcal) [45], and weight loss (start at 60% of the calories for dogs, 70% for cats; lose about 1% of body weight a week) [46] | as listed |
-| Brings food back up without retching (regurgitation) | its own tip: that is usually the food pipe (esophagus), not the stomach, so a vet should check it; aim for the top of the rim range so gravity helps, and give smaller meals more often; higher rims come first among equally good bowls. No slow feeder and no change to bowl size, because this is not eating fast. For a large or giant dog, raising the bowl is the vet's call because of the bloat risk | Merck [47][22][48] |
+| Brings food back up without retching (regurgitation) | its own tip: that is usually the food pipe (esophagus), not the stomach, so a vet should check it; aim for the top of the height range so gravity helps, and give smaller meals more often; higher rims come first among equally good bowls. No slow feeder and no change to bowl size, because this is not eating fast. For a large or giant dog, raising the bowl is the vet's call because of the bloat risk | Merck [47][22][48] |
 | Lip licking, dry heaving or being sick on an empty stomach for too long (e.g. often after overnight) (dogs) | its own tip: lip licking can be a sign of nausea [49]; vets use smaller meals through the day and a small late-evening meal, sometimes with medicine, and 12 of 17 dogs improved in a study of 20 [50]. No bowl change | [49][50] |
 | What your pet eats now | each food's amount × its calories (the maker's figures) × meals a day, shown next to the calories a day. Water or broth mixed in counts as 0 kcal. For a broth, type which one in the box under that line: if USDA FoodData Central has a ready-to-serve broth that matches, its calories are counted (amount × kcal per 100 ml × meals a day) and the entry is named and linked. If nothing matches, pick "Homemade bone broth" and type the calories in one cup | maker calorie statements; broth calories from [USDA FoodData Central](https://fdc.nal.usda.gov/), branded foods, with a link to the entry used |
 | Capacity | meal volume × 1.5 (× 2 for a slow feeder), rounded up to 50 ml. Meal volume = cups × 236.6 ml, or grams ÷ the food's grams in one cup × 236.6 ml (1 oz = 28.35 g; a can is its net weight), added up over the foods in the meal | rule of thumb; grams per cup from the makers (below) |
@@ -82,13 +82,13 @@ Everything is in [`bowlfit.js`](bowlfit.js), with no dependencies, the foods are
 ```js
 const { recommend } = require("./bowlfit.js");
 recommend({ species: "dog", unit: "cm", elbow: 11, cupsPerMeal: 0.5, fastEater: true, shortLegs: true });
-// rim 3.5 to 11 cm off the floor, holds at least 250 ml, slow feeder worth trying
+// bowl height 3.5 to 11 cm (floor to top edge), holds at least 250 ml, slow feeder worth trying
 recommend({ species: "dog", elbow: 65, size: "giant" });
 // on the floor, or raised no higher than 30.5 cm (1 ft)
 recommend({ species: "dog", unit: "in", elbow: 9, foods: [
   { id: "hills-pd-id-turkey-can-dog", amount: 150, unit: "g" },   // unit: "g", "oz", "cups" or "unit" (cans)
   { id: "nomnom-turkey-fare", amount: 40, unit: "g" }] });
-// rim 15.4 to 22.9 cm off the floor, holds at least 350 ml
+// bowl height 15.4 to 22.9 cm (floor to top edge), holds at least 350 ml
 ```
 
 ## Foods the calculator knows
@@ -121,7 +121,7 @@ Foods aren't listed when the maker's own numbers disagree (Hill's k/d dry cat fo
 
 The calculator also checks your numbers against the bowls we make. Sizes as listed in our shop, November 2026:
 
-| Bowl | Across | Rim height | Holds |
+| Bowl | Across | Tall | Holds |
 |---|---|---|---|
 | Lilac flower ceramic slow feeder plate | 14.8 cm (5.8 in) | 3.5 cm (1.4 in) | 310 ml |
 | Butter yellow ceramic slow feeder plate, medium | 15.5 cm (6.1 in) | 4 cm (1.6 in) | 400 ml |

@@ -4,7 +4,7 @@
   "use strict";
   var CUP_ML = 236.6;            // 1 US cup in millilitres
   var IN_CM = 2.54;
-  var BELOW_ELBOW_CM = 7.5;      // rule of thumb: rim from elbow height down to 2-3 in (5-7.5 cm) below it
+  var BELOW_ELBOW_CM = 7.5;      // rule of thumb: the top edge of the bowl from elbow height down to 2-3 in (5-7.5 cm) below it
   var ROOM = { regular: 1.5, slow: 2 }; // rule of thumb: the bowl holds one meal with room to spare
   var SHOP = "https://www.etsy.com/shop/PawsOnMePet";
   var LB_KG = 0.45359237;
@@ -139,7 +139,9 @@
     "merck-obesity": { title: "Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity.", url: "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals" }
   };
 
-  // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = floor to rim.
+  // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = how tall the bowl is: the floor to its top edge,
+  // the same point the bowl height in the result is measured to. The page says "tall", never "rim", because "rim" read
+  // as two different heights (owner 2026-11-20).
   // url = the bowl's own listing in our Etsy shop; img = a clean photo of it, copied into img/ (2026-11-16)
   // top = its place in the list shown before anything is typed: our best sellers, in the owner's order. It is a
   // static list, the same six for a cat or a dog (owner 2026-11-19: lilac plate, two-tone raised flower, the big-dog
@@ -290,7 +292,10 @@
     }
     var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood, fedKcalDay: fedKcalDay,
                 needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
-                tips: [], nutritionTips: [], cautions: [], products: [], productNote: "", shop: SHOP };
+                tips: [], nutritionTips: [], cautions: [], products: [], productNote: "", shop: SHOP,
+                // tips that only ask for something still to fill in; they also stay in tips, but a page that counts
+                // what is ready (owner 2026-11-20) leaves them out
+                asks: [] };
 
     // The energy behind the calories: resting energy, the factor used and why, and the table of levels for this
     // pet (kcal only when the weight is known). Then what the ticked health conditions mean for feeding.
@@ -337,17 +342,22 @@
       }
       out.cautions.push(NOTES[size]);
     } else if (elbow) {
-      out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor." };
+      out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor, measured to the top edge.",
+        // the sum behind it, written out under the page's picture of how the height is worked out (owner 2026-11-20)
+        sum: { elbow: show(hi), less: show(BELOW_ELBOW_CM), low: lo > 0 ? show(lo) : null } };
       if (lo < 3) out.tips.push("A flat plate on the floor already sits in this range.");
       if (i.senior) out.tips.push("Older or stiff: aim for the higher end, so the head doesn't have to drop as far.");
     } else {
       out.tips.push("Measure from the floor to your pet's elbow, standing, to get a height.");
+      out.asks.push(out.tips[out.tips.length - 1]);
+      out.elbowAsk = out.tips[out.tips.length - 1];   // the page shows this one as a note to its Bowl height line
     }
     if (whisker) {
       out.minWidthCm = r1(whisker);
       out.tips.push("Pick a dish at least " + show(whisker) + " across, so the whiskers don't brush the sides.");
     } else if (!dog) {
       out.tips.push("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.");
+      out.asks.push(out.tips[out.tips.length - 1]);
     }
     if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
     // Nutrition tips also go in nutritionTips, so a page can show them with the calories
@@ -384,9 +394,9 @@
     // every input; it says "may fit", never "fit" (owner 2026-11-15).
     function card(p, notes) {
       var holds = p.ml ? (p.mlAbout ? "about " : "") + p.ml + " ml" : "";
-      return { name: p.name, size: show(p.widthCm) + " across, rim " + show(p.rimCm) + " high" + (holds ? ", holds " + holds : ""),
+      return { name: p.name, size: show(p.widthCm) + " across, " + show(p.rimCm) + " tall" + (holds ? ", holds " + holds : ""),
                note: notes && notes.length ? notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "",
-               specs: [show(p.widthCm) + " across", "Rim " + show(p.rimCm) + " high"].concat(holds ? ["Holds " + holds] : [])
+               specs: [show(p.widthCm) + " across", show(p.rimCm) + " tall"].concat(holds ? ["Holds " + holds] : [])
                  .concat(p.extra ? [p.extra] : []),
                url: p.url, img: p.img };
     }
@@ -407,7 +417,9 @@
   }
 
   // How far off, said gently: the numbers are a reference, not a reason not to buy (owner 2026-11-19).
-  // Under 1 cm "slightly", up to 5 cm "a bit", more "quite a bit"; capacity as an approximate "~".
+  // Under 1 cm "slightly", up to 5 cm "a bit", more "quite a bit"; capacity as an approximate "~". The height note names
+  // the suggested height it is compared with ("a bit shorter than the suggested 12.2 cm"), so the gap never reads as a
+  // second height of the bowl (owner 2026-11-20: "Rim 1.2 cm" next to "Rim 11 cm high" looked like two different rims).
   function howMuch(d) { return d < 1 ? "slightly" : d <= 5 ? "a bit" : "quite a bit"; }
 
   // Our bowls ranked by how far each is from the numbers: 0 = fits. A rim 5 cm off counts like a bowl that holds
@@ -425,8 +437,8 @@
       if (size) {
         if (p.rimCm > FLOOR_RIM_CM && (size !== "giant" || p.rimCm > FT_CM)) return null;
       } else if (h && h.minCm !== undefined) {
-        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push("rim " + show(d) + " " + howMuch(d) + " lower than the range"); }
-        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push("rim " + show(d) + " " + howMuch(d) + " higher than the range"); }
+        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push(howMuch(d) + " shorter than the suggested " + show(h.minCm)); }
+        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push(howMuch(d) + " taller than the suggested " + show(h.maxCm)); }
       }
       if (need && p.ml === null) notes.push("capacity not listed yet");
       else if (need && p.ml < need) { score += (need - p.ml) / need; notes.push("holds ~" + (need - p.ml) + " ml less than suggested"); }
@@ -440,6 +452,7 @@
   }
 
   var api = { recommend: recommend, feeding: feeding, food: food, foods: foods, rowMl: rowMl, unitName: unitName,
-              MER: MER, LEVELS: LEVELS, CONDITIONS: CONDITIONS, SOURCES: SOURCES, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP };
+              MER: MER, LEVELS: LEVELS, CONDITIONS: CONDITIONS, SOURCES: SOURCES, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP,
+              BELOW_ELBOW_CM: BELOW_ELBOW_CM, show: show };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.BowlFit = api;
 })(this);

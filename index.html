@@ -75,16 +75,52 @@ table.rer td.who{overflow-wrap:anywhere}
 .tscroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 table.rer tr.on td{background:var(--accent-soft);font-weight:600}
 .fn{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+/* With no elbow yet, "Bowl height" gets an asterisk and how to measure the elbow is its note right under the Bowl
+   lines (owner 2026-11-20: as a bullet of its own it looked like something unrelated). The asterisk is drawn by CSS,
+   so the label still reads "Bowl height". */
+dt.ast::after{content:"*";content:"*"/""}
 .conds p{margin:8px 0 0}
 details.more{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line)}
 details.more>summary{cursor:pointer;font-weight:600;color:var(--accent)}
 details.more table.rer{margin-top:8px}
 details.more .tips{margin-top:6px}
+/* "How the bowl height is worked out" (owner 2026-11-20): a simple hand-drawn dog and bowl in the shop's lilac, a key
+   under it, then the pet's own sum. The lines get a slight wobble from an SVG filter; the words stay outside it. */
+.howh .art{position:relative;max-width:400px;margin:10px 0 4px;border-radius:12px;overflow:hidden;background:#fcf4ee;aspect-ratio:960/558}
+.howh .art img{display:block;width:100%;height:auto}
+.howh .art svg{position:absolute;inset:0;width:100%;height:100%}
+/* the marks on the drawing keep the light-page colours, because the paper stays light on a dark screen too */
+.howh .art .band{fill:rgba(201,187,240,.45)}
+.howh .art .gd{fill:none;stroke:#6f5aa8;stroke-width:8;stroke-dasharray:28 22;stroke-linecap:round}
+.howh .art .ag{fill:none;stroke:#6b625a;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.howh .art .aa{fill:none;stroke:#6f5aa8;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.howh .art .el{fill:#6f5aa8;stroke:#fcf4ee;stroke-width:7}
+/* the key under it uses the page colours */
+.howh li .band{fill:var(--accent-soft)}
+.howh li .gd{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:3 2}
+.howh li .ag{fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.howh li .aa{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.howh ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.howh li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.howh li>svg{flex:none;width:18px;height:18px;margin-top:3px}
+.howh p{margin:8px 0 0;font-size:.95rem}
 .add{font:inherit;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:999px;padding:8px 14px;margin:0 0 8px;cursor:pointer}
 fieldset>.hint{display:block}
 .part{margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
 dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
 dt{color:var(--muted)}dd{margin:0;font-weight:600}
+/* Where a box still needs filling in, the line ends in a small filled purple circle with an arrow pointing up (owner
+   2026-11-20); a tap goes up to that box. It stays on one line with the last word, and the padding gives it a bigger
+   tap area without moving the text around it. */
+.nw{white-space:nowrap}
+a.goto{display:inline-flex;vertical-align:-.27em;margin:-12px -12px -12px calc(.3em - 12px);padding:12px;color:var(--accent);-webkit-tap-highlight-color:transparent;transform:scale(var(--ps,1))}
+a.goto svg{display:block;width:1.2em;height:1.2em}
+a.goto circle{fill:currentColor}
+a.goto path{fill:none;stroke:var(--on-accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+a.goto:focus-visible{outline:2px solid var(--accent);outline-offset:-10px;border-radius:999px}
+a.goto.edit path{stroke-width:1.9}
+.field{scroll-margin-top:12px}
+#foodRows .frow{scroll-margin-top:44px}   /* leaves room for "Food per meal" above the first food */
 .caution{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0 0}
 .tips{margin:12px 0 0;padding-left:20px}
 .ours{background:var(--accent-soft);border-radius:10px;padding:12px;margin-top:14px}
@@ -136,11 +172,23 @@ a.shop{display:inline-block}
 html{scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 .jump{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:8px;padding:8px max(16px,calc((100% - 420px) / 2)) calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);transform:translateY(0);transition:transform .22s ease-out}
 .jump.away{transform:translateY(100%);pointer-events:none}
+/* The strip's colour carries on below it, so no page shows under the strip when iPhone Safari's toolbar slides away
+   during a scroll (owner 2026-11-20: the page showed through below "Your numbers"). */
+.jump::after{content:"";position:absolute;left:0;right:0;top:100%;height:100vh;background:var(--card)}
 .jump a{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:999px;font-weight:600;font-size:.95rem;white-space:nowrap;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,box-shadow .2s}
 .jump .jump-res{flex:1 1 auto;background:transparent;color:var(--accent);box-shadow:none}
 .jump .jump-res.ready{background:var(--accent);color:var(--on-accent)}
 .jump .jump-qa{flex:0 0 44px;width:44px;padding:0;background:var(--card);color:var(--accent);border:1px solid var(--line)}
 .jump svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* "(5 ready ✅👇)" after "Your numbers" once it is purple (owner 2026-11-20). The two emoji are drawn with blank space
+   beside them, which showed as gaps between ✅ and 👇 and before ")"; small pulls keep them together, as she wrote it. */
+.jump .cnt span{margin-right:-.2em}
+.jump .cnt i{font-style:normal;margin-left:-.2em}
+.jump .cnt{margin-left:-2px}   /* with the button's 6px gap, the space before "(" reads as one space */
+/* The icon keeps its size; on the smallest phones (320 px) the button's side padding and its words get a little smaller
+   so the whole "(5 ready ✅👇)" fits */
+.jump svg{flex:none}
+@media (max-width:359px){.jump .jump-res{padding:0 8px;gap:4px;font-size:.86rem}.jump .cnt{margin-left:0}}
 .jump .jump-qa svg{width:22px;height:22px}
 #f,#result,#qa{scroll-margin-top:12px}
 main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
@@ -154,12 +202,21 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 .fab a.ready{background:var(--accent);color:var(--on-accent);box-shadow:inset 0 0 0 1px var(--accent),0 2px 10px rgba(0,0,0,.18)}
 .fab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media (prefers-reduced-motion:reduce){.jump,.jump a,.fab,.fab a{transition:none}}
+/* Motion on every button (owner 2026-11-20), from the same RedNote note as the motion above: a press shrinks it and it
+   springs back; the bar's buttons and the round buttons also get the ripple from the tap point, white on the purple
+   ones, and with a mouse they lean toward the pointer. A pressed round button's shadow gets smaller. The only button
+   without motion is the tertiary "Your numbers", before there is a number to see. */
+.jump a,.fab a{position:relative;overflow:hidden;isolation:isolate;transform:translate(calc(var(--mx,0) * 1px),calc(var(--my,0) * 1px)) scale(var(--ps,1))}
+.jump .jump-res.ready .ripple,.fab a.ready .ripple{background:#fff}
+.fab a.down{box-shadow:inset 0 0 0 1px var(--line),0 1px 4px rgba(0,0,0,.12)}
+.fab a.ready.down{box-shadow:inset 0 0 0 1px var(--accent),0 1px 4px rgba(0,0,0,.12)}
+.ex,.rm{transform:scale(var(--ps,1));-webkit-tap-highlight-color:transparent}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Pet Nutrition & Bowl Calculator","applicationCategory":"UtilityApplication","operatingSystem":"Any","isAccessibleForFree":true,"url":"https://pawsonme.github.io/pet-bowl-size-calculator/","publisher":{"@type":"Organization","name":"PawsOnMe","url":"https://www.etsy.com/shop/PawsOnMePet"}},
 {"@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
+{"@type":"Question","name":"How high should my dog's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"No veterinary guideline sets a height. A common rule of thumb puts the top edge of the bowl between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it, measured with the dog standing on a flat floor. For large and giant breeds, a study of 1,637 dogs found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm) (Glickman et al., 2000)."}},
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
 {"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
 {"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume."}},
@@ -216,7 +273,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <label><input type="checkbox" name="cond" value="liver"> Liver values to watch</label>
 <label><input type="checkbox" name="cond" value="pancreatitis"> Pancreatitis, now or in the past</label>
 <label><input type="checkbox" name="cond" value="lipids"> High triglycerides or cholesterol on blood tests</label>
-<label><input type="checkbox" name="cond" value="overweight"> Working on weight loss</label>
+<label><input type="checkbox" name="cond" value="overweight" id="condOverweight"> Working on weight loss</label>
 </div></details>
 <h2 class="part">Bowl</h2>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
@@ -248,7 +305,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <section id="qa">
 <h2>Quick answers</h2>
 <h3>How high should my dog's food bowl be?</h3>
-<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
+<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the top edge of the bowl between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
 <h3>Are raised bowls safe for large dogs?</h3>
 <p>It depends on the height and on how big the breed is. A study followed 1,637 dogs of 11 large and giant breeds and asked whether the bowl was on the floor, raised 1 ft (30.5 cm) or less, or raised more than 1 ft [1][2]. In this study, large meant breeds of 23 to 45 kg (50 to 99 lb) and giant meant over 45 kg (99 lb) [10]. Bloat (GDV) cases per 1,000 dog-years:</p>
 <ul>
@@ -257,7 +314,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 </ul>
 <p>So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][9]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [8]. If you're unsure, ask your vet.</p>
 <h3>How tall should a cat's bowl be?</h3>
-<p>Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift with the rim a little below the elbow can make meals easier. No study has measured this, so treat it as a comfort tweak.</p>
+<p>Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift, with the top edge of the bowl a little below the elbow, can make meals easier. No study has measured this, so treat it as a comfort tweak.</p>
 <h3>How wide should a cat's bowl be? Is whisker fatigue real?</h3>
 <p>In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish [3]. A wide, shallow dish at least as wide as your cat's whisker span is a cheap thing to try.</p>
 <h3>Do slow feeder bowls work?</h3>
@@ -324,7 +381,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 </footer>
 </main>
 <nav class="jump" id="jump" aria-label="Jump to">
-<a class="jump-res" href="#result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Your numbers</a>
+<a class="jump-res" href="#result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Your numbers<span class="cnt" hidden></span></a>
 <a class="jump-qa" href="#qa" aria-label="Quick answers" title="Quick answers"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4"/><path d="M12 17.6v.1"/></svg></a>
 </nav>
 <nav class="fab away" id="fab" aria-label="Back to">
@@ -336,7 +393,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <script>
 (function () {
   var f = document.getElementById("f"), out = document.getElementById("result"), jumpRes = document.querySelector("#jump .jump-res");
-  var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form");
+  var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form"), jumpCnt = document.querySelector("#jump .cnt");
   var box = document.getElementById("foodRows"), seq = 0;
   var kField = document.getElementById("kcalField"), kLabel = document.getElementById("kcalLabel"), kHint = document.getElementById("kcalHint");
   var FOODS = BowlFit.foods(), HAY = {};
@@ -596,22 +653,102 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var was = srcList && srcList.open, li = openSource(location.hash);
     if (li && !was) li.scrollIntoView({ block: "start" });
   });
+  // Where a box still needs filling in, the line in the result ends in a small round button with an arrow up (owner
+  // 2026-11-20). A tap scrolls up to that box, like the bottom bar does to the result, and puts the cursor in it.
+  var UP = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 16.8V7.6M8 11.6l4-4 4 4"/></svg>';
+  function need(text, to) {   // to = [the box's id, what the button says to a screen reader]
+    var k = text.lastIndexOf(" ") + 1;
+    return esc(text.slice(0, k)) + '<span class="nw">' + esc(text.slice(k)) + '<a class="goto" href="#' + to[0] + '" aria-label="' + to[1] + '" title="' + to[1] + '">' + UP + "</a></span>";
+  }
+  // The food box to go to: the first food line with no food picked (only one with an amount typed, when the food is
+  // what's missing), or else the first line without an amount
+  function foodGoal(typedOnly) {
+    var rows = [].slice.call(box.querySelectorAll(".frow")), amt = function (row) { return row.querySelector(".fa").value; };
+    var a = rows.filter(function (row) { return !row.dataset.id && (!typedOnly || amt(row)); })[0];
+    if (a) return [a.querySelector(".fq").id, "Go to the food"];
+    var b = rows.filter(function (row) { return !amt(row); })[0];
+    return b ? [b.querySelector(".fa").id, "Go to the amount"] : [rows.length ? rows[0].querySelector(".fq").id : "foodRows", "Go to the food"];
+  }
+  // Where a box is already filled in and a number came from it, the line ends in the same round button with a pencil
+  // (owner 2026-11-20), so the number can be changed at its source: the weight, the food, the amount, the elbow, the
+  // whiskers, or the weight-loss tick.
+  var PEN = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8.1 14l6.2-6.2a1.36 1.36 0 0 1 1.9 1.9L10 15.9l-2.6.8z"/><path d="M13.1 9l1.9 1.9"/></svg>';
+  function edit(html, to) {   // like need(), the button stays on one line with the last word; spaces inside tags don't count
+    var cut = -1, tag = false;
+    for (var k = 0; k < html.length; k++) { var c = html.charAt(k); if (c === "<") tag = true; else if (c === ">") tag = false; else if (c === " " && !tag) cut = k; }
+    return html.slice(0, cut + 1) + '<span class="nw">' + html.slice(cut + 1) + '<a class="goto edit" href="#' + to[0] + '" aria-label="' + to[1] + '" title="' + to[1] + '">' + PEN + "</a></span>";
+  }
+  // The food line a number came from: the first amount typed, or the first food picked (else the calories per cup typed)
+  function foodEdit(what) {
+    var rows = [].slice.call(box.querySelectorAll(".frow"));
+    var a = rows.filter(function (row) { return row.querySelector(".fa").value; })[0];
+    if (what === "amount" && a) return [a.querySelector(".fa").id, "Change the amount"];
+    var p = rows.filter(function (row) { return row.dataset.id; })[0];
+    if (p) return [p.querySelector(".fq").id, "Change the food"];
+    if (document.getElementById("kcal").value) return ["kcal", "Change the calories per cup"];
+    return [rows[0].querySelector(".fq").id, "Change the food"];
+  }
+  out.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a.goto"), t = a && document.getElementById(a.getAttribute("href").slice(1));
+    if (!t) return;
+    e.preventDefault();
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var fold = t.closest("details");
+    if (fold && !fold.open) fold.open = true;   // the weight-loss tick sits in "Anything your vet is watching"
+    (t.closest(".field, .frow, label") || t).scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+    t.focus({ preventScroll: true });
+  });
   function fx(lo, hi) { return lo === hi ? lo.toFixed(1) : lo.toFixed(1) + " to " + hi.toFixed(1); }
   // A level in the table: 1.8, 1.2-1.4, 1.6-2.0, 2-6
   function lvl(lo, hi) { return lo === hi ? lo.toFixed(1) : (lo % 1 || hi % 1) ? lo.toFixed(1) + "-" + hi.toFixed(1) : lo + "-" + hi; }
   var EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
   // In the narrow cards a size may wrap, but never between a number and its unit: "3.5 cm" and "(1.4 in)" stay whole
   function nb(t) { return esc(t).replace(/(\d) (cm|in|ml)\b/g, "$1&nbsp;$2"); }
+  // "How the bowl height is worked out" (owner 2026-11-20), folded under the Bowl lines: a dog standing next to a raised
+  // bowl. Both heights are measured from the floor, and the top edge of the bowl should land in the shaded band, from the
+  // elbow down to 7.5 cm lower. "Tall" on the bowl cards is that same floor-to-top-edge height: the owner chose to compare
+  // the listing's height with the band as it is ("A", 2026-11-20), not a height to the food inside.
+  // The pet is a hand-drawn colored-pencil picture (owner 2026-11-20: warm, simple, bright, like the loose pet portraits
+  // she sent): a sable-and-white Sheltie, or a fluffy white cat when Cat is
+  // picked, each next to a lilac pedestal bowl. The band, the arrows and the elbow dot are drawn on top in SVG, in the
+  // picture's own pixels (crop 20,70 1496x870 of the 1536x1024 original), so they line up with the elbow and the rim.
+  // The band runs from the elbow down 7.5 / 19.7 of the elbow height, the example dog's share.
+  var ART = {
+    dog: { src: "img/howh-dog.jpg", say: "A dog", e: [848, 600], floor: 892, rim: 645, bowlR: 1393, armX: 968, bandX: 895 },
+    cat: { src: "img/howh-cat.jpg", say: "A cat", e: [876, 632], floor: 896, rim: 647, bowlR: 1387, armX: 985, bandX: 925 }
+  };
+  function arrow(cls, x, top, bottom) {   // a two-headed arrow from the floor up to a height
+    return '<path class="' + cls + '" d="M' + x + " " + (bottom - 6) + "V" + (top + 6) + "M" + (x - 13) + " " + (top + 21) + "L" + x + " " + (top + 4) + "L" + (x + 13) + " " + (top + 21) +
+      "M" + (x - 13) + " " + (bottom - 21) + "L" + x + " " + (bottom - 4) + "L" + (x + 13) + " " + (bottom - 21) + '"/>';
+  }
+  function howArt(species) {
+    var a = ART[species === "cat" ? "cat" : "dog"], ex = a.e[0], ey = a.e[1], low = Math.round(ey + (a.floor - ey) * 7.5 / 19.7), R = 1490;
+    return '<div class="art" role="img" aria-label="' + a.say + ' standing next to a raised bowl. Elbow height and bowl height are both measured from the floor. The top edge of the bowl sits in a band from the elbow down to 7.5 cm lower.">' +
+      '<img src="' + a.src + '" alt="" width="960" height="558" loading="lazy" decoding="async">' +
+      '<svg viewBox="20 70 1496 870" aria-hidden="true"><defs><filter id="howh-rough" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".009" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter></defs>' +
+      '<rect class="band" x="' + a.bandX + '" y="' + ey + '" width="' + (R - a.bandX) + '" height="' + (low - ey) + '"/>' +
+      '<g filter="url(#howh-rough)"><path class="gd" d="M' + ex + " " + ey + "H" + R + "M" + a.bandX + " " + low + "H" + R + '"/>' +
+      arrow("ag", a.armX, ey, a.floor) + arrow("aa", 1446, a.rim, a.floor) +
+      '<path class="gd" style="stroke-dasharray:12 12" d="M' + (a.bowlR + 6) + " " + a.rim + "H1438" + '"/></g>' +
+      '<circle class="el" cx="' + ex + '" cy="' + ey + '" r="20"/></svg></div>';
+  }
+  var KEYARROW = '<path d="M9 2v14M5.5 5.5 9 2l3.5 3.5M5.5 12.5 9 16l3.5-3.5"/>';
+  function howHeight(r, species) {
+    var hh = r.height || {}, s = hh.sum, less = nb(BowlFit.show(BowlFit.BELOW_ELBOW_CM)), mine = "";
+    if (hh.floor) mine = "Large and giant breeds also have a 1&nbsp;ft (30.5&nbsp;cm) rule for bloat risk, so the Bowl height line above can differ from this band.";
+    else if (s && s.low) mine = "For your pet: " + nb(s.elbow) + " − " + nb(s.less) + " = " + nb(s.low) + ". So the top edge of the bowl goes between these two heights.";
+    else if (s) mine = "For your pet: the elbow is " + nb(s.elbow) + " off the floor, less than " + nb(s.less) + ", so the band runs from the floor up to the elbow.";
+    return '<div class="howh">' + howArt(species) + "<ul>" +
+      '<li><svg class="ag" viewBox="0 0 18 18" aria-hidden="true">' + KEYARROW + "</svg><span><strong>Elbow height</strong>: the floor to the elbow, with your pet standing.</span></li>" +
+      '<li><svg class="aa" viewBox="0 0 18 18" aria-hidden="true">' + KEYARROW + "</svg><span><strong>Bowl height</strong>: the floor to the top edge of the bowl, the same as &quot;tall&quot; on our bowl cards.</span></li>" +
+      '<li><svg viewBox="0 0 18 18" aria-hidden="true"><rect class="band" x="1" y="5" width="16" height="8"/><path class="gd" style="stroke-dasharray:3 2;stroke-width:1.6" d="M1 5h16M1 13h16"/></svg><span>The top edge should land in this band: from the elbow height down to ' + less + " lower.</span></li></ul>" +
+      (mine ? "<p>" + mine + "</p>" : "") + "</div>";
+  }
   var lastHtml = null;
   function render() {
     syncActivity();
     var v = vals(), r = BowlFit.recommend(v);
-    // "Your numbers" in the bottom bar, and both round buttons in the quick answers (owner 2026-11-19), stay tertiary
-    // until the result has a number to see: calories from the weight, the rim height from the elbow, the bowl size from
-    // the food, the dish width from the whiskers, or what the pet eats now. Then they turn the purple primary style.
-    // Picking Cat, the units or anything else that gives no number yet is not enough, so they don't change for it.
-    var ready = !!(r.feeding || r.fedKcalDay || r.capacityMl || r.minWidthCm || (r.height && +v.elbow > 0));
-    [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
+    var n = 0, numbers;   // how many lines of the result have a number in them, counted as the lines are written below; the notes are added at the end
     document.body.setAttribute("data-species", v.species);
     document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
     document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
@@ -628,12 +765,17 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     // Resting energy and the factor behind the calories, then a table of every level with its calories for this
     // pet, the level in use highlighted; then what any ticked health conditions mean for feeding (owner 2026-11-16).
     var en = r.energy, rerSay = en && en.rer ? " (" + fx(en.lo, en.hi) + "&nbsp;×&nbsp;RER for " + esc(en.basis) + ")" : "";
-    if (en && en.rer) h += "<dt>Resting energy</dt><dd>" + en.rer + " kcal a day, what a pet burns at rest: 70&nbsp;×&nbsp;(" + en.kg + "&nbsp;kg)<sup>0.75</sup></dd>";
-    h += "<dt>Calories a day</dt><dd>" + (fd ? rng(fd.kcalLo, fd.kcalHi) + " kcal" + rerSay : "Add your pet's weight.") + "</dd>";
-    if (fd && fd.lossLo) h += "<dt>To lose weight</dt><dd>" + rng(fd.lossLo, fd.lossHi) + " kcal a day, " + Math.round(fd.lossShare * 100) + "% of that</dd>";
-    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals</dd>";
-    if (r.fedKcalDay) h += "<dt>Eats now</dt><dd>About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
-      (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : "") + "</dd>";
+    if (en && en.rer) n++;
+    if (en && en.rer) h += "<dt>Resting energy</dt><dd>" + edit(en.rer + " kcal a day, what a pet burns at rest: 70&nbsp;×&nbsp;(" + en.kg + "&nbsp;kg)<sup>0.75</sup>", ["weight", "Change the weight"]) + "</dd>";
+    if (fd) n++;
+    h += "<dt>Calories a day</dt><dd>" + (fd ? edit(rng(fd.kcalLo, fd.kcalHi) + " kcal" + rerSay, ["weight", "Change the weight"]) : need("Add your pet's weight.", ["weight", "Go to the weight"])) + "</dd>";
+    if (fd && fd.lossLo) n++;
+    if (fd && fd.lossLo) h += "<dt>To lose weight</dt><dd>" + edit(rng(fd.lossLo, fd.lossHi) + " kcal a day, " + Math.round(fd.lossShare * 100) + "% of that", ["condOverweight", "Change Working on weight loss"]) + "</dd>";
+    if (fd && fd.unit) n++;
+    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + edit(rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals", foodEdit("food")) + "</dd>";
+    if (r.fedKcalDay) n++;
+    if (r.fedKcalDay) h += "<dt>Eats now</dt><dd>" + edit("About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
+      (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : ""), foodEdit("amount")) + "</dd>";
     h += "</dl>";
     // The detail stays folded until tapped (owner 2026-11-16): the table of levels, the health notes and the tips.
     function fold(key, summary, body) { return '<details class="more" data-k="' + key + '"><summary>' + summary + "</summary>" + body + "</details>"; }
@@ -658,13 +800,22 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var nt = r.nutritionTips || [];
     if (nt.length) h += fold("tips", "Tips (" + nt.length + ")", '<ul class="tips">' + nt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>");
     h += "<h3>Bowl</h3><dl>";
-    h += "<dt>Rim height</dt><dd>" + esc(r.height ? r.height.text : "Add the elbow height.") + "</dd>";
-    if (r.minWidthCm) h += "<dt>Dish width</dt><dd>At least " + r.minWidthCm + " cm across</dd>";
-    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)"
-      : r.needFood ? "Pick the food from the list, so its weight can be turned into volume." : "Add the food per meal.") + "</dd>";
+    // "Bowl height", not "rim height": the floor to the top edge of the bowl, the same as "tall" on the bowl cards (owner
+    // 2026-11-20: "rim" read as two different heights). The line asks for the elbow when there is none (a large breed's
+    // says so at the end), so it gets the go-to button then.
+    var ht = r.height ? r.height.text : "Add the elbow height.";
+    if (r.height && +v.elbow > 0) n++;
+    h += "<dt" + (r.elbowAsk ? ' class="ast"' : "") + ">Bowl height</dt><dd>" + (!(+v.elbow > 0) && /Add the elbow height/.test(ht) ? need(ht, ["elbow", "Go to the elbow height"])
+      : r.height && +v.elbow > 0 ? edit(esc(ht), ["elbow", "Change the elbow height"]) : esc(ht)) + "</dd>";
+    if (r.minWidthCm) { h += "<dt>Dish width</dt><dd>" + edit("At least " + r.minWidthCm + " cm across", ["whisker", "Change the whisker span"]) + "</dd>"; n++; }
+    if (r.capacityMl) n++;
+    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? edit(r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)", foodEdit("amount"))
+      : r.needFood ? need("Pick the food from the list, so its weight can be turned into volume.", foodGoal(true)) : need("Add the food per meal.", foodGoal(false))) + "</dd>";
     h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";
+    if (r.elbowAsk) h += '<p class="fn ask"><span aria-hidden="true">*&nbsp;</span>' + esc(r.elbowAsk) + "</p>";
+    h += fold("howh", "How the bowl height is worked out", howHeight(r, v.species));
     r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
-    var bt = r.tips.filter(function (t) { return nt.indexOf(t) < 0; });
+    var bt = r.tips.filter(function (t) { return nt.indexOf(t) < 0 && t !== r.elbowAsk; });   // the elbow note is written above
     if (bt.length) h += '<ul class="tips">' + bt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
     // Our bowls as upright cards in a row that scrolls sideways (a phone shows two and a half): the listing's main
@@ -677,6 +828,20 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
       return "<li>" + (p.url ? '<a class="pcard" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + body + '<span class="sr"> Opens on Etsy</span></a>'
         : '<div class="pcard">' + body + "</div>") + "</li>";
     }).join("") + '</ul><p><a class="shop" href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
+    // "Your numbers" in the bottom bar, and both round buttons in the quick answers (owner 2026-11-19), stay tertiary
+    // until the result has a number to see: calories from the weight, the bowl height from the elbow, the bowl size from
+    // the food, the dish width from the whiskers, or what the pet eats now. Then they turn the purple primary style.
+    // Picking Cat, the units or anything else that gives no number yet is not enough, so they don't change for it.
+    // Purple, the bar's button also says how much is ready below, "(5 ready ✅👇)" (owner 2026-11-20), and the count
+    // grows as more is filled in (owner, later the same day: ticking "Liver values to watch" left it at 2): every line
+    // under Nutrition and Bowl that shows a number, every health note, every tip, and the large-breed note. Lines that
+    // only ask for something still to fill in ("Measure from the floor to your pet's elbow...") are not counted.
+    numbers = n;
+    var asks = r.asks || [];
+    n += cn.length + r.cautions.length + r.tips.filter(function (t) { return asks.indexOf(t) < 0; }).length;
+    var ready = numbers > 0;
+    [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
+    if (jumpCnt) { jumpCnt.hidden = !ready; jumpCnt.innerHTML = ready ? "(" + n + ' ready <span aria-hidden="true">✅<i>👇</i></span>)' : ""; }
     // Only touch the result when it changed. Leaving a box fires "change" right as the next tap lands, and
     // redrawing then would swallow a tap on a folded section. Opened sections stay open when it does redraw.
     var html = h + "</div>";
@@ -698,9 +863,10 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // puts back exactly what was in the form before: the food lines are set aside as they were, nothing is retyped.
   // Weight and elbow are kept in both unit systems, so the example uses the units already picked, and switching units
   // while it shows keeps the same dog (9.3 kg doesn't turn into 9.3 lb). No broth in it: a broth is looked up at USDA,
-  // and each visitor only gets a few look-ups.
+  // and each visitor only gets a few look-ups. It also ticks "Liver values to watch" and "High triglycerides or cholesterol"
+  // (owner 2026-11-20), and opens "Anything your vet is watching" so those ticks show; hiding the example closes it again.
   var EX = { weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
-    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["regurgitates", "emptyStomach"] };
+    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
   var KEEP = ["weight", "stage", "activity", "meals", "kcal", "elbow", "size", "whisker"];
   var exBtn = document.getElementById("example"), exShow = exBtn.textContent, exWas = null, exBusy = false;
   function pickRadio(name, v) {
@@ -709,9 +875,11 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   }
   function tickBox(c, on) { if (c.checked !== on) { c.checked = on; c.dispatchEvent(new Event("change", { bubbles: true })); } }
   function allBoxes() { return [].slice.call(f.querySelectorAll('input[type="checkbox"]')); }
+  function boxKey(c) { return c.name === "cond" ? "cond:" + c.value : c.name; }   // the health boxes share one name
+  var adv = f.querySelector("details.adv");
   function showExample() {
     exWas = { species: checked("species"), unit: checked("unit"), rows: [].slice.call(box.children), val: {},
-      on: allBoxes().filter(function (c) { return c.checked; }) };
+      on: allBoxes().filter(function (c) { return c.checked; }), adv: adv.open };
     KEEP.forEach(function (n) { exWas.val[n] = document.getElementById(n).value; });
     exBusy = true;
     pickRadio("species", "dog"); syncActivity();
@@ -724,7 +892,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     });
     var v = { weight: EX.weight[u], elbow: EX.elbow[u], stage: EX.stage, activity: EX.activity, meals: EX.meals, kcal: "", size: "", whisker: "" };
     KEEP.forEach(function (n) { document.getElementById(n).value = v[n]; });
-    allBoxes().forEach(function (c) { tickBox(c, EX.ticks.indexOf(c.name) >= 0); });
+    allBoxes().forEach(function (c) { tickBox(c, EX.ticks.indexOf(boxKey(c)) >= 0); });
+    adv.open = true;
     exBusy = false;
     exBtn.textContent = "Hide the example";
     render();
@@ -738,6 +907,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     pickRadio("species", was.species); pickRadio("unit", was.unit); syncActivity();
     KEEP.forEach(function (n) { document.getElementById(n).value = was.val[n]; });
     allBoxes().forEach(function (c) { tickBox(c, was.on.indexOf(c) >= 0); });
+    adv.open = was.adv;
     exBusy = false;
     exBtn.textContent = exShow;
     render();
@@ -765,6 +935,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 //   above) and the tick draws in 300 ms.
 // - Magnetic button: with a mouse within 120 px, "+ Add another food" leans 0.35 of the way toward the pointer and springs
 //   back when it leaves (stiffness 150, damping 15). Phones have no pointer to follow, so it is mouse only.
+// Every button has motion (owner 2026-11-20): the press and spring back on all of them; the ripple and the magnetic lean
+// also on the bottom bar's two buttons and the two round buttons in the quick answers. "Your numbers" in the bar is the
+// one exception while it is tertiary, before there is a number to see; once it turns purple it moves like the rest.
 // Springs have mass 1. Nothing moves when the system asks for reduced motion.
 (function () {
   "use strict";
@@ -841,7 +1014,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     inp.addEventListener("change", function () { if (inp.checked) spring(w, "--cs", 1, 260, 15, 0.8); });
   });
 
-  // Press and spring back on the main buttons, and a ripple from the tap point on "+ Add another food"
+  // Press and spring back on every button, and a ripple from the tap point on the bigger ones
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .rm", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
@@ -855,34 +1029,58 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   }
   document.addEventListener("pointerdown", function (e) {
     if (e.button > 0 || !e.target.closest) return;
-    var el = e.target.closest(".add, a.pcard, a.shop");
+    var el = e.target.closest(PRESS);
     if (!el) return;
     spring(el, "--ps", 0.94, 1600, 80);
+    el.classList.add("down");   // the note also has the shadow get smaller while pressed
     function up() {
       spring(el, "--ps", 1, 260, 12);
+      el.classList.remove("down");
       document.removeEventListener("pointerup", up, true);
       document.removeEventListener("pointercancel", up, true);
     }
     document.addEventListener("pointerup", up, true);
     document.addEventListener("pointercancel", up, true);
-    if (el.classList.contains("add")) ripple(el, e);
+    if (el.matches(RIPPLE)) ripple(el, e);
   }, true);
 
-  // Magnetic "+ Add another food", mouse only
-  var mx = -1e4, my = -1e4, queued = 0;
+  // Magnetic buttons, mouse only: "+ Add another food", the bottom bar's buttons and the round buttons. Of buttons side by
+  // side only the nearest one leans, so they never run into each other, and the long "Your numbers" is measured from
+  // the line through its middle, so it leans toward the pointer without swinging sideways.
+  var mx = -1e4, my = -1e4, queued = 0, leaned = [];
+  function groups() {
+    var bar = document.getElementById("jump"), fab = document.getElementById("fab");
+    return [[document.getElementById("addFood")],
+      bar && !bar.classList.contains("away") ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
+      fab && !fab.classList.contains("away") ? [].slice.call(fab.querySelectorAll("a")) : []];
+  }
   function pull() {
     queued = 0;
-    var el = document.getElementById("addFood");
-    if (!el) return;
-    var r = el.getBoundingClientRect(), all = el.__springs || {};
-    var ox = all["--mx"] ? all["--mx"].x : 0, oy = all["--my"] ? all["--my"].x : 0;
-    var dx = mx - (r.left + r.width / 2 - ox), dy = my - (r.top + r.height / 2 - oy), near = dx * dx + dy * dy < 120 * 120;
-    spring(el, "--mx", near ? dx * 0.35 : 0, 150, 15);
-    spring(el, "--my", near ? dy * 0.35 : 0, 150, 15);
+    var near = [];
+    groups().forEach(function (g) {
+      var best = null, bd = 120 * 120;
+      g.forEach(function (el) {
+        if (!el) return;
+        var r = el.getBoundingClientRect(), all = el.__springs || {};
+        var ox = all["--mx"] ? all["--mx"].x : 0, oy = all["--my"] ? all["--my"].x : 0;
+        var cx = r.left + r.width / 2 - ox, cy = r.top + r.height / 2 - oy, half = el.classList.contains("jump-res") ? Math.max(0, (r.width - r.height) / 2) : 0;
+        var dx = mx - Math.max(cx - half, Math.min(cx + half, mx)), dy = my - cy, d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = { el: el, dx: dx, dy: dy }; }
+      });
+      if (best) near.push(best);
+    });
+    leaned.forEach(function (el) {   // back home: no longer the nearest, out of range, or its bar slid away
+      if (near.some(function (b) { return b.el === el; })) return;
+      spring(el, "--mx", 0, 150, 15); spring(el, "--my", 0, 150, 15);
+    });
+    leaned = near.map(function (b) {
+      spring(b.el, "--mx", b.dx * 0.35, 150, 15); spring(b.el, "--my", b.dy * 0.35, 150, 15);
+      return b.el;
+    });
   }
   function later() { if (!queued) queued = requestAnimationFrame(pull); }
   document.addEventListener("pointermove", function (e) {
-    if (e.pointerType !== "mouse" || !fine.matches) return;
+    if (e.pointerType !== "mouse" || !fine.matches || reduce.matches) return;
     mx = e.clientX; my = e.clientY;
     later();
   }, { passive: true });
@@ -896,7 +1094,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 // the result is reached, and on through the quick answers, it isn't needed, so it slides away; back in the form it
 // returns, but only on the way down. It is also away while the page is scrolled up, and while the phone keyboard is up,
 // so it never sits on top of the box being typed in. CSS does the motion (220 ms), and nothing moves for reduced motion.
-// Which style "Your numbers" has (tertiary, secondary or primary) is set in render() above.
+// Which style "Your numbers" has (tertiary or primary) is set in render() above, and its motion in the script before.
 (function () {
   "use strict";
   var bar = document.getElementById("jump"), res = document.getElementById("result");

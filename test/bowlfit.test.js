@@ -5,6 +5,10 @@ const names = (r) => r.products.map((p) => p.name);
 // Dachshund-type dog: elbow 11 cm, half a cup per meal, fast eater
 let r = recommend({ species: "dog", unit: "cm", elbow: 11, cupsPerMeal: 0.5, fastEater: true, shortLegs: true });
 assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [3.5, 11]);
+// the sum the page writes out under its picture: elbow - 7.5 cm = the low end
+assert.deepStrictEqual(r.height.sum, { elbow: "11 cm (4.3 in)", less: "7.5 cm (3 in)", low: "3.5 cm (1.4 in)" });
+// an elbow lower than 7.5 cm: the low end is the floor, so there is no subtraction to show
+assert.strictEqual(recommend({ species: "cat", unit: "cm", elbow: 6 }).height.sum.low, null);
 assert.strictEqual(r.capacityMl, 250);               // 0.5 x 236.6 x 2 = 236.6 -> 250
 assert.ok(names(r).includes("Lilac flower slow feeder on a pedestal"));
 assert.ok(!names(r).includes("Sage green raised tilted slow feeder")); // 200 ml < 250 ml
@@ -13,6 +17,7 @@ assert.ok(!names(r).includes("Two-tone raised tilted flower slow feeder")); // 2
 // Large breed (23-45 kg): floor, or above 1 ft (30.5 cm) up to the elbow; one note; no products
 r = recommend({ species: "dog", elbow: 50, size: "large", cupsPerMeal: 2 });
 assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1);
+assert.strictEqual(r.height.sum, undefined);   // large breeds follow the 1 ft rule, not the plain elbow sum
 // Never a dead end, and for a large breed only the flat plates (raised 1 ft or less = 3.06x bloat risk). The Pink Planet
 // plate is made for medium to large dogs and holds about 650 ml (listing estimate), so it is the closest for 750 ml.
 assert.deepStrictEqual(names(r), ["Large dog ceramic slow feeder Pink Planet style", "Butter yellow ceramic slow feeder plate, medium", "Lilac flower ceramic slow feeder plate"]);
@@ -42,7 +47,7 @@ assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [17.9, 25.4]);
 assert.strictEqual(r.capacityMl, 400);               // 1 x 236.6 x 1.5 = 354.9 -> 400
 // None fits, so the 3 closest, each saying how far off it is: the tallest rims first
 assert.deepStrictEqual(names(r), ["Sage green raised tilted slow feeder", "Two-tone raised tilted flower slow feeder", "Lilac flower slow feeder on a pedestal"]);
-assert.ok(r.productNote.startsWith("The closest") && r.products[0].note.startsWith("Rim 6.9 cm (2.7 in) quite a bit lower than the range"));
+assert.ok(r.productNote.startsWith("The closest") && r.products[0].note.startsWith("Quite a bit shorter than the suggested 17.9 cm (7 in)"));
 
 // Cat: elbow 12, whisker 14, a third of a cup, flat face -> tilted first
 r = recommend({ species: "cat", elbow: 12, whisker: 14, cupsPerMeal: 0.33, flatFace: true });
@@ -92,7 +97,7 @@ assert.strictEqual(new Set(PRODUCTS.map((p) => p.url)).size, PRODUCTS.length);
 assert.strictEqual(new Set(PRODUCTS.map((p) => p.img)).size, PRODUCTS.length);
 r = recommend({ species: "cat", elbow: 12 });
 assert.ok(r.products.length === 3 && r.products.every((p) => p.url && p.img));
-assert.deepStrictEqual(r.products[0].specs, ["14.8 cm (5.8 in) across", "Rim 8.5 cm (3.3 in) high", "Holds 310 ml"]);
+assert.deepStrictEqual(r.products[0].specs, ["14.8 cm (5.8 in) across", "8.5 cm (3.3 in) tall", "Holds 310 ml"]);
 assert.strictEqual(r.products[0].url, "https://www.etsy.com/listing/4533246949/lilac-elevated-slow-feeder-ceramic-pet");
 // no result ever says "that fit"
 [{ species: "cat" }, { species: "cat", elbow: 12 }, { species: "dog", elbow: 11, cupsPerMeal: 0.5 }, { species: "dog", elbow: 50, size: "large" }]
@@ -100,9 +105,9 @@ assert.strictEqual(r.products[0].url, "https://www.etsy.com/listing/4533246949/l
 // Card notes are a gentle reference (owner 2026-11-19): "slightly" under 1 cm, "a bit" up to 5 cm, "quite a bit"
 // beyond, and an approximate "~" on capacity
 r = recommend({ species: "dog", unit: "cm", elbow: 19.7, cupsPerMeal: 1 });
-assert.strictEqual(r.products[0].note, "Rim 1.2 cm (0.5 in) a bit lower than the range, holds ~200 ml less than suggested.");
-assert.strictEqual(recommend({ species: "dog", unit: "cm", elbow: 19, cupsPerMeal: 0.25 }).products[0].note, "Rim 0.5 cm (0.2 in) slightly lower than the range.");
-assert.ok(r.products.every((p) => !/\) (lower|higher) than the range|holds \d/.test(p.note)));
+assert.strictEqual(r.products[0].note, "A bit shorter than the suggested 12.2 cm (4.8 in), holds ~200 ml less than suggested.");
+assert.strictEqual(recommend({ species: "dog", unit: "cm", elbow: 19, cupsPerMeal: 0.25 }).products[0].note, "Slightly shorter than the suggested 11.5 cm (4.5 in).");
+assert.ok(r.products.every((p) => !/than the range|holds \d|\brim\b/i.test(p.note)));   // no "rim" in a note (owner 2026-11-20)
 console.log("all bowlfit tests passed");
 
 // Feeding: 10 kg spayed/neutered dog, 400 kcal per cup, 2 meals
