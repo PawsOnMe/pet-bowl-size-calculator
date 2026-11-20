@@ -46,20 +46,23 @@
   //   130 x kg^0.75 = 1.86 x RER, inactive dogs 95 x kg^0.75 = 1.36, older active dogs 105 x kg^0.75 = 1.5, young
   //   adult active dogs 140 x kg^0.75 = 2.0 (at 30 lb: 922, 674, 745 and 993 kcal, against an RER of 496).
   // - Working detection dogs: about 2 x RER (Mullis, Witzel and Price, PeerJ 2015, 20 dogs over six months).
+  // - Very active cats, like ones that go outdoors (owner 2026-11-19): FEDIAF Nutritional Guidelines (September 2025),
+  //   Table VII-9, puts adult cats at 52-75 kcal per kg^0.67 a day if neutered and/or indoor and 100 if active, so an
+  //   active cat needs about a third more (100 / 75). A third more than the 1.2 x RER of a neutered adult is 1.6 x RER.
   var MER = {
     dog: { young: [2, 3], neutered: [1.6, 1.6], intact: [1.8, 1.8], inactive: [1.2, 1.4], active: [1.86, 1.86], working: [2, 2] },
-    cat: { young: [2, 3], neutered: [1.2, 1.2], intact: [1.4, 1.4], inactive: [1.0, 1.0] }
+    cat: { young: [2, 3], neutered: [1.2, 1.2], intact: [1.4, 1.4], inactive: [1.0, 1.0], active: [1.6, 1.6] }
   };
   var BASIS = { young: "growth, as a puppy or kitten", neutered: "an adult, spayed or neutered, usual activity",
     intact: "an adult, not spayed or neutered, usual activity", inactive: "a pet that isn't very active or gains weight easily",
-    active: "an active adult dog", working: "a working dog" };
+    active: "an active adult dog", working: "a working dog", activeCat: "a very active adult cat, like one that goes outdoors" };
   // Which factor applies. stage: "neutered", "intact" or "young" ("inactive" is still accepted); activity: "usual",
-  // "low", or for dogs "active" or "working". Growth sets the level for puppies and kittens whatever the activity.
+  // "low", "active" (dogs and cats) or "working" (dogs). Growth sets the level for puppies and kittens whatever the activity.
   function factorKey(i) {
     var a = i.activity || "usual";
     if (i.stage === "young") return "young";
     if (i.stage === "inactive" || a === "low") return "inactive";
-    if (i.species !== "cat" && (a === "active" || a === "working")) return a;
+    if (a === "active" || (a === "working" && i.species !== "cat")) return a;
     return i.stage === "intact" ? "intact" : "neutered";
   }
   function factor(i) { var t = MER[i.species === "cat" ? "cat" : "dog"]; return t[factorKey(i)] || t.neutered; }
@@ -85,6 +88,7 @@
       { lo: 1, hi: 1, who: "Not very active, or gains weight easily", key: "inactive", src: ["pna", "merck-req"] },
       { lo: 1.2, hi: 1.2, who: "Adult, spayed or neutered", key: "neutered", src: ["pna", "merck-req"] },
       { lo: 1.4, hi: 1.4, who: "Adult, not spayed or neutered", key: "intact", src: ["pna", "merck-req"] },
+      { lo: 1.6, hi: 1.6, who: "Very active, like cats that go outdoors", key: "active", src: ["fediaf", "merck-req"] },
       { lo: 2, hi: 3, who: "Kittens (Merck uses 2.5)", key: "young", src: ["pna", "merck-req"] },
       { lo: 2, hi: 3, who: "Pregnant", src: ["pna"] },
       { lo: 2, hi: 6, who: "Nursing mothers", src: ["pna"] }
@@ -92,12 +96,13 @@
   };
   var SLED = { text: "Racing sled dogs: about 9,000 to 13,800 kcal a day in the Yukon Quest race.", src: ["loftus"] };
 
-  // Health conditions a person can tick, and what vet sources say about feeding with each. text is per species
-  // where the advice differs. A vet's own plan comes first.
+  // Health things a person can tick, and what vet sources say about feeding with each. text is per species
+  // where the advice differs. A vet's own plan comes first. Worded gently: no "disease" in what people read
+  // (owner 2026-11-16: pet parents are already under a lot of pressure).
   var CONDITIONS = {
-    kidney: { title: "Kidney disease", src: ["merck-renal"],
-      text: "From stage 2 on, a kidney (renal) diet: less phosphorus, a modest amount of good protein. Pets on one live longer." },
-    liver: { title: "Liver disease", src: ["merck-liver"],
+    kidney: { title: "Kidney values to watch", src: ["merck-renal"],
+      text: "If your vet puts the kidneys at stage 2 or higher: a kidney (renal) diet, with less phosphorus and a modest amount of good protein. Pets on one live longer." },
+    liver: { title: "Liver values to watch", src: ["merck-liver"],
       text: "Most don't need less fat. Cut protein only if your vet finds hepatic encephalopathy. Copper building up in the liver calls for a low-copper liver diet. Small, frequent meals help." },
     pancreatitis: { title: "Pancreatitis", src: ["merck-pancreas"],
       dog: "Under 20 g of fat per 1,000 kcal. Treatment depends on it.",
@@ -105,7 +110,7 @@
     lipids: { title: "High triglycerides or cholesterol", src: ["weeth"],
       text: "24 g of fat per 1,000 kcal or less (about 20% of calories). If it stays high, ask your vet about fiber or fish oil.",
       dogExtra: { text: "Triglycerides of 500 mg/dL and up also raise the risk of pancreatitis.", src: ["merck-pancreas"] } },
-    overweight: { title: "Overweight", src: ["merck-obesity"],
+    overweight: { title: "Weight loss", src: ["merck-obesity"],
       dog: "Start at about 60% of the calories a day and aim to lose about 1% of body weight a week, on a weight-loss food.",
       cat: "Start at about 70% and aim to lose about 1% a week. Never starve a cat: it can cause hepatic lipidosis." }
   };
@@ -124,6 +129,7 @@
     "pna": { title: "Pet Nutrition Alliance. Calculating Calories Based on Pet Needs.", url: "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf" },
     "merck-req": { title: "Merck Veterinary Manual. Nutritional Requirements of Small Animals.", url: "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals" },
     "nrc": { title: "National Research Council. Your Dog's Nutritional Needs: A Science-Based Guide for Pet Owners. National Academies Press, 2006.", url: "https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf" },
+    "fediaf": { title: "FEDIAF. Nutritional Guidelines for Complete and Complementary Pet Food for Cats and Dogs, September 2025, Table VII-9.", url: "https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025.pdf" },
     "mullis": { title: "Mullis RA, Witzel AL, Price J. Maintenance energy requirements of odor detection, explosive detection and human detection working dogs. PeerJ, 2015.", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/" },
     "loftus": { title: "Loftus JP, et al. Energy requirements for racing endurance sled dogs. Journal of Nutritional Science, 2014.", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4473159/" },
     "merck-renal": { title: "Merck Veterinary Manual. Renal Dysfunction in Dogs and Cats.", url: "https://www.merckvetmanual.com/urinary-system/noninfectious-diseases-of-the-urinary-system-in-small-animals/renal-dysfunction-in-dogs-and-cats" },
@@ -134,18 +140,31 @@
   };
 
   // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = floor to rim.
-  // url = the bowl's own listing in our Etsy shop; img = that listing's main photo, copied into img/ (2026-11-16)
+  // url = the bowl's own listing in our Etsy shop; img = a clean photo of it, copied into img/ (2026-11-16)
+  // top = its place in the list shown before anything is typed: our best sellers, in the owner's order. It is a
+  // static list, the same six for a cat or a dog (owner 2026-11-19: lilac plate, two-tone raised flower, the big-dog
+  // Pink Planet third, raised lilac pedestal, sage, and the butter yellow line-and-dots plate sixth).
+  // ml: null = no capacity known, so nothing is claimed either way; mlAbout = an estimate, shown as "about".
+  // dogOnly = made for dogs, not cats.
   var PRODUCTS = [
-    { name: "Lilac flower ceramic slow feeder plate", slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310,
+    { name: "Lilac flower ceramic slow feeder plate", slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310, top: 1,
       url: "https://www.etsy.com/listing/4517774070/ceramic-slow-feeder-cat-bowl-lilac", img: "img/lilac-flower-plate.jpg" },
-    { name: "Butter yellow ceramic slow feeder plate, medium", slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400,
+    { name: "Butter yellow ceramic slow feeder plate, medium", slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400, top: 6,
       url: "https://www.etsy.com/listing/4517744488/ceramic-slow-feeder-cat-bowl-butter", img: "img/butter-yellow-plate.jpg" },
-    { name: "Lilac flower slow feeder on a pedestal", slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310,
+    { name: "Lilac flower slow feeder on a pedestal", slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310, top: 4,
       url: "https://www.etsy.com/listing/4533246949/lilac-elevated-slow-feeder-ceramic-pet", img: "img/lilac-flower-pedestal.jpg" },
-    { name: "Sage green raised tilted slow feeder", slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200,
+    { name: "Sage green raised tilted slow feeder", slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200, top: 5,
       url: "https://www.etsy.com/listing/4517348136/sage-green-ceramic-slow-feeder-bowl", img: "img/sage-green-raised-tilted.jpg" },
-    { name: "Two-tone raised tilted flower slow feeder", slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200,
-      url: "https://www.etsy.com/listing/4504867658/raised-flower-ceramic-slow-feeder-bowl", img: "img/two-tone-raised-tilted-flower.jpg" }
+    { name: "Two-tone raised tilted flower slow feeder", slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200, top: 2,
+      url: "https://www.etsy.com/listing/4504867658/raised-flower-ceramic-slow-feeder-bowl", img: "img/two-tone-raised-tilted-flower.jpg" },
+    // Plate 21.6 cm across, 3.5 cm tall; the optional bamboo stand is 7 cm tall (listing, measured by hand by the maker).
+    // About 650 ml: the estimate on the listing's size chart (2026-11-16, from its size; the maker gives none).
+    // Made for medium to large dogs (owner 2026-11-10). Photo: the listing's second photo, a tricolor Rough Collie
+    // eating from it, so the size reads at a glance (owner 2026-11-19). The name is the owner's: "Large dog ceramic slow
+    // feeder pink planet style" (2026-11-19), "large dog" first, about four lines on the card.
+    { name: "Large dog ceramic slow feeder Pink Planet style", slow: true, tilted: false, widthCm: 21.6, rimCm: 3.5, ml: 650, mlAbout: true, top: 3,
+      dogOnly: true, extra: "Optional bamboo stand, 7 cm (2.8 in) tall",
+      url: "https://www.etsy.com/listing/4614433467/pink-planet-ceramic-slow-feeder-dog-bowl", img: "img/pink-planet-plate.jpg" }
   ];
 
   function num(v) { var n = parseFloat(v); return isFinite(n) && n > 0 ? n : null; }
@@ -277,7 +296,7 @@
     // pet (kcal only when the weight is known). Then what the ticked health conditions mean for feeding.
     var sp = dog ? "dog" : "cat", key = factorKey(i), fx = factor(i), wkg = num(i.weight);
     var kgE = wkg ? (unit === "in" ? wkg * LB_KG : wkg) : null, rerE = kgE ? 70 * Math.pow(kgE, 0.75) : null;
-    out.energy = { kg: kgE ? r1(kgE) : null, rer: rerE ? Math.round(rerE) : null, key: key, lo: fx[0], hi: fx[1], basis: BASIS[key],
+    out.energy = { kg: kgE ? r1(kgE) : null, rer: rerE ? Math.round(rerE) : null, key: key, lo: fx[0], hi: fx[1], basis: (!dog && BASIS[key + "Cat"]) || BASIS[key],
       fedTimesRer: rerE && fedKcalDay ? r1(fedKcalDay / rerE) : null,
       levels: LEVELS[sp].map(function (l) {
         return { lo: l.lo, hi: l.hi, who: l.who, src: l.src, on: l.key === key,
@@ -342,6 +361,20 @@
     out.tips = out.tips.concat(out.nutritionTips);
     if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
       : "A slow feeder or puzzle feeder spreads the meal out. A feline vet consensus recommends small meals from puzzle feeders, partly because cats that gorge may vomit.");
+    // Brings food back up without retching: that is regurgitation, a passive motion with no effort from the belly,
+    // often undigested food from the food pipe (esophagus), not vomiting (Merck, Vomiting in Dogs; The Digestive
+    // System in Animals). Gravity helps: for megaesophagus Merck has dogs fed with the forelimbs higher than the
+    // hindlimbs and held there 10-15 minutes, with frequent small meals; for reflux in the food pipe, small frequent
+    // meals of soft, low-fat food (Merck, Esophagitis). A slow feeder is for eating fast, so it stays as it was.
+    if (i.regurgitates) out.tips.push("Brings food back up: that's usually the food pipe (esophagus), not the stomach, so have your vet check it. " +
+      (size ? "Smaller meals, more often, help. For a large dog, raising the bowl for this is your vet's call, because of the bloat risk above."
+        : elbow ? "Aim for the top of the range so gravity helps, and give smaller meals more often."
+        : "A higher bowl lets gravity help, and smaller meals more often help too."));
+    // Sick or lip licking on an empty stomach, often at night or early morning: bilious vomiting, thought to come
+    // from bile flowing back into the stomach. Ferguson et al., JAAHA 2016, 20 dogs: treated with more frequent
+    // meals, late evening meals, acid reducers and other medicines; 12 of the 17 dogs that kept the diagnosis
+    // improved, and it should be a diagnosis of exclusion. Lip licking is a sign of nausea (Merck). No bowl change.
+    if (dog && i.emptyStomach) out.tips.push("Empty stomach: lip licking can be a sign of nausea. Vets use smaller meals through the day and a small late-evening meal, sometimes with medicine; in one study 12 of 17 dogs improved. Let your vet rule out other causes first.");
     if (i.flatFace) out.tips.push("Flat face: a wide, shallow or tilted bowl is easier to eat from.");
     if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
     if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");
@@ -349,42 +382,60 @@
     // Always end with our bowls: the ones that may fit, or else the closest ones and how far each is from the numbers.
     // Never a dead end with no bowl (owner 2026-11-16). The list is there before anything is typed and re-ranks with
     // every input; it says "may fit", never "fit" (owner 2026-11-15).
+    function card(p, notes) {
+      var holds = p.ml ? (p.mlAbout ? "about " : "") + p.ml + " ml" : "";
+      return { name: p.name, size: show(p.widthCm) + " across, rim " + show(p.rimCm) + " high" + (holds ? ", holds " + holds : ""),
+               note: notes && notes.length ? notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "",
+               specs: [show(p.widthCm) + " across", "Rim " + show(p.rimCm) + " high"].concat(holds ? ["Holds " + holds] : [])
+                 .concat(p.extra ? [p.extra] : []),
+               url: p.url, img: p.img };
+    }
+    // Nothing typed or ticked that changes the ranking: our six best sellers, in the owner's order, the same for any
+    // pet (owner 2026-11-19: "empty state 是一个 static state…你要先展示你店里面好的东西").
+    if (!out.height && !out.capacityMl && !out.minWidthCm && !out.slowFeeder && !i.flatFace && !i.longEars && !i.senior && !i.regurgitates) {
+      out.products = PRODUCTS.filter(function (p) { return p.top; })
+        .sort(function (a, b) { return a.top - b.top; }).map(function (p) { return card(p); });
+      out.productNote = "PawsOnMe bowls that may fit these numbers:";   // the original heading (owner 2026-11-19)
+      return out;
+    }
     var ranked = rankProducts(out, size, i.flatFace || i.longEars,
-                              !!i.senior && !size && !!out.height && out.height.minCm !== undefined);
+                              (!!i.senior || !!i.regurgitates) && !size && !!out.height && out.height.minCm !== undefined, dog);
     var fits = ranked.filter(function (r) { return r.score === 0; });
-    out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) {
-      return { name: r.p.name, size: show(r.p.widthCm) + " across, rim " + show(r.p.rimCm) + " high, holds " + r.p.ml + " ml",
-               note: r.notes.length ? r.notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "",
-               specs: [show(r.p.widthCm) + " across", "Rim " + show(r.p.rimCm) + " high", "Holds " + r.p.ml + " ml"],
-               url: r.p.url, img: r.p.img };
-    });
-    out.productNote = big ? "Our bowls are made for cats and small to medium dogs. The closest ones for yours:"
-      : fits.length ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
+    out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) { return card(r.p, r.notes); });
+    out.productNote = fits.length ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
     return out;
   }
+
+  // How far off, said gently: the numbers are a reference, not a reason not to buy (owner 2026-11-19).
+  // Under 1 cm "slightly", up to 5 cm "a bit", more "quite a bit"; capacity as an approximate "~".
+  function howMuch(d) { return d < 1 ? "slightly" : d <= 5 ? "a bit" : "quite a bit"; }
 
   // Our bowls ranked by how far each is from the numbers: 0 = fits. A rim 5 cm off counts like a bowl that holds
   // nothing extra; capacity and width count by the share that's missing. Large breeds only get the flat plates,
   // because raised bowls of 1 ft or less carried 3.06 times the bloat risk; giant breeds anything up to 1 ft.
-  // Ties follow what was ticked: tilted bowls first for a flat face or long ears; for an older or stiff pet the
-  // higher rims first, as the tip says to aim for the higher end of the range.
-  function rankProducts(out, size, tiltFirst, highFirst) {
+  // Ties follow what was ticked: tilted bowls first for a flat face or long ears; for an older or stiff pet, or one
+  // that brings food back up, the higher rims first, as the tips say to aim for the higher end of the range;
+  // for a large or giant breed the wider plates first. A bowl with no capacity from the maker stays in the
+  // "may fit" list, and when capacity matters its card says the capacity isn't listed yet.
+  function rankProducts(out, size, tiltFirst, highFirst, dog) {
     var h = out.height, need = out.capacityMl, w = out.minWidthCm;
     return PRODUCTS.map(function (p, k) {
       var notes = [], score = 0, d;
+      if (p.dogOnly && !dog) return null;
       if (size) {
         if (p.rimCm > FLOOR_RIM_CM && (size !== "giant" || p.rimCm > FT_CM)) return null;
       } else if (h && h.minCm !== undefined) {
-        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push("rim " + show(d) + " lower than the range"); }
-        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push("rim " + show(d) + " higher than the range"); }
+        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push("rim " + show(d) + " " + howMuch(d) + " lower than the range"); }
+        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push("rim " + show(d) + " " + howMuch(d) + " higher than the range"); }
       }
-      if (need && p.ml < need) { score += (need - p.ml) / need; notes.push("holds " + (need - p.ml) + " ml less than suggested"); }
-      if (w && p.widthCm < w) { d = w - p.widthCm; score += d / w; notes.push(show(d) + " narrower than the whisker span"); }
+      if (need && p.ml === null) notes.push("capacity not listed yet");
+      else if (need && p.ml < need) { score += (need - p.ml) / need; notes.push("holds ~" + (need - p.ml) + " ml less than suggested"); }
+      if (w && p.widthCm < w) { d = w - p.widthCm; score += d / w; notes.push(show(d) + " " + howMuch(d) + " narrower than the whisker span"); }
       if (out.slowFeeder && !p.slow) { score += 1; notes.push("not a slow feeder"); }
       return { p: p, k: k, score: score, notes: notes };
     }).filter(Boolean).sort(function (a, b) {
       return (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0)
-        || (highFirst ? b.p.rimCm - a.p.rimCm : 0) || (a.k - b.k);
+        || (highFirst ? b.p.rimCm - a.p.rimCm : 0) || (size ? b.p.widthCm - a.p.widthCm : 0) || (a.k - b.k);
     });
   }
 

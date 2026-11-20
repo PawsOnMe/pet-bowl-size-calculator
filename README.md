@@ -4,7 +4,7 @@ A healthy nutrition plan starts with how much and what your pet eats. Enter your
 
 **Use it:** https://pawsonme.github.io/pet-bowl-size-calculator/
 
-Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet
+Made by **PawsOnMe**, an Etsy shop of ceramic slow feeder bowls for cats and dogs: https://www.etsy.com/shop/PawsOnMePet
 
 ## Quick answers
 
@@ -48,7 +48,7 @@ Mealtime also gets more interesting: in a small study of 4 dogs, a feeding toy m
 Big enough for one meal with room to spare: 1.5 times the meal volume for a regular bowl, 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume (see [Foods the calculator knows](#foods-the-calculator-knows)). The 1.5 and 2 are our rule of thumb.
 
 **How much should I feed my dog or cat?**
-Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)^0.75 kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. Pets can differ from these estimates by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.
+Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)^0.75 kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Very active cats, like ones that go outdoors, need about a third more than indoor or neutered cats (100 against 75 kcal per kg^0.67 a day) [51], so the calculator uses 1.6 for them instead of 1.2 [38]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. Pets can differ from these estimates by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.
 
 **What should I feed?**
 A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].
@@ -70,8 +70,10 @@ Short-legged dogs (dachshund, corgi, basset): measure the elbow height, because 
 | Large breed, adults 23 to 45 kg | floor, or rim above 30.5 cm (1 ft) and up to elbow height | cohort study [1][30], review [2] |
 | Giant breed, adults over 45 kg | floor, or rim at 30.5 cm (1 ft) or lower | cohort study [1][30], review [2] |
 | Cat dish width | at least the whisker span | 38-cat study [3] |
-| Calories a day | resting energy (RER) = 70 × kg^0.75, times a factor set by life stage and activity: dog 1.6 spayed or neutered, 1.8 intact, 1.2–1.4 not very active, 1.86 active adult, 2.0 working, 2–3 growing; cat 1.2, 1.4, 1.0, 2–3. Divided by kcal per cup, or for grams by kcal per kg × 1,000. A tap-to-open table on the page lists every level with the calories for the pet | Pet Nutrition Alliance [5]; Merck [38]; National Research Council [39] (its calories by weight work out to 1.36 × RER inactive, 1.86 active adult, 1.5 older active, 2.0 young adult active); working detection dogs [40]; racing sled dogs [41] |
-| Health conditions (optional, folded away) | what vet sources say about feeding with kidney disease (renal diet from stage 2) [42], liver disease (most need no fat cut; protein cut only with hepatic encephalopathy; low-copper diet for copper build-up) [43], pancreatitis (dogs under 20 g fat per 1,000 kcal; cats moderately less fat) [44], high triglycerides or cholesterol (no more than 24 g fat per 1,000 kcal) [45], and overweight (start at 60% of the calories for dogs, 70% for cats; lose about 1% of body weight a week) [46] | as listed |
+| Calories a day | resting energy (RER) = 70 × kg^0.75, times a factor set by life stage and activity: dog 1.6 spayed or neutered, 1.8 intact, 1.2–1.4 not very active, 1.86 active adult, 2.0 working, 2–3 growing; cat 1.2, 1.4, 1.0, 1.6 very active or outdoors, 2–3. Divided by kcal per cup, or for grams by kcal per kg × 1,000. A tap-to-open table on the page lists every level with the calories for the pet | Pet Nutrition Alliance [5]; Merck [38]; National Research Council [39] (its calories by weight work out to 1.36 × RER inactive, 1.86 active adult, 1.5 older active, 2.0 young adult active); working detection dogs [40]; racing sled dogs [41]; very active cats [51]: 100 kcal per kg^0.67 against 75 for indoor or neutered cats, a third more, so 1.2 × 4/3 = 1.6 |
+| Anything your vet is watching (optional, folded away) | what vet sources say about feeding for kidney values to watch (renal diet from stage 2) [42], liver values to watch (most need no fat cut; protein cut only with hepatic encephalopathy; low-copper diet for copper build-up) [43], pancreatitis (dogs under 20 g fat per 1,000 kcal; cats moderately less fat) [44], high triglycerides or cholesterol (no more than 24 g fat per 1,000 kcal) [45], and weight loss (start at 60% of the calories for dogs, 70% for cats; lose about 1% of body weight a week) [46] | as listed |
+| Brings food back up without retching (regurgitation) | its own tip: that is usually the food pipe (esophagus), not the stomach, so a vet should check it; aim for the top of the rim range so gravity helps, and give smaller meals more often; higher rims come first among equally good bowls. No slow feeder and no change to bowl size, because this is not eating fast. For a large or giant dog, raising the bowl is the vet's call because of the bloat risk | Merck [47][22][48] |
+| Lip licking, dry heaving or being sick on an empty stomach for too long (e.g. often after overnight) (dogs) | its own tip: lip licking can be a sign of nausea [49]; vets use smaller meals through the day and a small late-evening meal, sometimes with medicine, and 12 of 17 dogs improved in a study of 20 [50]. No bowl change | [49][50] |
 | What your pet eats now | each food's amount × its calories (the maker's figures) × meals a day, shown next to the calories a day. Water or broth mixed in counts as 0 kcal. For a broth, type which one in the box under that line: if USDA FoodData Central has a ready-to-serve broth that matches, its calories are counted (amount × kcal per 100 ml × meals a day) and the entry is named and linked. If nothing matches, pick "Homemade bone broth" and type the calories in one cup | maker calorie statements; broth calories from [USDA FoodData Central](https://fdc.nal.usda.gov/), branded foods, with a link to the entry used |
 | Capacity | meal volume × 1.5 (× 2 for a slow feeder), rounded up to 50 ml. Meal volume = cups × 236.6 ml, or grams ÷ the food's grams in one cup × 236.6 ml (1 oz = 28.35 g; a can is its net weight), added up over the foods in the meal | rule of thumb; grams per cup from the makers (below) |
 
@@ -126,8 +128,9 @@ The calculator also checks your numbers against the bowls we make. Sizes as list
 | Lilac flower slow feeder on a pedestal | 14.8 cm (5.8 in) | 8.5 cm (3.3 in) | 310 ml |
 | Sage green raised tilted slow feeder | 14.8 cm (5.8 in) | 11 cm (4.3 in) | 200 ml |
 | Two-tone raised tilted flower slow feeder | 14.5 cm (5.7 in) | 10.5 cm (4.1 in) | 200 ml |
+| Large dog ceramic slow feeder Pink Planet style (optional bamboo stand, 7 cm / 2.8 in tall) | 21.6 cm (8.5 in) | 3.5 cm (1.4 in) | about 650 ml (our estimate from its size) |
 
-They're made for cats and small to medium dogs. The calculator lists the ones that may fit, starting before you type anything, and re-ranks the list with every number you add. When none fits exactly, it shows the three closest and how far each one is from your numbers. For a large breed it only suggests the flat plates, because raised bowls of 1 ft or less were linked to bloat [1].
+Most are made for cats and small to medium dogs; the Pink Planet plate is made for medium to large dogs. Before you type anything, the calculator shows our six best sellers, the same for a cat or a dog (lilac plate, two-tone raised flower, Pink Planet, lilac pedestal, sage green, butter yellow). Then it lists the ones that may fit and re-ranks the list with every number you add. When none fits exactly, it shows the three closest and roughly how far each one is from your numbers, as a reference. For a large breed it only suggests the flat plates, because raised bowls of 1 ft or less were linked to bloat [1].
 
 Shop: https://www.etsy.com/shop/PawsOnMePet
 
@@ -180,6 +183,11 @@ Shop: https://www.etsy.com/shop/PawsOnMePet
 44. Merck Veterinary Manual. Pancreatitis in Dogs and Cats. https://www.merckvetmanual.com/digestive-system/the-exocrine-pancreas/pancreatitis-in-dogs-and-cats
 45. Weeth LP. Nutritional Management of Hyperlipidemia. Today's Veterinary Practice, 2022. https://todaysveterinarypractice.com/nutrition/nutritional-management-of-hyperlipidemia/
 46. Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity. https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals
+47. Merck Veterinary Manual. Vomiting in Dogs. https://www.merckvetmanual.com/dog-owners/digestive-disorders-of-dogs/vomiting-in-dogs
+48. Merck Veterinary Manual. Esophagitis in Small Animals. https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/esophagitis-in-small-animals
+49. Merck Veterinary Manual. Overview of Motion Sickness (signs of nausea). https://www.merckvetmanual.com/nervous-system/motion-sickness/overview-of-motion-sickness
+50. Ferguson L, Wennogle SA, Webb CB. Bilious vomiting syndrome in dogs: retrospective study of 20 cases (2002–2012). Journal of the American Animal Hospital Association, 2016. https://pubmed.ncbi.nlm.nih.gov/27008323/
+51. FEDIAF. Nutritional Guidelines for Complete and Complementary Pet Food for Cats and Dogs, September 2025, Table VII-9. https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025.pdf
 
 Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.
 

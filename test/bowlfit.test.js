@@ -13,9 +13,16 @@ assert.ok(!names(r).includes("Two-tone raised tilted flower slow feeder")); // 2
 // Large breed (23-45 kg): floor, or above 1 ft (30.5 cm) up to the elbow; one note; no products
 r = recommend({ species: "dog", elbow: 50, size: "large", cupsPerMeal: 2 });
 assert.ok(r.height.floor && r.height.minCm === 42.5 && r.height.maxCm === 50 && r.cautions.length === 1);
-// Never a dead end: the closest bowls, and for a large breed only the flat plates (raised 1 ft or less = 3.06x bloat risk)
-assert.deepStrictEqual(names(r), ["Butter yellow ceramic slow feeder plate, medium", "Lilac flower ceramic slow feeder plate"]);
-assert.ok(r.products[0].note.includes("350 ml less"));        // 750 - 400
+// Never a dead end, and for a large breed only the flat plates (raised 1 ft or less = 3.06x bloat risk). The Pink Planet
+// plate is made for medium to large dogs and holds about 650 ml (listing estimate), so it is the closest for 750 ml.
+assert.deepStrictEqual(names(r), ["Large dog ceramic slow feeder Pink Planet style", "Butter yellow ceramic slow feeder plate, medium", "Lilac flower ceramic slow feeder plate"]);
+assert.deepStrictEqual(r.products.map((p) => p.note), ["Holds ~100 ml less than suggested.", "Holds ~350 ml less than suggested.", "Holds ~440 ml less than suggested."]);
+assert.ok(recommend({ species: "dog" }).products[2].specs.includes("Holds about 650 ml"));   // an estimate says "about"
+// a smaller meal fits the other flat plates too, the widest plate first for a large breed
+assert.deepStrictEqual(names(recommend({ species: "dog", elbow: 50, size: "large", cupsPerMeal: 0.5 })),
+  ["Large dog ceramic slow feeder Pink Planet style", "Butter yellow ceramic slow feeder plate, medium", "Lilac flower ceramic slow feeder plate"]);
+// when nothing else fits, the capacity gap is said gently: 1 cup for a cat x 1.5 = 400 ml, raised elbow
+assert.ok(recommend({ species: "cat", elbow: 20, cupsPerMeal: 2 }).products.every((p) => /holds ~\d+ ml less than suggested/.test(p.note)));
 r = recommend({ species: "dog", elbow: 35, size: "large" });
 assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [30.5, 35]);   // elbow rule 27.5-35 cm, cut at 30.5
 r = recommend({ species: "dog", elbow: 28, size: "large" });
@@ -27,7 +34,7 @@ assert.ok(r.height.floor && r.height.maxCm === 30.5 && r.height.minCm === undefi
 
 // Old flag largeBreed (size unknown): both cut-offs explained, no products
 r = recommend({ species: "dog", elbow: 50, largeBreed: true });
-assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 2 && r.products.every((p) => /ceramic slow feeder plate/.test(p.name)));
+assert.ok(r.height.floor && r.cautions.length === 1 && r.products.length === 3 && r.products.every((p) => /ceramic slow feeder/.test(p.name)));
 
 // Inches: elbow 10 in = 25.4 cm -> 17.9 to 25.4 cm, too tall for our bowls
 r = recommend({ species: "dog", unit: "in", elbow: 10, cupsPerMeal: 1 });
@@ -35,7 +42,7 @@ assert.deepStrictEqual([r.height.minCm, r.height.maxCm], [17.9, 25.4]);
 assert.strictEqual(r.capacityMl, 400);               // 1 x 236.6 x 1.5 = 354.9 -> 400
 // None fits, so the 3 closest, each saying how far off it is: the tallest rims first
 assert.deepStrictEqual(names(r), ["Sage green raised tilted slow feeder", "Two-tone raised tilted flower slow feeder", "Lilac flower slow feeder on a pedestal"]);
-assert.ok(r.productNote.startsWith("The closest") && r.products[0].note.startsWith("Rim 6.9 cm (2.7 in) lower than the range"));
+assert.ok(r.productNote.startsWith("The closest") && r.products[0].note.startsWith("Rim 6.9 cm (2.7 in) quite a bit lower than the range"));
 
 // Cat: elbow 12, whisker 14, a third of a cup, flat face -> tilted first
 r = recommend({ species: "cat", elbow: 12, whisker: 14, cupsPerMeal: 0.33, flatFace: true });
@@ -48,10 +55,16 @@ r = recommend({ species: "cat" });
 assert.strictEqual(r.height, null);
 assert.ok(r.tips.length >= 2);
 
-// The bowl list is there before anything is typed, and it says "may fit", never "fit" (owner 2026-11-15)
+// Before anything is typed: our six best sellers in the owner's order, no notes, the same static list for a cat or a
+// dog (owner 2026-11-19)
+const TOP = ["Lilac flower ceramic slow feeder plate", "Two-tone raised tilted flower slow feeder", "Large dog ceramic slow feeder Pink Planet style",
+  "Lilac flower slow feeder on a pedestal", "Sage green raised tilted slow feeder", "Butter yellow ceramic slow feeder plate, medium"];
+assert.strictEqual(r.productNote, "PawsOnMe bowls that may fit these numbers:");   // the original heading, not "best-selling" (owner 2026-11-19)
+assert.deepStrictEqual(names(r), TOP);
+assert.deepStrictEqual(names(recommend({ species: "dog" })), TOP);
+assert.ok(recommend({ species: "dog", weight: 10 }).products.every((p) => !p.note));   // weight alone doesn't rank bowls
+// After that, the list says "may fit", never "fit" (owner 2026-11-15)
 const MAY = "PawsOnMe bowls that may fit these numbers:";
-assert.strictEqual(r.productNote, MAY);
-assert.deepStrictEqual(names(r), ["Lilac flower ceramic slow feeder plate", "Butter yellow ceramic slow feeder plate, medium", "Lilac flower slow feeder on a pedestal"]);
 // It re-ranks with every input. A low elbow keeps the two flat plates:
 r = recommend({ species: "cat", elbow: 6 });
 assert.deepStrictEqual(names(r), ["Lilac flower ceramic slow feeder plate", "Butter yellow ceramic slow feeder plate, medium"]);
@@ -84,6 +97,12 @@ assert.strictEqual(r.products[0].url, "https://www.etsy.com/listing/4533246949/l
 // no result ever says "that fit"
 [{ species: "cat" }, { species: "cat", elbow: 12 }, { species: "dog", elbow: 11, cupsPerMeal: 0.5 }, { species: "dog", elbow: 50, size: "large" }]
   .forEach((v) => assert.ok(!/that fit\b/.test(recommend(v).productNote)));
+// Card notes are a gentle reference (owner 2026-11-19): "slightly" under 1 cm, "a bit" up to 5 cm, "quite a bit"
+// beyond, and an approximate "~" on capacity
+r = recommend({ species: "dog", unit: "cm", elbow: 19.7, cupsPerMeal: 1 });
+assert.strictEqual(r.products[0].note, "Rim 1.2 cm (0.5 in) a bit lower than the range, holds ~200 ml less than suggested.");
+assert.strictEqual(recommend({ species: "dog", unit: "cm", elbow: 19, cupsPerMeal: 0.25 }).products[0].note, "Rim 0.5 cm (0.2 in) slightly lower than the range.");
+assert.ok(r.products.every((p) => !/\) (lower|higher) than the range|holds \d/.test(p.note)));
 console.log("all bowlfit tests passed");
 
 // Feeding: 10 kg spayed/neutered dog, 400 kcal per cup, 2 meals
@@ -141,9 +160,9 @@ r = recommend({ species: "dog", weight: 10, stage: "young", activity: "working",
 assert.deepStrictEqual([r.feeding.kcalLo, r.feeding.kcalHi, r.energy.levels.filter((l) => l.on).length], [787, 1181, 2]);
 // The old stage "inactive" still works
 assert.strictEqual(recommend({ species: "dog", weight: 10, stage: "inactive", kcalPerCup: 400 }).energy.key, "inactive");
-// Cats have no "active" or "working" level: 4 kg neutered cat, RER 198, x 1.2 = 238
+// Cats have no "working" level (an "active" one, yes: see below): 4 kg neutered cat, RER 198, x 1.2 = 238
 r = recommend({ species: "cat", weight: 4, stage: "neutered", activity: "working", kcalPerCup: 400 });
-assert.deepStrictEqual([r.energy.rer, r.feeding.kcalHi, r.energy.key, r.energy.levels.length, r.energy.after], [198, 238, "neutered", 7, null]);
+assert.deepStrictEqual([r.energy.rer, r.feeding.kcalHi, r.energy.key, r.energy.levels.length, r.energy.after], [198, 238, "neutered", 8, null]);
 // No weight: the levels are still there, without calories
 r = recommend({ species: "dog" });
 assert.ok(r.energy.rer === null && r.energy.levels.length === 11 && r.energy.levels.every((l) => l.kcalLo === null));
@@ -168,4 +187,32 @@ Object.values(B.LEVELS).forEach((ls) => ls.forEach((l) => l.src.forEach((id) => 
 Object.values(B.CONDITIONS).forEach((c) => { c.src.forEach((id) => ids.add(id)); if (c.dogExtra) c.dogExtra.src.forEach((id) => ids.add(id)); });
 ids.add("loftus");
 ids.forEach((id) => assert.ok(B.SOURCES[id] && /^https:\/\//.test(B.SOURCES[id].url), "source " + id));
+// Brings food back up (regurgitation) and being sick on an empty stomach are not "eats fast" (owner 2026-11-16):
+// their own tips, no slow feeder, the same bowl size; regurgitation puts the higher rims first.
+const reg = { species: "dog", unit: "in", elbow: 9, weight: 30, stage: "neutered", mealsPerDay: 2,   // the made-up example dog
+  foods: [{ id: "hills-pd-id-turkey-can-dog", amount: 150, unit: "g" }, { id: "nomnom-turkey-fare", amount: 40, unit: "g" }] };
+r = recommend({ ...reg, regurgitates: true, emptyStomach: true });
+assert.ok(r.tips.some((t) => /^Brings food back up/.test(t) && /Aim for the top of the range/.test(t)));
+assert.ok(r.tips.some((t) => /^Empty stomach: lip licking can be a sign of nausea/.test(t) && /12 of 17/.test(t)));
+assert.deepStrictEqual([r.slowFeeder, r.capacityMl], [false, recommend(reg).capacityMl]);
+assert.ok(!r.tips.some((t) => /^A slow feeder/.test(t)));
+// A large dog: the bowl height is the vet's call because of bloat; no elbow: a higher bowl in general
+assert.ok(recommend({ species: "dog", size: "large", elbow: 40, regurgitates: true }).tips.some((t) => /your vet's call/.test(t)));
+assert.ok(recommend({ species: "dog", regurgitates: true }).tips.some((t) => /A higher bowl lets gravity help/.test(t)));
+// The empty-stomach advice comes from a study in dogs, so a cat gets none
+assert.ok(!recommend({ species: "cat", emptyStomach: true }).tips.some((t) => /^Empty stomach/.test(t)));
+// Ties go to the higher rim for regurgitation: 1 cm elbow-to-rim difference between equal-scoring bowls
+const flat = recommend({ species: "dog", unit: "cm", elbow: 9, cupsPerMeal: 0.5 }).products.map((p) => p.name);
+const high = recommend({ species: "dog", unit: "cm", elbow: 9, cupsPerMeal: 0.5, regurgitates: true }).products.map((p) => p.name);
+assert.notDeepStrictEqual(flat, high);
+// What people read never says "disease"
+Object.values(B.CONDITIONS).forEach((c) => assert.ok(!/disease/i.test([c.title, c.text, c.dog, c.cat].join(" ")), c.title));
+// A very active cat, like one that goes outdoors: 1.6 x RER, a third more than a neutered adult's 1.2 (FEDIAF 2025:
+// active cats 100 against 75 kcal/kg^0.67 for indoor or neutered cats). "working" stays for dogs only.
+r = recommend({ species: "cat", weight: 4, stage: "neutered", activity: "active", kcalPerCup: 400 });
+assert.deepStrictEqual([r.energy.key, r.energy.lo, r.energy.basis], ["active", 1.6, "a very active adult cat, like one that goes outdoors"]);
+assert.strictEqual(r.feeding.kcalLo, Math.round(70 * Math.pow(4, 0.75) * 1.6));   // 317 kcal
+assert.ok(r.energy.levels.some((l) => l.on && l.lo === 1.6 && l.src.includes("fediaf")));
+assert.strictEqual(recommend({ species: "cat", weight: 4, stage: "neutered", activity: "working" }).energy.key, "neutered");
+assert.strictEqual(recommend({ species: "cat", weight: 4, stage: "young", activity: "active" }).energy.key, "young");   // kittens go by growth
 console.log("energy and condition tests passed");

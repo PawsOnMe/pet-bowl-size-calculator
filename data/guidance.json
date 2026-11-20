@@ -57,7 +57,10 @@
       "applies_to": "dogs and cats",
       "rule": "Meal volume = cups x 236.6 ml, or grams (1 oz = 28.35 g; a can is its net weight) / the food's grams in one level cup x 236.6 ml, added up over the foods. Grams in one cup: dry food = the maker's kcal per cup / kcal per kg x 1000, or the cup weight on the label; dry food not listed = 86.1 g, the 10th percentile of the 50 listed dry foods; wet food = 236.6 g (1.0 g per ml); fresh-cooked food from the maker (146.5 to 188 g), or 146.5 g when not listed, also for raw and homemade food; freeze-dried 45 g; water or broth 236.6 g",
       "evidence": "maker calorie statements (foods.js, one source per food, checked 15 November 2026); density of mostly-water food about 1.05-1.10 g per ml without air (Choi and Okos 1986 composition model), rounded down so the bowl errs big",
-      "sources": ["foods.js", "https://www.slideshare.net/miguemeneses/thermophysical"]
+      "sources": [
+        "foods.js",
+        "https://www.slideshare.net/miguemeneses/thermophysical"
+      ]
     },
     {
       "id": "slow-feeder",
@@ -96,13 +99,14 @@
     {
       "id": "daily-calories",
       "applies_to": "dogs and cats",
-      "rule": "RER = 70 x kg^0.75 kcal/day; MER = RER x factor (dog: neutered 1.6, intact 1.8, inactive 1.2-1.4, active adult 1.86, working detection dog 2.0, growth 2-3; cat: neutered 1.2, intact 1.4, inactive 1.0, growth 2-3); cups = MER / kcal per cup",
-      "evidence": "Pet Nutrition Alliance table; estimates only, pets can vary by as much as 50%, adjust to body condition",
+      "rule": "RER = 70 x kg^0.75 kcal/day; MER = RER x factor (dog: neutered 1.6, intact 1.8, inactive 1.2-1.4, active adult 1.86, working detection dog 2.0, growth 2-3; cat: neutered 1.2, intact 1.4, inactive 1.0, very active or outdoor 1.6, growth 2-3); cups = MER / kcal per cup",
+      "evidence": "Pet Nutrition Alliance table; estimates only, pets can vary by as much as 50%, adjust to body condition; FEDIAF 2025 Table VII-9: adult cats 52-75 kcal/kg^0.67 if neutered and/or indoor, 100 if active (a third more than 75), so very active or outdoor cats 1.2 x 4/3 = 1.6 x RER",
       "sources": [
         "https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf",
         "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutritional-requirements-of-small-animals",
         "https://nap.nationalacademies.org/resource/10668/dog_nutrition_final_fix.pdf",
-        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/"
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349026/",
+        "https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025.pdf"
       ]
     },
     {
@@ -113,6 +117,28 @@
       "sources": [
         "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods",
         "https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/"
+      ]
+    },
+    {
+      "id": "regurgitation",
+      "applies_to": "dogs and cats that bring food back up without retching",
+      "rule": "Not the same as eating fast: a vet should check the food pipe; feed from higher up (the top of the rim range) and give smaller meals more often; no slow feeder; for large and giant dogs the height is the vet's call because of bloat risk",
+      "evidence": "Merck: regurgitation is passive, without effort from the belly, often undigested food, and points to the esophagus; for megaesophagus, frequent small meals and feeding with the forelimbs higher than the hindlimbs, held 10-15 minutes; for reflux esophagitis, small frequent meals of soft, low-fat food",
+      "sources": [
+        "https://www.merckvetmanual.com/dog-owners/digestive-disorders-of-dogs/vomiting-in-dogs",
+        "https://www.merckvetmanual.com/digestive-system/digestive-system-introduction/the-digestive-system-in-animals",
+        "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals",
+        "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/esophagitis-in-small-animals"
+      ]
+    },
+    {
+      "id": "empty-stomach",
+      "applies_to": "dogs that lick their lips, dry heave or are sick on an empty stomach, often at night or early morning",
+      "rule": "Meal timing, not a bowl change: smaller meals through the day and a small late-evening meal; the vet rules out other causes first",
+      "evidence": "Merck lists lip licking among the signs of nausea; Ferguson et al., JAAHA 2016, 20 dogs with bilious vomiting syndrome, treated with frequent feedings, late evening meals and medicines: 12 of the 17 that kept the diagnosis improved; it should be a diagnosis of exclusion",
+      "sources": [
+        "https://www.merckvetmanual.com/nervous-system/motion-sickness/overview-of-motion-sickness",
+        "https://pubmed.ncbi.nlm.nih.gov/27008323/"
       ]
     }
   ]

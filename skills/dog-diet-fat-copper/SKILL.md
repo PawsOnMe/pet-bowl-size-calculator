@@ -71,4 +71,4 @@ Add every total up again from the rows as shown. Never adjust an old total. Then
 8. Whole Dog Journal. How to Find a Low Copper Dog Food. https://www.whole-dog-journal.com/food/how-to-find-a-low-copper-dog-food/
 9. USDA FoodData Central. https://fdc.nal.usda.gov/
 
-Made by PawsOnMe, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs: https://www.etsy.com/shop/PawsOnMePet. Not veterinary advice.
+Made by PawsOnMe, an Etsy shop of ceramic slow feeder bowls for cats and dogs: https://www.etsy.com/shop/PawsOnMePet. Not veterinary advice.

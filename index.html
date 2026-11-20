@@ -24,8 +24,10 @@ legend{font-weight:600;margin-bottom:6px}
 .seg label{position:relative;display:block;cursor:pointer}
 .seg input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
 .seg span{display:flex;align-items:center;justify-content:center;min-height:40px;padding:6px 10px;border-radius:999px;text-align:center;line-height:1.2;font-size:.95rem;transition:background-color .15s,color .15s}
-@media (hover:hover){.seg input:not(:checked):hover+span{background:var(--accent-soft)}}
-.seg input:checked+span{background:var(--accent);color:var(--on-accent);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+/* The toggles use the secondary style: a soft tint, purple text and a thin purple outline. The filled purple was too
+   bright (owner 2026-11-19). */
+@media (hover:hover){.seg input:not(:checked):hover+span{color:var(--accent)}}
+.seg input:checked+span{background:var(--accent-soft);color:var(--accent);font-weight:600;box-shadow:inset 0 0 0 1px var(--accent)}
 .seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.seg span{transition:none}}
 .field{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin:0 0 14px}
@@ -61,8 +63,12 @@ table.rer{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:.92rem
 table.rer caption{caption-side:top;text-align:left;font-weight:600;padding:0 0 6px}
 table.rer th,table.rer td{text-align:left;vertical-align:top;padding:6px 6px;border-bottom:1px solid var(--line)}
 table.rer th{color:var(--muted);font-weight:600}
-table.rer td:first-child,table.rer th:first-child{white-space:nowrap;padding-left:0}
-table.rer td:last-child,table.rer th:last-child{white-space:nowrap;text-align:right;padding-right:0}
+table.rer tr>:first-child{padding-left:0}
+table.rer tr>:last-child{padding-right:0}
+table.rer .x{white-space:nowrap}
+table.rer .k{white-space:nowrap;text-align:right}
+table.rer td.who{overflow-wrap:anywhere}
+.tscroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 table.rer tr.on td{background:var(--accent-soft);font-weight:600}
 .fn{font-size:.85rem;color:var(--muted);margin:6px 0 0}
 .conds p{margin:8px 0 0}
@@ -86,14 +92,62 @@ dt{color:var(--muted)}dd{margin:0;font-weight:600}
 .pcard .pt{display:flex;flex-direction:column;gap:3px;padding:8px 8px 10px}
 .pcard .pt strong{font-size:.86rem;line-height:1.25;color:var(--ink);margin-bottom:2px}
 .pcard .pt>span{font-size:.76rem;line-height:1.3}
-.pcard .pt .pn{color:var(--warn);margin-top:2px}
+.pcard .pt .pn{color:var(--warn);margin-top:2px;font-style:italic}
 .pcard .ext{position:absolute;top:6px;right:6px;width:22px;height:22px;padding:4px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 a.pcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 a.pcard:active{border-color:var(--accent)}
 @media (hover:hover){a.pcard:hover{border-color:var(--accent)}}
 a{color:var(--accent)}
 .sources li{margin:6px 0;font-size:.92rem}
+/* Sources fold away like the other expanders on the page, closed at first (owner 2026-11-19); the heading keeps its size */
+.srcs>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}
+.srcs>summary h2{display:inline;margin:0}
 footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
+/* Motion (owner 2026-11-16): the springs run in the script at the end and write the variables used here */
+.seg{position:relative}
+.seg label{z-index:1;-webkit-tap-highlight-color:transparent}
+.seg span{transition:background-color .15s,color 280ms}
+.seg .thumb{position:absolute;left:0;top:0;border-radius:999px;background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent);transform:translateX(calc(var(--tx,0) * 1px)) scaleX(var(--sx,1));transition:background-color 280ms;pointer-events:none}
+.seg.has-thumb input:checked+span{background:transparent;box-shadow:none}
+.add{position:relative;z-index:1;overflow:hidden;background:var(--card)}
+.add,a.pcard,a.shop{transform:translate(calc(var(--mx,0) * 1px),calc(var(--my,0) * 1px)) scale(var(--ps,1));-webkit-tap-highlight-color:transparent}
+a.shop{display:inline-block}
+.ripple{position:absolute;border-radius:50%;background:currentColor;pointer-events:none;opacity:0}
+.checks .cb{position:relative;display:inline-grid;flex:0 0 auto;width:20px;height:20px;margin-top:2px;transform:scale(var(--cs,1))}
+.checks .cb input{-webkit-appearance:none;appearance:none;margin:0;width:20px;height:20px;border:2px solid var(--muted);border-radius:6px;background:var(--bg);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 280ms,border-color 280ms}
+.checks .cb input:checked{background:var(--accent);border-color:var(--accent)}
+.checks .cb input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cb svg{position:absolute;left:0;top:0;width:20px;height:20px;pointer-events:none;fill:none;stroke:var(--on-accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cb path{stroke-dasharray:15;stroke-dashoffset:15;transition:stroke-dashoffset 300ms ease-out}
+.cb input:checked+svg path{stroke-dashoffset:0}
+@media (prefers-reduced-motion:reduce){.seg .thumb,.checks .cb input,.cb path{transition:none}}
+/* Bottom bar (owner 2026-11-19): "Your numbers" jumps to the result, the ? icon to the quick answers. Both sit in one
+   solid strip across the bottom of the screen, so the page never shows around them while scrolling. "Your numbers" is
+   tertiary (just purple text, no fill or outline) until the result has a number to see, then the purple primary style.
+   Picking Cat, the units or anything else that gives no number yet keeps it tertiary. The strip shows in the form
+   on the way down, also after numbers are filled in; it slides away while the page is scrolled up, once the result has
+   come up into the top third of the screen (and on through the quick answers), and while the phone keyboard is up. */
+html{scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+.jump{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:8px;padding:8px max(16px,calc((100% - 420px) / 2)) calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);transform:translateY(0);transition:transform .22s ease-out}
+.jump.away{transform:translateY(100%);pointer-events:none}
+.jump a{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:999px;font-weight:600;font-size:.95rem;white-space:nowrap;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,box-shadow .2s}
+.jump .jump-res{flex:1 1 auto;background:transparent;color:var(--accent);box-shadow:none}
+.jump .jump-res.ready{background:var(--accent);color:var(--on-accent)}
+.jump .jump-qa{flex:0 0 44px;width:44px;padding:0;background:var(--card);color:var(--accent);border:1px solid var(--line)}
+.jump svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.jump .jump-qa svg{width:22px;height:22px}
+#f,#result,#qa{scroll-margin-top:12px}
+main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+/* In the quick answers (owner 2026-11-19): two round buttons float at the bottom right, one above the other: back to
+   the form (a pencil) and back to Your numbers (the strip's chart icon). Like the strip, both stay tertiary until the
+   result has a number to see: the card colour, the usual grey border, a purple icon. Then both turn the purple primary
+   style. They only show while the quick answers are on screen. */
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;display:flex;flex-direction:column;gap:12px;transition:opacity .2s ease-out,transform .2s ease-out,visibility 0s}
+.fab.away{opacity:0;transform:translateY(12px);pointer-events:none;visibility:hidden;transition:opacity .2s ease-out,transform .2s ease-out,visibility 0s .2s}
+.fab a{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line),0 2px 10px rgba(0,0,0,.18);-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,box-shadow .2s}
+.fab a.ready{background:var(--accent);color:var(--on-accent);box-shadow:inset 0 0 0 1px var(--accent),0 2px 10px rgba(0,0,0,.18)}
+.fab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.jump,.jump a,.fab,.fab a{transition:none}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
@@ -103,7 +157,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 {"@type":"Question","name":"Are raised bowls safe for large dogs?","acceptedAnswer":{"@type":"Answer","text":"It depends on the height and on how big the breed is. In a study of 1,637 large and giant breed dogs, large breeds (23 to 45 kg) fed from a bowl raised 1 ft (30.5 cm) or less had 3.06 times the bloat (GDV) risk of floor-fed dogs, with no significant difference above 1 ft; giant breeds (over 45 kg) had 2.29 times the risk above 1 ft and no significant difference at 1 ft or less (Glickman et al., 2000; Buckley, 2017). So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases, so treat the cut-off as a guide. If you're unsure, ask your vet."}},
 {"@type":"Question","name":"How wide should a cat's bowl be?","acceptedAnswer":{"@type":"Answer","text":"In a study of 38 cats, whisker-friendly dishes made no difference to time spent eating, food dropped or food eaten, though 63% of owners said their cat preferred the wider dish (Slovak and Foster, 2021). A wide, shallow dish at least as wide as the whisker span is a cheap thing to try."}},
 {"@type":"Question","name":"How big should a pet's food bowl be?","acceptedAnswer":{"@type":"Answer","text":"Big enough to hold one meal with room to spare: about 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume."}},
-{"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag, or by the kcal per kg and multiply by 1,000 for grams, and adjust to body condition."}},
+{"@type":"Question","name":"How much should I feed my dog or cat?","acceptedAnswer":{"@type":"Answer","text":"Start with the chart on the food bag, or calculate resting energy as 70 x (weight in kg)^0.75 kcal a day and multiply by a life-stage factor: 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat (about 1.6 if very active or outdoors, FEDIAF 2025), 2 to 3 for puppies and kittens (Pet Nutrition Alliance). Divide by the kcal per cup on the bag, or by the kcal per kg and multiply by 1,000 for grams, and adjust to body condition."}},
 {"@type":"Question","name":"What should I feed my puppy?","acceptedAnswer":{"@type":"Answer","text":"A food labelled complete and balanced for growth or all life stages. For a puppy that will be a large dog, the label should say it includes growth of large size dogs."}},
 {"@type":"Question","name":"Do slow feeder bowls work?","acceptedAnswer":{"@type":"Answer","text":"Yes, at slowing a fast eater down. In a study of 10 pet dogs, meals took significantly longer from a slow feeder than from a plain bowl, and the dogs were still slower after nine days of practice (Buckley and Lees, 2016). Eating fast was a bloat (GDV) risk factor in two Purdue studies (Glickman et al., 1997 and 2000), and VCA Animal Hospitals advises feeding large and giant dogs from the floor with a puzzle feeder or slow-down bowl. For cats, a feline vet consensus recommends frequent small meals from puzzle feeders, which it says increase activity and help weight control (AAFP, 2018). Veterinary Partner says small meals in feeders prevent gulping and may lessen vomiting in cats, and suggests puzzle feeding bowls for dogs that swallow air by eating quickly. Owners on Reddit report the same, though that is personal experience, not research. No trial has yet tested whether a slow feeder prevents bloat itself."}}
 ]}]}
@@ -125,7 +179,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <label><input type="radio" name="unit" value="cm" checked><span>Metric (cm, kg)</span></label>
 <label><input type="radio" name="unit" value="in"><span>US (inches, lb)</span></label></div></fieldset>
 <h2 class="part">Nutrition</h2>
-<div class="field"><label for="weight">Weight (<span id="u3">kg</span>)</label>
+<div class="field"><label for="weight"><span class="dog-only">Dog</span><span class="cat-only">Cat</span> weight (<span id="u3">kg</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
 <div class="field"><label for="stage">Life stage</label>
 <select id="stage" name="stage">
@@ -137,7 +191,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <select id="activity" name="activity">
 <option value="usual">Usual: everyday walks or play</option>
 <option value="low">Low: mostly rests, or gains weight easily</option>
-<option value="active" class="dog-only">High: plenty of chances to run, like a big yard or other dogs at home</option>
+<option value="active">High: plenty of chances to run, like a big yard or other dogs at home</option>
 <option value="working" class="dog-only">Working dog, such as a detection dog</option>
 </select></div>
 <fieldset><legend>Food per meal</legend>
@@ -149,14 +203,14 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <div class="field" id="kcalField"><label for="kcal" id="kcalLabel">Calories per cup (kcal/cup)</label>
 <input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
 <span class="hint" id="kcalHint">Printed on the food bag as kcal/cup.</span></div>
-<details class="adv"><summary>Health conditions (optional)</summary>
-<span class="hint">Tick any that a vet has diagnosed. The result then adds what vet sources say about feeding for each.</span>
+<details class="adv"><summary>Anything your vet is watching (optional)</summary>
+<span class="hint">Tick anything your vet is keeping an eye on. The result then adds what vet sources say about feeding for it.</span>
 <div class="checks">
-<label><input type="checkbox" name="cond" value="kidney"> Kidney disease</label>
-<label><input type="checkbox" name="cond" value="liver"> Liver disease</label>
+<label><input type="checkbox" name="cond" value="kidney"> Kidney values to watch</label>
+<label><input type="checkbox" name="cond" value="liver"> Liver values to watch</label>
 <label><input type="checkbox" name="cond" value="pancreatitis"> Pancreatitis, now or in the past</label>
 <label><input type="checkbox" name="cond" value="lipids"> High triglycerides or cholesterol on blood tests</label>
-<label><input type="checkbox" name="cond" value="overweight"> Overweight and needs to lose weight</label>
+<label><input type="checkbox" name="cond" value="overweight"> Working on weight loss</label>
 </div></details>
 <h2 class="part">Bowl</h2>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
@@ -175,6 +229,8 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <fieldset class="checks"><legend>Anything that applies</legend>
 <label class="dog-only"><input type="checkbox" name="shortLegs"> Short legs, long back (dachshund, corgi, basset)</label>
 <label><input type="checkbox" name="fastEater"> Eats very fast or throws up after meals</label>
+<label><input type="checkbox" name="regurgitates"> Brings food back up without retching (regurgitation)</label>
+<label class="dog-only"><input type="checkbox" name="emptyStomach"> Lip licking, dry heaving or being sick on an empty stomach for too long (e.g. often after overnight)</label>
 <label><input type="checkbox" name="flatFace"> Flat face (pug, Persian)</label>
 <label class="dog-only"><input type="checkbox" name="longEars"> Long, floppy ears</label>
 <label><input type="checkbox" name="senior"> Older or stiff joints</label>
@@ -183,7 +239,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 
 <section id="result" class="card" aria-live="polite"></section>
 
-<section>
+<section id="qa">
 <h2>Quick answers</h2>
 <h3>How high should my dog's food bowl be?</h3>
 <p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the rim between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
@@ -210,7 +266,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <h3>How big should the bowl be?</h3>
 <p>Big enough for one meal with room to spare. We use 1.5 times the meal volume for a regular bowl and 2 times for a slow feeder, because the ridges take up space. 1 US cup is 236.6 ml. If you weigh your pet's food or feed it by the can, pick the food in the calculator and it turns grams, ounces or cans into volume. This is our rule of thumb.</p>
 <h3>How much should I feed my dog or cat?</h3>
-<p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
+<p>Start with the chart on the food bag, or work it out: resting energy is 70 × (weight in kg)<sup>0.75</sup> kcal a day, times a life-stage factor, for example 1.6 for a spayed or neutered adult dog, 1.2 for a spayed or neutered adult cat, and 2 to 3 for puppies and kittens [5]. Very active cats, like ones that go outdoors, need about a third more than indoor or neutered cats (100 against 75 kcal per kg<sup>0.67</sup> a day) [32], so the calculator uses 1.6 for them instead of 1.2 [19]. Divide by the calories per cup on the bag (or, if you weigh food, by the calories per kg, times 1,000 for grams), then pick a bowl that holds one meal with room to spare. These are estimates and pets can differ by as much as 50%, so check body condition and adjust [5]. For weight loss, ask your vet for a plan.</p>
 <h3>What should I feed?</h3>
 <p>A food whose label says it is complete and balanced for your pet's life stage: growth, adult maintenance or all life stages. For a puppy that will be a large dog, the label should say the food includes growth of large size dogs [6]. That rule exists because large-breed puppies need tighter calcium limits [7].</p>
 <h3>Short legs, long ears or a flat face?</h3>
@@ -218,7 +274,7 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 </section>
 
 <section class="sources">
-<h2>Sources</h2>
+<details class="srcs"><summary><h2>Sources</h2></summary>
 <ol>
 <li>Glickman LT, et al. Non-dietary risk factors for gastric dilatation-volvulus in large and giant breed dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/11128539/">PubMed</a></li>
 <li>Buckley L. Are dogs that are fed from a raised bowl at an increased risk of gastric dilation volvulus compared with floor-fed dogs? Veterinary Evidence. <a href="https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf">PDF</a></li>
@@ -247,19 +303,34 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 <li data-src="merck-pancreas">Merck Veterinary Manual. Pancreatitis in Dogs and Cats. <a href="https://www.merckvetmanual.com/digestive-system/the-exocrine-pancreas/pancreatitis-in-dogs-and-cats">Merck</a></li>
 <li data-src="weeth">Weeth LP. Nutritional Management of Hyperlipidemia. Today's Veterinary Practice, 2022. <a href="https://todaysveterinarypractice.com/nutrition/nutritional-management-of-hyperlipidemia/">Article</a></li>
 <li data-src="merck-obesity">Merck Veterinary Manual. Nutrition in Disease Management in Small Animals: Obesity. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals">Merck</a></li>
+<li data-src="merck-vomit">Merck Veterinary Manual. Vomiting in Dogs. <a href="https://www.merckvetmanual.com/dog-owners/digestive-disorders-of-dogs/vomiting-in-dogs">Merck</a></li>
+<li data-src="merck-esophagitis">Merck Veterinary Manual. Esophagitis in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/esophagitis-in-small-animals">Merck</a></li>
+<li data-src="merck-nausea">Merck Veterinary Manual. Overview of Motion Sickness (signs of nausea). <a href="https://www.merckvetmanual.com/nervous-system/motion-sickness/overview-of-motion-sickness">Merck</a></li>
+<li data-src="ferguson">Ferguson L, Wennogle SA, Webb CB. Bilious vomiting syndrome in dogs: retrospective study of 20 cases (2002–2012). Journal of the American Animal Hospital Association, 2016. <a href="https://pubmed.ncbi.nlm.nih.gov/27008323/">PubMed</a></li>
+<li data-src="fediaf">FEDIAF. Nutritional Guidelines for Complete and Complementary Pet Food for Cats and Dogs, September 2025, Table VII-9. <a href="https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025.pdf">FEDIAF</a></li>
 </ol>
+</details>
 </section>
 
 <footer>
-<p>Made by <a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a>, an Etsy shop of ceramic slow feeder bowls for cats and small to medium dogs. Free and open source (MIT).</p>
+<p>Made by <a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a>, an Etsy shop of ceramic slow feeder bowls for cats and dogs. Free and open source (MIT).</p>
 <p>Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.</p>
 </footer>
 </main>
+<nav class="jump" id="jump" aria-label="Jump to">
+<a class="jump-res" href="#result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Your numbers</a>
+<a class="jump-qa" href="#qa" aria-label="Quick answers" title="Quick answers"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4"/><path d="M12 17.6v.1"/></svg></a>
+</nav>
+<nav class="fab away" id="fab" aria-label="Back to">
+<a class="fab-form" href="#f" aria-label="Back to the form" title="Back to the form"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.2 15.6L15.6 5.2a2.26 2.26 0 0 1 3.2 3.2L8.4 18.8 4 20z"/><path d="M13.6 7.2l3.2 3.2"/></svg></a>
+<a class="fab-res" href="#result" aria-label="Your numbers" title="Your numbers"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg></a>
+</nav>
 <script src="foods.js"></script>
 <script src="bowlfit.js"></script>
 <script>
 (function () {
-  var f = document.getElementById("f"), out = document.getElementById("result");
+  var f = document.getElementById("f"), out = document.getElementById("result"), jumpRes = document.querySelector("#jump .jump-res");
+  var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form");
   var box = document.getElementById("foodRows"), seq = 0;
   var kField = document.getElementById("kcalField"), kLabel = document.getElementById("kcalLabel"), kHint = document.getElementById("kcalHint");
   var FOODS = BowlFit.foods(), HAY = {};
@@ -456,13 +527,24 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     return { species: d.get("species"), unit: d.get("unit"), elbow: d.get("elbow"), whisker: d.get("whisker"),
       foods: foodRows(), labelKcal: d.get("kcal"), weight: d.get("weight"), stage: d.get("stage"), mealsPerDay: d.get("meals"), size: dog ? d.get("size") : "", shortLegs: dog && d.has("shortLegs"),
       fastEater: d.has("fastEater"), flatFace: d.has("flatFace"), longEars: dog && d.has("longEars"), senior: d.has("senior"),
+      regurgitates: d.has("regurgitates"), emptyStomach: dog && d.has("emptyStomach"),
       activity: d.get("activity"), conditions: d.getAll("cond") };
   }
-  // The "High" and "Working" activity levels are for dogs only; for a cat they are hidden and can't be chosen.
+  // "Working" comes from studies of working dogs, so a cat doesn't get it: it is taken out of the list, not hidden,
+  // because iPhone Safari ignores "hidden" on an option and shows it greyed out, which reads as "not allowed".
+  // "High" is there for both; for a cat it means a very active cat, like one that goes outdoors (owner 2026-11-19).
+  var dogOnlyActivity = [].slice.call(document.querySelectorAll("#activity option.dog-only"));
+  var actHigh = document.querySelector('#activity option[value="active"]');
+  var HIGH = { dog: actHigh.text, cat: "High: very active, like a cat that goes outdoors" };
   function syncActivity() {
     var cat = (checked("species") || "dog") === "cat", sel = document.getElementById("activity");
-    [].forEach.call(sel.querySelectorAll("option.dog-only"), function (o) { o.hidden = o.disabled = cat; });
-    if (cat && sel.selectedOptions[0] && sel.selectedOptions[0].disabled) sel.value = "usual";
+    actHigh.text = cat ? HIGH.cat : HIGH.dog;
+    if (cat) {
+      if (dogOnlyActivity.indexOf(sel.selectedOptions[0]) >= 0) sel.value = "usual";
+      dogOnlyActivity.forEach(function (o) { if (o.parentNode) o.parentNode.removeChild(o); });
+    } else {
+      dogOnlyActivity.forEach(function (o) { if (!o.parentNode) sel.appendChild(o); });
+    }
   }
   // Source numbers on the page come from the Sources list, so they stay right if the list changes.
   function refs(ids) {
@@ -482,6 +564,12 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
   function render() {
     syncActivity();
     var v = vals(), r = BowlFit.recommend(v);
+    // "Your numbers" in the bottom bar, and both round buttons in the quick answers (owner 2026-11-19), stay tertiary
+    // until the result has a number to see: calories from the weight, the rim height from the elbow, the bowl size from
+    // the food, the dish width from the whiskers, or what the pet eats now. Then they turn the purple primary style.
+    // Picking Cat, the units or anything else that gives no number yet is not enough, so they don't change for it.
+    var ready = !!(r.feeding || r.fedKcalDay || r.capacityMl || r.minWidthCm || (r.height && +v.elbow > 0));
+    [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
     document.body.setAttribute("data-species", v.species);
     document.getElementById("u1").textContent = document.getElementById("u2").textContent = v.unit;
     document.getElementById("u3").textContent = v.unit === "in" ? "lb" : "kg";
@@ -509,12 +597,14 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
     function fold(key, summary, body) { return '<details class="more" data-k="' + key + '"><summary>' + summary + "</summary>" + body + "</details>"; }
     if (en) {
       var kc = !!en.rer, tb = "";
-      tb += '<table class="rer"><caption class="sr">Calories a day at each level</caption>' +
-        "<thead><tr><th>× RER</th><th>Who</th>" + (kc ? "<th>kcal a day</th>" : "") + "</tr></thead><tbody>" +
+      // Columns are styled by class, not by position: without a weight there is no kcal column, and "Who" must
+      // still wrap. The table scrolls inside its own box if it ever can't fit, never the page.
+      tb += '<div class="tscroll"><table class="rer"><caption class="sr">Calories a day at each level</caption>' +
+        '<thead><tr><th class="x">× RER</th><th>Who</th>' + (kc ? '<th class="k">kcal a day</th>' : "") + "</tr></thead><tbody>" +
         en.levels.map(function (l) {
-          return "<tr" + (l.on ? ' class="on"' : "") + "><td>" + lvl(l.lo, l.hi) + "</td><td>" + esc(l.who) + "</td>" +
-            (kc ? "<td>" + (l.kcalLo === l.kcalHi ? l.kcalLo : l.kcalLo + "-" + l.kcalHi) + "</td>" : "") + "</tr>";
-        }).join("") + "</tbody></table>";
+          return "<tr" + (l.on ? ' class="on"' : "") + '><td class="x">' + lvl(l.lo, l.hi) + '</td><td class="who">' + esc(l.who) + "</td>" +
+            (kc ? '<td class="k">' + (l.kcalLo === l.kcalHi ? l.kcalLo : l.kcalLo + "-" + l.kcalHi) + "</td>" : "") + "</tr>";
+        }).join("") + "</tbody></table></div>";
       var lv = [], seen = {};
       en.levels.forEach(function (l) { l.src.forEach(function (id) { if (!seen[id]) { seen[id] = 1; lv.push(id); } }); });
       tb += '<p class="fn">' + (en.after ? cite(en.after.text, en.after.src) + " " : "") + "Levels from " + refs(lv) + ".</p>";
@@ -541,10 +631,10 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
       var body = (p.img ? '<img src="' + esc(p.img) + '" alt="" width="320" height="320" decoding="async">' : "") + (p.url ? EXT : "") +
         '<span class="pt"><strong>' + esc(p.name) + "</strong>" +
         (p.specs || [p.size]).map(function (t) { return "<span>" + nb(t) + "</span>"; }).join("") +
-        (p.note ? '<span class="pn">' + nb(p.note) + "</span>" : "") + "</span>";
+        (p.note ? '<span class="pn"><span aria-hidden="true">💡 </span>' + nb(p.note) + "</span>" : "") + "</span>";
       return "<li>" + (p.url ? '<a class="pcard" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + body + '<span class="sr"> Opens on Etsy</span></a>'
         : '<div class="pcard">' + body + "</div>") + "</li>";
-    }).join("") + '</ul><p><a href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
+    }).join("") + '</ul><p><a class="shop" href="' + r.shop + '">See them in the PawsOnMe shop on Etsy</a></p>';
     // Only touch the result when it changed. Leaving a box fires "change" right as the next tap lands, and
     // redrawing then would swallow a tap on a folded section. Opened sections stay open when it does redraw.
     var html = h + "</div>";
@@ -561,6 +651,198 @@ footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
   f.addEventListener("input", render);
   f.addEventListener("change", render);
   addRow(false); render();
+})();
+</script>
+<script>
+// Motion (owner 2026-11-16), with the numbers from a RedNote note on button motion ("6 个UI按钮动效参数"):
+// - Press and spring back: a pressed main button shrinks to 0.94 and springs back to 1 when let go (stiffness 260, damping 12).
+// - Elastic toggle: the segmented controls' thumb stretches up to 1.35x sideways while it moves, then springs into place
+//   (stiffness 200, damping 14); the label colour changes over 280 ms.
+// - Touch ripple: on "+ Add another food", a ripple from the tap point grows to 2.4x the button width in 450 ms,
+//   starting at opacity 0.28 and fading out.
+// - Animated checkbox: a ticked box springs up from 0.8 as it fills (damping 15; the note gives no stiffness, so 260 as
+//   above) and the tick draws in 300 ms.
+// - Magnetic button: with a mouse within 120 px, "+ Add another food" leans 0.35 of the way toward the pointer and springs
+//   back when it leaves (stiffness 150, damping 15). Phones have no pointer to follow, so it is mouse only.
+// Springs have mass 1. Nothing moves when the system asks for reduced motion.
+(function () {
+  "use strict";
+  function mq(q) { return window.matchMedia ? window.matchMedia(q) : { matches: false }; }
+  var reduce = mq("(prefers-reduced-motion: reduce)"), fine = mq("(hover: hover) and (pointer: fine)");
+  var live = [], raf = 0, last = 0;
+  function frame(t) {
+    var dt = last ? Math.min((t - last) / 1000, 1 / 30) : 1 / 60;
+    last = t;
+    for (var i = live.length - 1; i >= 0; i--) {
+      var p = live[i], n = 8, h = dt / n;
+      for (var j = 0; j < n; j++) { p.v += (-p.k * (p.x - p.to) - p.c * p.v) * h; p.x += p.v * h; }
+      if (Math.abs(p.x - p.to) < 1e-3 && Math.abs(p.v) < 1e-2) { p.x = p.to; p.v = 0; live.splice(i, 1); }
+      p.el.style.setProperty(p.name, p.x.toFixed(4));
+      if (p.step) p.step(p);
+    }
+    raf = live.length ? requestAnimationFrame(frame) : 0;
+    if (!raf) last = 0;
+  }
+  // Moves one CSS variable of an element toward "to" on a spring; "from" restarts it at rest from that value.
+  function spring(el, name, to, k, c, from) {
+    var all = el.__springs || (el.__springs = {}), p = all[name];
+    if (!p) p = all[name] = { el: el, name: name, x: from === undefined ? to : from, v: 0 };
+    if (from !== undefined) { p.x = from; p.v = 0; }
+    p.to = to; p.k = k; p.c = c;
+    if (reduce.matches) {
+      p.x = to; p.v = 0; el.style.setProperty(name, to);
+      if (p.step) p.step(p);
+      if (live.indexOf(p) >= 0) live.splice(live.indexOf(p), 1);
+      return p;
+    }
+    if (live.indexOf(p) < 0) live.push(p);
+    if (!raf) raf = requestAnimationFrame(frame);
+    return p;
+  }
+  // The top speed of a spring let go at distance d, so the stretch can follow the speed
+  function peak(d, k, c) {
+    var x = d, v = 0, h = 1 / 1000, m = 0;
+    for (var i = 0; i < 3000; i++) { v += (-k * x - c * v) * h; x += v * h; m = Math.max(m, Math.abs(v)); }
+    return m || 1;
+  }
+
+  // Elastic toggle on the segmented controls
+  [].forEach.call(document.querySelectorAll(".seg"), function (s) {
+    var th = document.createElement("span");
+    th.className = "thumb";
+    th.setAttribute("aria-hidden", "true");
+    s.insertBefore(th, s.firstChild);
+    s.classList.add("has-thumb");
+    function place(move) {
+      var inp = s.querySelector("input:checked");
+      if (!inp) return;
+      var lab = inp.closest("label"), to = lab.offsetLeft, p = th.__springs && th.__springs["--tx"];
+      th.style.width = lab.offsetWidth + "px";
+      th.style.height = lab.offsetHeight + "px";
+      th.style.top = lab.offsetTop + "px";
+      if (!move || !p) { spring(th, "--tx", to, 200, 14, to); th.style.setProperty("--sx", 1); return; }
+      var top = peak(Math.abs(to - p.x) || 1, 200, 14);
+      p = spring(th, "--tx", to, 200, 14);
+      p.step = function (q) { th.style.setProperty("--sx", (1 + 0.35 * Math.min(1, Math.abs(q.v) / top)).toFixed(4)); };
+    }
+    s.addEventListener("change", function () { place(true); });
+    if (window.ResizeObserver) new ResizeObserver(function () { place(false); }).observe(s);
+    place(false);
+  });
+
+  // Animated checkboxes: the box springs up from 0.8 as it fills, the tick draws itself
+  [].forEach.call(document.querySelectorAll(".checks input[type=checkbox]"), function (inp) {
+    var w = document.createElement("span");
+    w.className = "cb";
+    inp.parentNode.insertBefore(w, inp);
+    w.appendChild(inp);
+    w.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 10.4l3.2 3.2L15 6.8"/></svg>');
+    inp.addEventListener("change", function () { if (inp.checked) spring(w, "--cs", 1, 260, 15, 0.8); });
+  });
+
+  // Press and spring back on the main buttons, and a ripple from the tap point on "+ Add another food"
+  function ripple(b, e) {
+    if (reduce.matches || !b.animate) return;
+    var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
+    s.className = "ripple";
+    s.style.width = s.style.height = d + "px";
+    s.style.left = (e.clientX - r.left - d / 2) + "px";
+    s.style.top = (e.clientY - r.top - d / 2) + "px";
+    b.appendChild(s);
+    s.animate([{ transform: "scale(0)", opacity: 0.28 }, { transform: "scale(1)", opacity: 0 }],
+      { duration: 450, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" }).onfinish = function () { s.remove(); };
+  }
+  document.addEventListener("pointerdown", function (e) {
+    if (e.button > 0 || !e.target.closest) return;
+    var el = e.target.closest(".add, a.pcard, a.shop");
+    if (!el) return;
+    spring(el, "--ps", 0.94, 1600, 80);
+    function up() {
+      spring(el, "--ps", 1, 260, 12);
+      document.removeEventListener("pointerup", up, true);
+      document.removeEventListener("pointercancel", up, true);
+    }
+    document.addEventListener("pointerup", up, true);
+    document.addEventListener("pointercancel", up, true);
+    if (el.classList.contains("add")) ripple(el, e);
+  }, true);
+
+  // Magnetic "+ Add another food", mouse only
+  var mx = -1e4, my = -1e4, queued = 0;
+  function pull() {
+    queued = 0;
+    var el = document.getElementById("addFood");
+    if (!el) return;
+    var r = el.getBoundingClientRect(), all = el.__springs || {};
+    var ox = all["--mx"] ? all["--mx"].x : 0, oy = all["--my"] ? all["--my"].x : 0;
+    var dx = mx - (r.left + r.width / 2 - ox), dy = my - (r.top + r.height / 2 - oy), near = dx * dx + dy * dy < 120 * 120;
+    spring(el, "--mx", near ? dx * 0.35 : 0, 150, 15);
+    spring(el, "--my", near ? dy * 0.35 : 0, 150, 15);
+  }
+  function later() { if (!queued) queued = requestAnimationFrame(pull); }
+  document.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse" || !fine.matches) return;
+    mx = e.clientX; my = e.clientY;
+    later();
+  }, { passive: true });
+  document.documentElement.addEventListener("mouseleave", function () { mx = my = -1e4; later(); });
+  window.addEventListener("scroll", function () { if (mx > -1e4) later(); }, { passive: true });
+})();
+</script>
+<script>
+// Bottom bar (owner 2026-11-19), one solid strip: a tap scrolls to the result or the quick answers. In the form it shows
+// on the way down, also after numbers are filled in, and "Your numbers" is purple once there is a number to see. Once
+// the result is reached, and on through the quick answers, it isn't needed, so it slides away; back in the form it
+// returns, but only on the way down. It is also away while the page is scrolled up, and while the phone keyboard is up,
+// so it never sits on top of the box being typed in. CSS does the motion (220 ms), and nothing moves for reduced motion.
+// Which style "Your numbers" has (tertiary, secondary or primary) is set in render() above.
+(function () {
+  "use strict";
+  var bar = document.getElementById("jump"), res = document.getElementById("result");
+  var fab = document.getElementById("fab"), qa = document.getElementById("qa");   // the two round buttons in the quick answers
+  if (!bar || !res) return;
+  var lastY = window.scrollY, ticking = 0, up = false;
+  function field(el) { return !!(el && el.matches && el.matches("input:not([type=checkbox]):not([type=radio]), select, textarea")); }
+  // The phone keyboard (or a select's picker) is up while a box is in focus and the visible part of the page is much
+  // shorter than the screen. A box can stay in focus after the keyboard is put away, and then the strip comes back.
+  // Where the browser can't tell, a box in focus counts as the keyboard being up.
+  function keyboard() {
+    var vv = window.visualViewport;
+    if (!field(document.activeElement)) return false;
+    return !vv || document.documentElement.clientHeight - vv.height * vv.scale > 150;
+  }
+  // The result counts as reached once its top has come up into the top third of the screen. Before that the end of the
+  // form is still in view, so the strip shows on the way down. The quick answers come after the result.
+  function past() { return res.getBoundingClientRect().top <= window.innerHeight / 3; }
+  function set() {
+    bar.classList.toggle("away", up || keyboard() || past());
+    // The round buttons show once the quick answers have come up into the top third of the screen, on to the end
+    if (fab && qa) fab.classList.toggle("away", qa.getBoundingClientRect().top > window.innerHeight / 3);
+  }
+  function moved() {
+    if (ticking) return;
+    ticking = requestAnimationFrame(function () {
+      ticking = 0;
+      var y = window.scrollY, dy = y - lastY;
+      if (Math.abs(dy) >= 6) { up = dy < 0; lastY = y; }   // ignore small jitters, like the bounce at the ends of the page
+      set();
+    });
+  }
+  window.addEventListener("scroll", moved, { passive: true });
+  window.addEventListener("resize", moved);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", moved);   // the keyboard coming and going
+  set();
+  document.addEventListener("focusin", set);
+  document.addEventListener("focusout", function () { setTimeout(set, 120); });
+  function jump(e) {
+    var a = e.target.closest("a"), t = a && document.querySelector(a.getAttribute("href"));
+    if (!t) return;
+    e.preventDefault();
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    t.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+  }
+  bar.addEventListener("click", jump);
+  if (fab) fab.addEventListener("click", jump);
 })();
 </script>
 </body>
