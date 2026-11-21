@@ -971,13 +971,15 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // the cases tested, so each breed size, different elbow heights, meals a day and health boxes come up. label = a few
   // words: size or age, then (with the weight in the units picked) what stands out. whisker = cats' whisker span;
   // kcal = calories per cup, for a food not in the list. Amounts give about the calories each pet needs.
+  // The large dog brings food back up (owner 2026-11-20), so one example shows the megaesophagus sentence, in bold, and
+  // the caution after it; it still eats one meal a day, which that tip's "smaller meals, more often" answers.
   var PRESETS = [
     { group: "Dogs", label: ["Small", "eats fast"], species: "dog", weight: { cm: "6", "in": "13" }, elbow: { cm: "17", "in": "6.75" },
       stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.6"]], ticks: ["fastEater"] },
     { group: "Dogs", label: ["Medium", "older, losing weight"], species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
       stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.1"]], ticks: ["senior", "cond:overweight"] },
-    { group: "Dogs", label: ["Large", "one meal a day"], species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
-      stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis"] },
+    { group: "Dogs", label: ["Large", "brings food back up"], species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
+      stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis", "regurgitates"] },
     { group: "Dogs", label: ["Giant", "long ears"], species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
       stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
     { group: "Cats", label: ["Adult", "flat face"], species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
