@@ -58,23 +58,45 @@ header{position:relative}
 .exzoom:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* The enlarged card (owner 2026-11-21): the same card over most of the screen, on the page dimmed behind it, with the
    drawing large enough to see its little pictures. It grows out of the card and shrinks back into it (340 ms; nothing
-   moves for reduced motion). The bottom bar shows above it, the same bar with the same two buttons, looks and motion as
-   on the page, so the numbers for this example are a tap away; the card sits above the bar. The page under it stays
+   moves for reduced motion). It opens not yet picked (owner 2026-11-21): no purple outline, the form as it was, no bottom
+   bar, and joined to the card's bottom edge a purple "Tap to select this example" band. That band, or a tap on the card,
+   picks it: the card is outlined, the band folds up into it (its place kept, so the card doesn't move) and the bottom bar comes up, the
+   same bar with the same two buttons, looks and motion as on the page, so the numbers for this example are a tap away;
+   the card and its button sit above the bar's place. A card already picked opens outlined with the bar up. The card and
+   its button, together, sit in the middle of the screen from top to bottom (owner 2026-11-21); on a screen too short for
+   that they move up, never into the bar's place (the spacer before them gives way first). The page under it stays
    still. A tap outside the card, Esc or the round button closes it. */
-.zoom{position:fixed;inset:0;z-index:40;display:flex;padding:16px 16px calc(77px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
+.zoom{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;padding:16px 16px calc(77px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
+.zoom::before{content:"";flex:0 1 calc(61px + env(safe-area-inset-bottom));min-height:0}
 .zoom[hidden]{display:none}
 .zoom.out{pointer-events:none}
 .zscrim{position:fixed;inset:0;background:var(--scrim)}
-.zcard{position:relative;display:flex;flex-direction:column;width:min(100%,560px,calc((100vh - 190px) * 1.2));margin:auto;border:1px solid var(--accent);border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 1px var(--accent),0 18px 48px rgba(0,0,0,.3);overflow:hidden;outline:0;transform-origin:0 100%}
-@supports (height:100dvh){.zcard{width:min(100%,560px,calc((100dvh - 190px) * 1.2))}}
+.zbox{position:relative;display:flex;flex-direction:column;flex-shrink:0;width:min(100%,560px,calc((100vh - 256px) * 1.2));margin:auto;outline:0;transition:padding-bottom .22s ease}
+@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 256px) * 1.2))}}
+.zbox.on{padding-bottom:52px}   /* the band's place, kept once it folds away, so the card doesn't move */
+.zpress{display:flex;flex-direction:column;width:100%;transform:scale(var(--ps,1));filter:drop-shadow(0 18px 48px rgba(0,0,0,.3))}
+.zcard{position:relative;display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden;cursor:pointer;transform-origin:0 100%;transition:border-color .2s,box-shadow .2s,border-radius .22s}
+.zbox:not(.on) .zcard{border-bottom-width:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.zcard.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);cursor:auto}
 .zcard .ext{display:block;padding:14px 16px 0;font-size:1.15rem;font-weight:600;line-height:1.25}
 .zcard .exs{display:block;padding:2px 16px 12px;font-size:1rem;line-height:1.3;color:var(--muted)}
 .zpic{position:relative}
 .zpic img{display:block;width:100%;height:auto;aspect-ratio:6/5;background:#fcf4ee center/100% 100% no-repeat;pointer-events:none;-webkit-touch-callout:none;-webkit-user-drag:none}
 .zpic .exzoom{right:12px;width:34px;height:34px}
 .zpic .exzoom svg{width:18px;height:18px}
+/* "Tap to select this example" (owner 2026-11-21): a purple band joined to the card's bottom edge with no gap, as wide as
+   the card, its bottom corners rounded like the card's, as if the card went on a little and that part were coloured in;
+   the band is the button. While it is there the card's own bottom corners are square. Picked, it folds up into the card
+   (its place kept below, so the card doesn't move) and the card's corners round again. On a phone turned sideways,
+   where the card is narrow, its words go on two lines inside it. */
+.zsel{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center;justify-content:center;width:100%;height:52px;margin:0;padding:0 16px;border:0;border-radius:0 0 22px 22px;background:var(--accent);color:var(--on-accent);font:inherit;font-size:.95rem;font-weight:600;line-height:1.15;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:height .22s ease,opacity .16s}
+.zsel .ripple{background:#fff}
+.zsel:focus-visible{outline:2px solid var(--on-accent);outline-offset:-6px}
+.zbox.on .zsel{height:0;opacity:0;visibility:hidden;pointer-events:none;transition:height .22s ease,opacity .16s,visibility 0s linear .22s}
+@media (prefers-reduced-motion:reduce){.zbox,.zcard,.zsel,.zbox.on .zsel{transition:none}}
 html.zoom,html.zoom body{overflow:hidden}
-html.zoom .jump{z-index:50;transform:none;pointer-events:auto}
+html.zoom .jump{z-index:50;transform:translateY(100%);pointer-events:none}
+html.zoom.zon .jump{transform:none;pointer-events:auto}
 .ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
 /* While the link reads "Clear & hide the example" (owner 2026-11-20), it and its three-dot button wrap together: at
    430 px wide the button alone fell to the next line. Only that state changes (owner 2026-11-20); "Show a filled-in
@@ -1024,14 +1046,16 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // health boxes come up. label = a few words: size or age, then (with the weight in the units picked) what stands out.
   // whisker = cats' whisker span; kcal = calories per cup, for a food not in the list. Amounts give about the calories
   // each pet needs. art = the card's hand-drawn picture (owner 2026-11-20), drawn to show what the example is about.
-  // The small one that eats fast is a Pomeranian (owner 2026-11-21): 2.5 kg (5.5 lb), as the AKC standard gives 3 to 7 lb,
-  // and its elbow at about half its height (15 to 18 cm, Britannica), as the standard has the height from withers to
-  // elbow about equal to the height from elbow to ground.
+  // The small one that eats fast is a miniature dachshund with short legs (owner 2026-11-21, in place of a Pomeranian):
+  // 5 kg (11 lb), as the AKC gives 11 lb and under for the miniature and 5 to 6 in (13 to 15 cm) at the withers. Its elbow
+  // is taken as 6 cm (2.4 in): the FCI standard (No. 148) has the ground clearance, the floor to the bottom of the chest,
+  // at about a third of the height at the withers, so about 4.7 cm at 14 cm, and the elbow sits a little above that.
+  // Short legs is ticked for it. Half a cup twice a day gives about 96% of the calories it needs, as the Pomeranian had.
   // The large dog brings food back up (owner 2026-11-20), so one example shows the megaesophagus sentence, in bold, and
   // the caution after it; it still eats one meal a day, which that tip's "smaller meals, more often" answers.
   var PRESETS = [EX,
-    { group: "Dogs", label: ["Small", "eats fast"], art: "img/ex-dog-pom.jpg", species: "dog", weight: { cm: "2.5", "in": "5.5" }, elbow: { cm: "9", "in": "3.5" },
-      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.3"]], ticks: ["fastEater"] },
+    { group: "Dogs", label: ["Small", "short legs, eats fast"], art: "img/ex-dog-dachshund.jpg", species: "dog", weight: { cm: "5", "in": "11" }, elbow: { cm: "6", "in": "2.4" },
+      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.5"]], ticks: ["fastEater", "shortLegs"] },
     { group: "Dogs", label: ["Medium", "older, losing weight"], art: "img/ex-dog-medium.jpg", species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
       stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.1"]], ticks: ["senior", "cond:overweight"] },
     { group: "Dogs", label: ["Large", "brings food back up"], art: "img/ex-dog-large.jpg", species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
@@ -1096,7 +1120,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   }
   // "Clear & hide the example" also folds the example cards away, the caret back to pointing right (owner 2026-11-21)
   exBtn.addEventListener("click", function () {
-    if (!exOn) { fill(EX); pickedIntoView(); return; }
+    // Show: the example, with its card outlined in the row, which always opens if it was folded away (owner 2026-11-21)
+    if (!exOn) { fill(EX); if (moreBtn.getAttribute("aria-expanded") !== "true") setOpen(true); else pickedIntoView(); return; }
     clearAll();
     if (moreBtn.getAttribute("aria-expanded") === "true") setOpen(false);
   });
@@ -1108,7 +1133,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   });
   // The examples as hand-drawn cards (owner 2026-11-20, in place of the popover): the round button after the link opens
   // them inline under the intro and folds them away again; its caret points down while they show, right while they
-  // don't. They show from the start (owner 2026-11-21). A tap on a card fills the form with that example. The row stays
+  // don't. They show from the start (owner 2026-11-21), and "Show a filled-in example" always opens them (owner
+  // 2026-11-21). A tap on a card fills the form with that example. The row stays
   // open, and the card filled in is outlined until the example is cleared or another one is picked. A tap on the
   // outlined card clears it, as "Clear & hide the example" does, back to the empty form and the link's own words, while
   // the row stays open (owner 2026-11-21). The names give the weight in the units picked.
@@ -1161,6 +1187,22 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     a.onfinish = function () { car.__anim = null; if (!open) car.hidden = true; };
   }
   moreBtn.addEventListener("click", function () { setOpen(moreBtn.getAttribute("aria-expanded") !== "true"); });
+  // Dog or Cat tapped while the cards show (owner 2026-11-21): the row slides to the first card of that kind, lined up
+  // with the text, also when that one was already picked; only the row moves, never the page. Not when an example or
+  // clearing one sets it (exBusy), so a card just tapped stays in view.
+  function carToSpecies(sp) {
+    var ul = car.firstChild, k = -1;
+    if (!ul || car.hidden || moreBtn.getAttribute("aria-expanded") !== "true") return;
+    PRESETS.some(function (x, i) { if (x.species === sp) { k = i; return true; } return false; });
+    var b = k < 0 ? null : car.querySelector('.excard[data-k="' + k + '"]');
+    if (!b) return;
+    var r = b.getBoundingClientRect(), u = ul.getBoundingClientRect();
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ul.scrollTo({ left: Math.max(0, ul.scrollLeft + r.left - u.left - 16), behavior: still ? "auto" : "smooth" });
+  }
+  ["click", "change"].forEach(function (ev) {
+    f.addEventListener(ev, function (e) { var t = e.target; if (t && t.name === "species" && t.type === "radio" && t.checked && !exBusy) carToSpecies(t.value); });
+  });
   var held = null;   // the card a long press just enlarged: the click its finger leaves behind doesn't fill it again
   document.addEventListener("pointerdown", function () { held = null; }, true);
   car.addEventListener("click", function (e) {
@@ -1199,52 +1241,71 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   });
   car.addEventListener("contextmenu", function (e) { if (held && e.target.closest && e.target.closest(".excard")) e.preventDefault(); });
   // The enlarged card (owner 2026-11-21): the round button on a card, or holding the card down, shows that card over most
-  // of the screen with its drawing large, and fills the form with its example as a tap on the card does, so "Your
-  // numbers" in the bottom bar, which shows above it, are this example's. A tap on either of the bar's buttons closes the
-  // card and goes on as it does on the page. A tap outside the card, Esc or the round button (now shrinking) closes it
-  // back into its card. While it is open the page under it stays still, and keyboard focus stays on the card and the bar
-  // and then goes back to where it was.
+  // of the screen with its drawing large. It opens not yet picked (owner 2026-11-21): the form stays as it was, nothing is
+  // outlined and the bottom bar stays away, and joined to the card's bottom edge is a purple "Tap to select this example"
+  // band. That band, or a tap on the card, picks it: the form fills as a tap on the card in the row does, the card is outlined here
+  // and in the row, the band folds up into it, and the bottom bar comes up with this example's numbers ready, so it's plain
+  // what the bar is for once it turns purple. A card already picked opens that way, outlined with the bar up; a tap on it
+  // then does nothing. A tap on either of the bar's buttons closes the card and goes on as it does on the page. A tap
+  // outside the card, Esc or the round button (now shrinking) closes it back into its card. While it is open the page
+  // under it stays still, and keyboard focus stays on the card, its button and the bar, and then goes back to where it was.
   var zoom = document.getElementById("exZoom"), zBar = document.getElementById("jump"), zMain = document.querySelector("main"), zFab = document.getElementById("fab");
-  var zRoot = document.documentElement, zCard, zScrim, zName, zNote, zImg, zk = -1, zFrom = null, zRun = [], zDownOut = false, EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+  var zRoot = document.documentElement, zBox, zCard, zSel, zScrim, zName, zNote, zImg, zk = -1, zFrom = null, zRun = [], zDownOut = false, zDownIn = false, EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
   function zBuild() {
     if (zCard) return;
-    zoom.innerHTML = '<div class="zscrim"></div><div class="zcard" role="dialog" aria-modal="true" aria-labelledby="zoomName" aria-describedby="zoomNote" tabindex="-1">' +
-      '<span class="ext" id="zoomName"></span><span class="exs" id="zoomNote"></span><div class="zpic"><img alt="" width="1080" height="900" ' +
+    zoom.innerHTML = '<div class="zscrim"></div><div class="zbox" role="dialog" aria-modal="true" aria-labelledby="zoomName" aria-describedby="zoomNote" tabindex="-1">' +
+      '<div class="zpress"><div class="zcard"><span class="ext" id="zoomName"></span><span class="exs" id="zoomNote"></span><div class="zpic"><img alt="" width="1080" height="900" ' +
       'sizes="(min-width: 592px) 560px, calc(100vw - 32px)" decoding="async" draggable="false">' +
-      '<button type="button" class="exzoom" aria-label="Shrink back" title="Shrink back">' + ICON_SMALL + "</button></div></div>";
-    zCard = zoom.querySelector(".zcard"); zScrim = zoom.querySelector(".zscrim"); zName = zoom.querySelector("#zoomName"); zNote = zoom.querySelector("#zoomNote"); zImg = zoom.querySelector("img");
+      '<button type="button" class="exzoom" aria-label="Shrink back" title="Shrink back">' + ICON_SMALL + "</button></div></div>" +
+      '<button type="button" class="zsel">Tap to select this example</button></div></div>';   // the band, joined to the card's bottom edge (owner 2026-11-21)
+    zBox = zoom.querySelector(".zbox"); zCard = zoom.querySelector(".zcard"); zSel = zoom.querySelector(".zsel"); zScrim = zoom.querySelector(".zscrim");
+    zName = zoom.querySelector("#zoomName"); zNote = zoom.querySelector("#zoomNote"); zImg = zoom.querySelector("img");
   }
   function zStill() { return !zCard.animate || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
   function zStop() { zRun.forEach(function (a) { a.cancel(); }); zRun = []; }
   // The enlarged card drawn over the small one, the same width, bottoms lined up: both drawings sit at the bottom
   function zAt(a, b) { return "translate(" + (a.left - b.left) + "px," + (a.bottom - b.bottom) + "px) scale(" + (a.width / b.width) + ")"; }
+  // Picked or not: the purple outline, the button under the card, and the bottom bar above the dimmed page (out of the
+  // keyboard's reach too while it is away)
+  function zMark(on) {
+    zBox.classList.toggle("on", on); zCard.classList.toggle("on", on);
+    zRoot.classList.toggle("zon", on); zBar.inert = !on;
+  }
   function openZoom(k, from) {
-    var x = PRESETS[k], c = car.querySelector('.excard[data-k="' + k + '"]');
+    var x = PRESETS[k], c = car.querySelector('.excard[data-k="' + k + '"]'), on = exOn === x;
     zBuild(); zStop();
-    if (exOn !== x) fill(x);
-    zk = k; zFrom = from; zDownOut = false;
+    zk = k; zFrom = from; zDownOut = zDownIn = false;
     zName.textContent = presetName(x); zNote.textContent = x.label[1];
     zImg.style.backgroundImage = "url(" + x.art + ")";   // the card's own small drawing shows until the large one is in
     zImg.srcset = x.art + " 360w, " + x.art.replace(/\.jpg$/, "-720.jpg") + " 720w, " + x.art.replace(/\.jpg$/, "-1080.jpg") + " 1080w";
     zImg.src = x.art;
     var gap = window.innerWidth - zRoot.clientWidth;   // a desktop scrollbar about to go: the page doesn't shift under the card
+    zMark(on);
     zRoot.classList.add("zoom");
     if (gap > 0) { zRoot.style.paddingRight = gap + "px"; zBar.style.right = gap + "px"; }
     zMain.inert = true; if (zFab) zFab.inert = true;
     zoom.classList.remove("out"); zoom.hidden = false;
-    zCard.focus({ preventScroll: true });
+    zBox.focus({ preventScroll: true });
     document.addEventListener("keydown", zKey);
     if (zStill() || !c) return;
     var a = c.getBoundingClientRect(), b = zCard.getBoundingClientRect();
     zRun.push(zScrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: "ease-out" }));
     zRun.push(zCard.animate([{ transform: zAt(a, b), opacity: 0 }, { opacity: 1, offset: 0.3 }, { transform: "none", opacity: 1 }], { duration: 340, easing: EASE }));
+    if (!on) zRun.push(zSel.animate([{ opacity: 0 }, { opacity: 0, offset: 0.6 }, { opacity: 1 }], { duration: 400, easing: "ease-out" }));   // the band comes in as the card lands
+  }
+  function zPick() {
+    if (zk < 0) return;
+    var x = PRESETS[zk], kb = document.activeElement === zSel;
+    if (exOn !== x) fill(x);
+    zMark(true);
+    if (kb) jumpRes.focus({ preventScroll: true });   // from the button, keyboard focus goes on to "Your numbers"
   }
   function closeZoom(leaving) {   // leaving: on to the numbers or the quick answers, so it fades out instead of shrinking back
     if (zk < 0) return;
-    var c = leaving ? null : car.querySelector('.excard[data-k="' + zk + '"]'), from = zFrom;
+    var c = leaving ? null : car.querySelector('.excard[data-k="' + zk + '"]'), from = zFrom, btn = !zBox.classList.contains("on");
     zk = -1; zFrom = null; held = null;
     document.removeEventListener("keydown", zKey);
-    zRoot.classList.remove("zoom"); zRoot.style.paddingRight = ""; zBar.style.right = "";
+    zRoot.classList.remove("zoom", "zon"); zRoot.style.paddingRight = ""; zBar.style.right = ""; zBar.inert = false;
     zMain.inert = false; if (zFab) zFab.inert = false;
     if (!leaving && from && from.isConnected) from.focus({ preventScroll: true });
     zStop();
@@ -1252,15 +1313,18 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     zoom.classList.add("out");
     var b = zCard.getBoundingClientRect(), a = c && c.getClientRects().length ? c.getBoundingClientRect() : null, t = a ? 280 : 180;
     zRun.push(zScrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: "ease-in", fill: "forwards" }));
+    if (btn) zRun.push(zSel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-in", fill: "forwards" }));
     var m = zCard.animate(a ? [{ transform: "none", opacity: 1 }, { opacity: 1, offset: 0.7 }, { transform: zAt(a, b), opacity: 0 }] : [{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: EASE, fill: "forwards" });
     zRun.push(m);
     m.onfinish = function () { if (zk < 0) { zoom.hidden = true; zoom.classList.remove("out"); zStop(); } };
   }
   function zKey(e) { if (e.key === "Escape") { e.preventDefault(); closeZoom(false); } }
-  zoom.addEventListener("pointerdown", function (e) { zDownOut = !e.target.closest(".zcard"); });
-  zoom.addEventListener("click", function (e) {   // outside the card counts only when the tap also started outside it
-    var out = zDownOut; zDownOut = false;
-    if (e.target.closest(".exzoom") || (out && !e.target.closest(".zcard"))) closeZoom(false);
+  zoom.addEventListener("pointerdown", function (e) { zDownOut = !e.target.closest(".zbox"); zDownIn = !!e.target.closest(".zcard") && !e.target.closest(".exzoom"); });
+  zoom.addEventListener("click", function (e) {   // outside the card counts only when the tap also started outside it, and the card only when it started on the card
+    var out = zDownOut, on = zDownIn; zDownOut = zDownIn = false;
+    if (e.target.closest(".exzoom")) closeZoom(false);
+    else if (e.target.closest(".zsel") || (on && e.target.closest(".zcard"))) zPick();
+    else if (out && !e.target.closest(".zbox")) closeZoom(false);
   });
   zoom.addEventListener("contextmenu", function (e) { if (held) e.preventDefault(); });
   zBar.addEventListener("click", function () { if (zk >= 0) closeZoom(true); }, true);   // before the bar's own jump runs
@@ -1284,7 +1348,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 //   back when it leaves (stiffness 150, damping 15). Phones have no pointer to follow, so it is mouse only.
 // Every button has motion (owner 2026-11-20): the press and spring back on all of them, and on every expander line
 // (owner 2026-11-20, the same as the "Show a filled-in example" link) and on each example card's round enlarge button
-// (owner 2026-11-21); the ripple and the magnetic lean
+// (owner 2026-11-21), and on the enlarged card with its "Tap to select this example" band, as one piece, until it is
+// picked, with a white ripple in the band (owner 2026-11-21); the ripple and the magnetic lean
 // also on the bottom bar's two buttons and the two round buttons in the quick answers. "Your numbers" in the bar is the
 // one exception while it is tertiary, before there is a number to see; once it turns purple it moves like the rest.
 // Springs have mass 1. Nothing moves when the system asks for reduced motion.
@@ -1365,8 +1430,10 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 
   // Press and spring back on every button, and a ripple from the tap point on the bigger ones
   // An example card is pressed as its whole li, so its round enlarge button moves with it; the button pressed on its own
-  // moves alone (owner 2026-11-21)
-  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .rm, .adv>summary, details.more>summary, .srcs>summary", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
+  // moves alone (owner 2026-11-21). The enlarged card presses as a whole (its .zpress) while it isn't picked yet, as a tap
+  // on it picks it, and its "Tap to select this example" band, joined to it, moves with it, the ripple in the band; once
+  // picked a tap on it does nothing, so it stays still (owner 2026-11-21).
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .zbox:not(.on) .zpress, .rm, .adv>summary, details.more>summary, .srcs>summary", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a, .zsel";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
@@ -1392,17 +1459,18 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     }
     document.addEventListener("pointerup", up, true);
     document.addEventListener("pointercancel", up, true);
-    if (el.matches(RIPPLE)) ripple(el, e);
+    var rp = e.target.closest(RIPPLE);   // the pressed button's own, or the band inside the enlarged card that presses
+    if (rp && el.contains(rp)) ripple(rp, e);
   }, true);
 
   // Magnetic buttons, mouse only: "+ Add another food", the bottom bar's buttons and the round buttons. Of buttons side by
   // side only the nearest one leans, so they never run into each other, and the long "Your numbers" is measured from
   // the line through its middle, so it leans toward the pointer without swinging sideways.
   var mx = -1e4, my = -1e4, queued = 0, leaned = [];
-  function groups() {   // with a card enlarged, only the bottom bar shows above it (owner 2026-11-21)
-    var bar = document.getElementById("jump"), fab = document.getElementById("fab"), zoomed = document.documentElement.classList.contains("zoom");
+  function groups() {   // with a card enlarged, only the bottom bar shows above it, once the card is picked (owner 2026-11-21)
+    var root = document.documentElement, bar = document.getElementById("jump"), fab = document.getElementById("fab"), zoomed = root.classList.contains("zoom");
     return [zoomed ? [] : [document.getElementById("addFood")],
-      bar && (zoomed || !bar.classList.contains("away")) ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
+      bar && (zoomed ? root.classList.contains("zon") : !bar.classList.contains("away")) ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
       fab && !zoomed && !fab.classList.contains("away") ? [].slice.call(fab.querySelectorAll("a")) : []];
   }
   function pull() {
