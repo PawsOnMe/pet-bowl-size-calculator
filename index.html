@@ -7,8 +7,8 @@
 <meta name="description" content="Free nutrition calculator for dogs of any breed or mix, and cats: daily calories and how much to feed for dry, wet, fresh or freeze-dried food, plus the right bowl height and size. Sources cited. Made by PawsOnMe.">
 <link rel="canonical" href="https://pawsonme.github.io/pet-bowl-size-calculator/">
 <style>
-:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6;--yellow:#8a6100}
-@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f;--yellow:#f2c94c}}
+:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6;--yellow:#8a6100;--scrim:rgba(42,38,34,.52)}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f;--yellow:#f2c94c;--scrim:rgba(0,0,0,.62)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
@@ -20,22 +20,66 @@ h3{font-size:1.02rem;margin:1.4em 0 .3em}
 /* "Show a filled-in example" at the end of the intro, a purple text link (owner 2026-11-19). It never splits across two
    lines, and the padding gives it a bigger tap area without moving the text around it. */
 .ex{display:inline-block;margin:-10px -4px;padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer}
-/* The three-dot button after "Show a filled-in example" (owner 2026-11-20): filled, in the purple of the other round
-   buttons and about their size; it opens a popover with example pets to fill the form with */
+/* The round button after "Show a filled-in example" (owner 2026-11-20): filled, in the purple of the other round
+   buttons and about their size. Its caret points right while the example cards are folded away and down while they
+   show (owner 2026-11-20, in place of three dots); it opens them inline, between the intro and the form. */
 .exmore{display:inline-flex;vertical-align:-.27em;margin:-12px -12px -12px calc(.35em - 12px);padding:12px;border:0;background:none;color:var(--accent);cursor:pointer;-webkit-tap-highlight-color:transparent;transform:scale(var(--ps,1))}
-.exmore svg{display:block;width:1.2em;height:1.2em}
-.exmore .bg{fill:currentColor}.exmore circle:not(.bg){fill:var(--on-accent)}
+.exmore svg{display:block;width:1.2em;height:1.2em;transition:transform .22s cubic-bezier(.22,.61,.36,1)}
+.exmore[aria-expanded="true"] svg{transform:rotate(90deg)}
+.exmore .bg{fill:currentColor}.exmore .chev{fill:none;stroke:var(--on-accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.exmore svg{transition:none}}
 .exmore:focus-visible{outline:2px solid var(--accent);outline-offset:-10px;border-radius:999px}
 header{position:relative}
-.expop{position:absolute;z-index:20;left:0;width:min(300px,100%);padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
-.expop::after{content:"";position:absolute;left:var(--caret,40px);bottom:-7px;width:12px;height:12px;background:var(--card);border:1px solid var(--line);border-width:0 1px 1px 0;transform:rotate(45deg)}
-.expop.below::after{top:-7px;bottom:auto;transform:rotate(225deg)}
-.expop .exlist{position:relative;overflow-y:auto;overscroll-behavior:contain}
-.expop .exh{margin:4px 8px 0;font-size:.82rem;font-weight:600;color:var(--muted)}
-.expop button{display:block;width:100%;margin:0;padding:8px;border:0;border-radius:10px;background:none;font:inherit;font-size:.94rem;line-height:1.3;text-align:left;color:var(--ink);cursor:pointer;transform:scale(var(--ps,1))}
-.expop button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-@media (hover:hover){.expop button:hover{background:var(--accent-soft)}}
+/* The examples as a row of hand-drawn cards (owner 2026-11-20, in place of the popover): they open inline under the
+   intro and push the form down, about three cards and part of the next across a phone, and the row scrolls sideways.
+   Each card: its name in two lines, then its drawing, in the hand-drawn style of the bowl height picture. The card
+   filled in is outlined like a picked toggle. */
+.excar{margin:14px -16px 0;overflow:hidden}
+.excar ul{display:flex;gap:10px;margin:0;padding:2px 16px 4px;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:16px;overscroll-behavior-x:contain;scrollbar-width:none}
+.excar ul::-webkit-scrollbar{display:none}
+@media (hover:hover){.excar ul{scrollbar-width:thin}}
+/* A pressed card springs back with its round enlarge button on it (the press moves the whole li); holding a card down
+   enlarges it, so the phone's own long-press menu and text selection are off on the cards. */
+.excar li{position:relative;display:flex;flex:0 0 clamp(100px,calc((100% - 30px) / 3.4),140px);min-width:0;scroll-snap-align:start;transform:scale(var(--ps,1));-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.excard{display:flex;flex-direction:column;width:100%;min-width:0;margin:0;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;text-align:left;cursor:pointer;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.excard .ext{display:block;padding:8px 7px 0;font-size:.74rem;font-weight:600;line-height:1.25;white-space:nowrap}
+.excard .exs{display:block;padding:1px 7px 14px;font-size:.72rem;line-height:1.25;color:var(--muted)}   /* 14 px under the words: the round button on the line below them never covers them (owner 2026-11-21) */
+.excard img{display:block;width:100%;height:auto;aspect-ratio:6/5;margin-top:auto;background:#fcf4ee;pointer-events:none;-webkit-user-drag:none}
+.excard[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.excard:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+/* Each card's small round enlarge button (owner 2026-11-21), on its right edge where the words meet the drawing (.exz is
+   a box the size of the drawing, so its top edge is that line). In the card colour with the usual grey border and a
+   purple icon, like the ? button in the bottom bar; the tap area reaches 6 px past the circle. A tap on it, or holding
+   the card down, enlarges the card; on the enlarged card the same button shrinks it back. */
+.exz{position:absolute;left:1px;right:1px;bottom:1px;padding-top:calc((100% - 2px) * 5 / 6);pointer-events:none}
+.exzoom{--ps:1;position:absolute;top:0;right:6px;display:flex;align-items:center;justify-content:center;width:26px;height:26px;margin:0;padding:0;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.16);cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;transform:translateY(-50%) scale(var(--ps))}
+.exzoom::before{content:"";position:absolute;inset:-7px;border-radius:999px}
+.exzoom svg{display:block;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.exzoom:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* The enlarged card (owner 2026-11-21): the same card over most of the screen, on the page dimmed behind it, with the
+   drawing large enough to see its little pictures. It grows out of the card and shrinks back into it (340 ms; nothing
+   moves for reduced motion). The bottom bar shows above it, the same bar with the same two buttons, looks and motion as
+   on the page, so the numbers for this example are a tap away; the card sits above the bar. The page under it stays
+   still. A tap outside the card, Esc or the round button closes it. */
+.zoom{position:fixed;inset:0;z-index:40;display:flex;padding:16px 16px calc(77px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
+.zoom[hidden]{display:none}
+.zoom.out{pointer-events:none}
+.zscrim{position:fixed;inset:0;background:var(--scrim)}
+.zcard{position:relative;display:flex;flex-direction:column;width:min(100%,560px,calc((100vh - 190px) * 1.2));margin:auto;border:1px solid var(--accent);border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 1px var(--accent),0 18px 48px rgba(0,0,0,.3);overflow:hidden;outline:0;transform-origin:0 100%}
+@supports (height:100dvh){.zcard{width:min(100%,560px,calc((100dvh - 190px) * 1.2))}}
+.zcard .ext{display:block;padding:14px 16px 0;font-size:1.15rem;font-weight:600;line-height:1.25}
+.zcard .exs{display:block;padding:2px 16px 12px;font-size:1rem;line-height:1.3;color:var(--muted)}
+.zpic{position:relative}
+.zpic img{display:block;width:100%;height:auto;aspect-ratio:6/5;background:#fcf4ee center/100% 100% no-repeat;pointer-events:none;-webkit-touch-callout:none;-webkit-user-drag:none}
+.zpic .exzoom{right:12px;width:34px;height:34px}
+.zpic .exzoom svg{width:18px;height:18px}
+html.zoom,html.zoom body{overflow:hidden}
+html.zoom .jump{z-index:50;transform:none;pointer-events:auto}
 .ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
+/* While the link reads "Clear & hide the example" (owner 2026-11-20), it and its three-dot button wrap together: at
+   430 px wide the button alone fell to the next line. Only that state changes (owner 2026-11-20); "Show a filled-in
+   example" wraps as it always did. */
+.exw.on{white-space:nowrap}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:18px 0}
 fieldset{border:0;padding:0;margin:0 0 14px}
 legend{font-weight:600;margin-bottom:6px}
@@ -170,6 +214,9 @@ a.cite{text-decoration:none;padding:6px 0}
 /* Sources fold away like the other expanders on the page, closed at first (owner 2026-11-19); the heading keeps its size */
 .srcs>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}
 .srcs>summary h2{display:inline;margin:0}
+/* Every expander line presses and springs back when tapped, the same motion as the "Show a filled-in example" link
+   (owner 2026-11-20); each hugs its words, so it scales about them as that link does. */
+.adv>summary,details.more>summary,.srcs>summary{width:fit-content;max-width:100%;transform:scale(var(--ps,1));-webkit-tap-highlight-color:transparent}
 footer{margin-top:32px;font-size:.9rem;color:var(--muted)}
 /* Motion (owner 2026-11-16): the springs run in the script at the end and write the variables used here */
 .seg{position:relative}
@@ -257,8 +304,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <header>
 <p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
 <h1>Pet Nutrition & Bowl Calculator</h1>
-<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button><button type="button" class="exmore" id="exMore" aria-label="More examples" aria-haspopup="menu" aria-expanded="false" aria-controls="exPop"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle class="bg" cx="12" cy="12" r="11"/><circle cx="7.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="16.8" cy="12" r="1.7"/></svg></button></p>
-<div class="expop" id="exPop" role="menu" aria-label="Examples" hidden></div>
+<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <span class="exw"><button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button><button type="button" class="exmore" id="exMore" aria-label="More examples" aria-expanded="true" aria-controls="exCar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle class="bg" cx="12" cy="12" r="11"/><path class="chev" d="M9.9 7.6l4.4 4.4-4.4 4.4"/></svg></button></span></p>
+<div class="excar" id="exCar" role="region" aria-label="Examples"></div>
 </header>
 
 <form id="f" class="card" autocomplete="off">
@@ -412,6 +459,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <p>Not veterinary advice. If your pet has a medical condition, follow your vet's feeding plan.</p>
 </footer>
 </main>
+<div class="zoom" id="exZoom" hidden></div>
 <nav class="jump" id="jump" aria-label="Jump to">
 <a class="jump-res" href="#result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Your numbers<span class="cnt" hidden></span></a>
 <a class="jump-qa" href="#qa" aria-label="Quick answers" title="Quick answers"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4"/><path d="M12 17.6v.1"/></svg></a>
@@ -957,36 +1005,44 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   box.addEventListener("input", function (e) { if (e.target.classList.contains("fa")) startAt(e.target.closest(".frow")); });
   box.addEventListener("change", function (e) { if (e.target.classList.contains("fu")) startAt(e.target.closest(".frow")); });
   // "Show a filled-in example" at the end of the intro (owner 2026-11-19): one tap fills the form with an example dog,
-  // so a visitor sees a whole result before typing anything. The link then reads "Hide the example", and a second tap
-  // clears every input back to the empty form (owner 2026-11-20; before, it put back what had been typed).
+  // so a visitor sees a whole result before typing anything. The link then reads "Clear & hide the example" (owner
+  // 2026-11-20 wording; it was "Hide the example"), and a second tap clears every input back to the empty form
+  // (owner 2026-11-20; before, it put back what had been typed).
   // Weight and elbow are kept in both unit systems, so the example uses the units already picked, and switching units
   // while it shows keeps the same dog (9.3 kg doesn't turn into 9.3 lb). No broth in it: a broth is looked up at USDA,
   // and each visitor only gets a few look-ups. It also ticks "Liver values to watch" and "High triglycerides or cholesterol"
   // (owner 2026-11-20), and opens "Anything your vet is watching" so those ticks show; hiding the example closes it again.
   // It ticks "Eats very fast" too (owner 2026-11-20), so the example shows a slow feeder worth trying.
-  var EX = { species: "dog", weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
+  // The example is also the first card (owner 2026-11-21): "Show a filled-in example" outlines that card, and a tap on
+  // the card fills the same example.
+  var EX = { group: "Dogs", label: ["Small", "liver, high cholesterol"], art: "img/ex-dog-liver.jpg",
+    species: "dog", weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
     size: "small",   // the example dog is 9.3 kg, a small dog (under 10 kg)
     foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["fastEater", "cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
-  // More examples behind the three-dot button after the link (owner 2026-11-20): four typical dogs and three cats, from
-  // the cases tested, so each breed size, different elbow heights, meals a day and health boxes come up. label = a few
-  // words: size or age, then (with the weight in the units picked) what stands out. whisker = cats' whisker span;
-  // kcal = calories per cup, for a food not in the list. Amounts give about the calories each pet needs.
+  // More examples behind the round button after the link (owner 2026-11-20): five typical dogs, the first being the
+  // example above, and three cats, from the cases tested, so each breed size, different elbow heights, meals a day and
+  // health boxes come up. label = a few words: size or age, then (with the weight in the units picked) what stands out.
+  // whisker = cats' whisker span; kcal = calories per cup, for a food not in the list. Amounts give about the calories
+  // each pet needs. art = the card's hand-drawn picture (owner 2026-11-20), drawn to show what the example is about.
+  // The small one that eats fast is a Pomeranian (owner 2026-11-21): 2.5 kg (5.5 lb), as the AKC standard gives 3 to 7 lb,
+  // and its elbow at about half its height (15 to 18 cm, Britannica), as the standard has the height from withers to
+  // elbow about equal to the height from elbow to ground.
   // The large dog brings food back up (owner 2026-11-20), so one example shows the megaesophagus sentence, in bold, and
   // the caution after it; it still eats one meal a day, which that tip's "smaller meals, more often" answers.
-  var PRESETS = [
-    { group: "Dogs", label: ["Small", "eats fast"], species: "dog", weight: { cm: "6", "in": "13" }, elbow: { cm: "17", "in": "6.75" },
-      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.6"]], ticks: ["fastEater"] },
-    { group: "Dogs", label: ["Medium", "older, losing weight"], species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
+  var PRESETS = [EX,
+    { group: "Dogs", label: ["Small", "eats fast"], art: "img/ex-dog-pom.jpg", species: "dog", weight: { cm: "2.5", "in": "5.5" }, elbow: { cm: "9", "in": "3.5" },
+      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.3"]], ticks: ["fastEater"] },
+    { group: "Dogs", label: ["Medium", "older, losing weight"], art: "img/ex-dog-medium.jpg", species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
       stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.1"]], ticks: ["senior", "cond:overweight"] },
-    { group: "Dogs", label: ["Large", "brings food back up"], species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
+    { group: "Dogs", label: ["Large", "brings food back up"], art: "img/ex-dog-large.jpg", species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
       stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis", "regurgitates"] },
-    { group: "Dogs", label: ["Giant", "long ears"], species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
+    { group: "Dogs", label: ["Giant", "long ears"], art: "img/ex-dog-giant.jpg", species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
       stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
-    { group: "Cats", label: ["Adult", "flat face"], species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
+    { group: "Cats", label: ["Adult", "flat face"], art: "img/ex-cat-adult.jpg", species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
       stage: "neutered", activity: "usual", meals: "2", foods: [["hills-sd-cat-adult-indoor-dry", "0.4"]], ticks: ["flatFace"] },
-    { group: "Cats", label: ["Older", "kidney values"], species: "cat", weight: { cm: "3.8", "in": "8.5" }, elbow: { cm: "11", "in": "4.25" }, whisker: { cm: "12", "in": "4.75" },
+    { group: "Cats", label: ["Older", "kidney values"], art: "img/ex-cat-older.jpg", species: "cat", weight: { cm: "3.8", "in": "8.5" }, elbow: { cm: "11", "in": "4.25" }, whisker: { cm: "12", "in": "4.75" },
       stage: "neutered", activity: "usual", meals: "3", foods: [["hills-pd-kd-chicken-pate-can-cat", "0.4"]], ticks: ["senior", "cond:kidney"] },
-    { group: "Cats", label: ["Kitten", "eats fast"], species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
+    { group: "Cats", label: ["Kitten", "eats fast"], art: "img/ex-cat-kitten.jpg", species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
       stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] }
   ];
   var KEEP = ["weight", "stage", "activity", "meals", "kcal", "elbow", "size", "whisker"];
@@ -1022,7 +1078,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     mealsWas = +mealsBox.value; mealsSet = true;
     [].forEach.call(box.querySelectorAll(".frow"), startAt);
     exOn = x; exBusy = false;
-    exBtn.textContent = "Hide the example";
+    exBtn.textContent = "Clear & hide the example"; exBtn.parentNode.classList.add("on"); markCards();
     render();
   }
   function clearAll() {
@@ -1035,70 +1091,182 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     adv.open = false;
     mealsWas = +mealsBox.value || 0; mealsSet = false;
     exOn = null; exWas = null; exBusy = false;
-    exBtn.textContent = exShow;
+    exBtn.textContent = exShow; exBtn.parentNode.classList.remove("on"); markCards();
     render();
   }
-  exBtn.addEventListener("click", function () { closePop(); if (exOn) clearAll(); else fill(EX); });
+  // "Clear & hide the example" also folds the example cards away, the caret back to pointing right (owner 2026-11-21)
+  exBtn.addEventListener("click", function () {
+    if (!exOn) { fill(EX); pickedIntoView(); return; }
+    clearAll();
+    if (moreBtn.getAttribute("aria-expanded") === "true") setOpen(false);
+  });
   f.addEventListener("change", function (e) {   // units switched while an example shows: the same pet in the new units
     if (!exOn || exBusy || e.target.name !== "unit") return;
     var u = e.target.value === "in" ? "in" : "cm", old = u === "in" ? "cm" : "in";
     ["weight", "elbow", "whisker"].forEach(function (n) { var el = document.getElementById(n); if (exOn[n] && el.value === exOn[n][old]) el.value = exOn[n][u]; });
     render();
   });
-  // The popover: a speech bubble pointing at the three-dot button, Dogs then Cats (owner 2026-11-20). It opens above or
-  // below the button, on the side with more room on screen (owner 2026-11-20); if even that side is too short, the list
-  // scrolls.
-  // A tap on an example fills the form with it; a tap outside, Escape or the button again closes it.
-  var moreBtn = document.getElementById("exMore"), pop = document.getElementById("exPop");
-  function presetLabel(x) { var us = checked("unit") === "in"; return x.label[0] + ", " + x.weight[us ? "in" : "cm"] + (us ? " lb" : " kg") + ", " + x.label[1]; }
-  function placePop() {
-    var hb = pop.offsetParent.getBoundingClientRect(), b = moreBtn.querySelector("svg").getBoundingClientRect(), list = pop.firstChild;
-    list.style.maxHeight = "";
-    var up = b.top - 20, down = document.documentElement.clientHeight - b.bottom - 20, below = down > up;   // 12 px for the tip, 8 to the edge
-    if (pop.offsetHeight > (below ? down : up)) {
-      var m = Math.max(120, (below ? down : up) - (pop.offsetHeight - list.offsetHeight)), rows = [].slice.call(list.children);
-      // end the list halfway down a row, so it's plain there's more: the last row that starts in view if at least half
-      // of it fits, else the one before
-      var k = rows.filter(function (r) { return r.offsetTop < m; }).length - 1;
-      if (k > 0 && rows[k].offsetTop + rows[k].offsetHeight / 2 > m) k--;
-      if (k >= 0) m = rows[k].offsetTop + rows[k].offsetHeight / 2;
-      list.style.maxHeight = m + "px";
-    }
-    var w = pop.offsetWidth, h = pop.offsetHeight, mid = b.left + b.width / 2 - hb.left;
-    var left = Math.max(0, Math.min(mid - w / 2, hb.width - w));
-    pop.classList.toggle("below", below);
-    pop.style.left = left + "px";
-    pop.style.top = (below ? b.bottom - hb.top + 12 : b.top - hb.top - h - 12) + "px";
-    pop.style.setProperty("--caret", Math.max(14, Math.min(mid - left - 6, w - 26)) + "px");
+  // The examples as hand-drawn cards (owner 2026-11-20, in place of the popover): the round button after the link opens
+  // them inline under the intro and folds them away again; its caret points down while they show, right while they
+  // don't. They show from the start (owner 2026-11-21). A tap on a card fills the form with that example. The row stays
+  // open, and the card filled in is outlined until the example is cleared or another one is picked. A tap on the
+  // outlined card clears it, as "Clear & hide the example" does, back to the empty form and the link's own words, while
+  // the row stays open (owner 2026-11-21). The names give the weight in the units picked.
+  // Each card also has a small round enlarge button where its words meet its drawing (owner 2026-11-21).
+  var moreBtn = document.getElementById("exMore"), car = document.getElementById("exCar");
+  var ICON_BIG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5h5v5M19 5l-5.5 5.5M10 19H5v-5M5 19l5.5-5.5"/></svg>';
+  var ICON_SMALL = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5.5V10h4.5M14 10l5.5-5.5M10 18.5V14H5.5M10 14l-5.5 5.5"/></svg>';
+  function presetName(x) { var us = checked("unit") === "in"; return x.label[0] + ", " + x.weight[us ? "in" : "cm"] + (us ? " lb" : " kg"); }
+  function presetLabel(x) { return presetName(x) + ", " + x.label[1]; }
+  function drawCards() {
+    car.innerHTML = "<ul>" + PRESETS.map(function (x, k) {
+      return '<li><button type="button" class="excard" data-k="' + k + '" aria-pressed="false" aria-label="' + esc(presetLabel(x)) + '">' +
+        '<span class="ext">' + esc(presetName(x)) + '</span><span class="exs">' + esc(x.label[1]) + "</span>" +
+        '<img src="' + x.art + '" alt="" width="360" height="300" loading="lazy" decoding="async" draggable="false"></button>' +
+        '<span class="exz"><button type="button" class="exzoom" data-z="' + k + '" aria-haspopup="dialog" aria-label="Enlarge ' + esc(presetLabel(x)) + '" title="Enlarge">' +
+        ICON_BIG + "</button></span></li>";
+    }).join("") + "</ul>";
+    markCards();
   }
-  function openPop() {
-    var h = "", g = "";
-    PRESETS.forEach(function (x, k) {
-      if (x.group !== g) { g = x.group; h += '<p class="exh" role="presentation">' + esc(g) + "</p>"; }
-      h += '<button type="button" role="menuitem" data-k="' + k + '">' + esc(presetLabel(x)) + "</button>";
+  function nameCards() {   // units switched: the same cards, the weight in the new units
+    [].forEach.call(car.querySelectorAll(".excard"), function (b) {
+      var x = PRESETS[+b.getAttribute("data-k")], z = b.parentNode.querySelector(".exzoom");
+      b.querySelector(".ext").textContent = presetName(x); b.setAttribute("aria-label", presetLabel(x));
+      if (z) z.setAttribute("aria-label", "Enlarge " + presetLabel(x));
     });
-    pop.innerHTML = '<div class="exlist">' + h + "</div>"; pop.hidden = false; moreBtn.setAttribute("aria-expanded", "true");
-    placePop();
-    pop.querySelector("button").focus({ preventScroll: true });
   }
-  function closePop(back) {
-    if (pop.hidden) return;
-    pop.hidden = true; moreBtn.setAttribute("aria-expanded", "false");
-    if (back) moreBtn.focus({ preventScroll: true });
+  // The outlined card, when the row has been scrolled away from it, slides back into view, lined up with the text, so the
+  // card "Show a filled-in example" picks can be seen (owner 2026-11-21); only the row moves, never the page.
+  function pickedIntoView() {
+    var b = car.querySelector('.excard[aria-pressed="true"]'), ul = car.firstChild;
+    if (!b || !ul || car.hidden) return;
+    var r = b.getBoundingClientRect(), u = ul.getBoundingClientRect();
+    if (r.left >= u.left && r.right <= u.right) return;
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ul.scrollTo({ left: ul.scrollLeft + r.left - u.left - 16, behavior: still ? "auto" : "smooth" });
   }
-  moreBtn.addEventListener("click", function () { if (pop.hidden) openPop(); else closePop(true); });
-  pop.addEventListener("click", function (e) {
+  function markCards() {
+    [].forEach.call(car.querySelectorAll(".excard"), function (b) { b.setAttribute("aria-pressed", String(exOn === PRESETS[+b.getAttribute("data-k")])); });
+  }
+  // Opening grows the space under the intro from nothing to the row's height and fades the cards in (260 ms), and
+  // folding away does the reverse; nothing moves when the system asks for reduced motion.
+  function setOpen(open) {
+    moreBtn.setAttribute("aria-expanded", String(open));
+    if (car.__anim) { car.__anim.cancel(); car.__anim = null; }
+    if (open) { if (!car.firstChild) drawCards(); car.hidden = false; pickedIntoView(); }
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still || !car.animate) { car.hidden = !open; return; }
+    var full = { height: car.scrollHeight + "px", marginTop: "14px", opacity: 1 }, none = { height: "0px", marginTop: "0px", opacity: 0 };
+    var a = car.__anim = car.animate(open ? [none, full] : [full, none], { duration: 260, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" });
+    a.onfinish = function () { car.__anim = null; if (!open) car.hidden = true; };
+  }
+  moreBtn.addEventListener("click", function () { setOpen(moreBtn.getAttribute("aria-expanded") !== "true"); });
+  var held = null;   // the card a long press just enlarged: the click its finger leaves behind doesn't fill it again
+  document.addEventListener("pointerdown", function () { held = null; }, true);
+  car.addEventListener("click", function (e) {
+    var z = e.target.closest && e.target.closest(".exzoom");
+    if (z) { openZoom(+z.getAttribute("data-z"), z); return; }
     var b = e.target.closest && e.target.closest("button[data-k]");
-    if (b) { closePop(); fill(PRESETS[+b.getAttribute("data-k")]); }
+    if (!b) return;
+    if (held === b) { held = null; return; }
+    var x = PRESETS[+b.getAttribute("data-k")];
+    if (exOn === x) clearAll(); else fill(x);
   });
-  pop.addEventListener("keydown", function (e) {   // up and down move between the examples
-    var items = [].slice.call(pop.querySelectorAll("button")), k = items.indexOf(document.activeElement);
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); items[(k + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus(); }
+  car.addEventListener("keydown", function (e) {   // left and right move between the cards, also from a card's round button
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    var items = [].slice.call(car.querySelectorAll(".excard")), li = document.activeElement && document.activeElement.closest ? document.activeElement.closest("li") : null;
+    var k = li ? items.indexOf(li.querySelector(".excard")) : -1;
+    if (k < 0) return;
+    e.preventDefault(); items[Math.max(0, Math.min(items.length - 1, k + (e.key === "ArrowRight" ? 1 : -1)))].focus();
   });
-  document.addEventListener("click", function (e) { if (!pop.hidden && !pop.contains(e.target) && !moreBtn.contains(e.target)) closePop(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !pop.hidden) closePop(true); });
-  window.addEventListener("resize", function () { if (!pop.hidden) placePop(); });
+  // Holding a card down (owner 2026-11-21) enlarges it too: half a second with the finger (or the mouse button) still on
+  // it. Moving more than 10 px first (scrolling the row or the page) or letting go sooner is the usual scroll or tap.
+  // Where the phone has a long-press menu of its own, that menu doesn't show; the card enlarges instead.
+  car.addEventListener("pointerdown", function (e) {
+    var b = e.button > 0 || !e.target.closest ? null : e.target.closest(".excard");
+    if (!b) return;
+    var x0 = e.clientX, y0 = e.clientY, t = setTimeout(go, 500);
+    function off() {
+      clearTimeout(t); t = 0;
+      document.removeEventListener("pointermove", move, true); document.removeEventListener("pointerup", off, true);
+      document.removeEventListener("pointercancel", off, true); car.removeEventListener("contextmenu", menu);
+    }
+    function move(ev) { if (Math.abs(ev.clientX - x0) > 10 || Math.abs(ev.clientY - y0) > 10) off(); }
+    function go() { off(); held = b; openZoom(+b.getAttribute("data-k"), b); }
+    function menu(ev) { ev.preventDefault(); if (t) go(); }
+    document.addEventListener("pointermove", move, true); document.addEventListener("pointerup", off, true);
+    document.addEventListener("pointercancel", off, true); car.addEventListener("contextmenu", menu);
+  });
+  car.addEventListener("contextmenu", function (e) { if (held && e.target.closest && e.target.closest(".excard")) e.preventDefault(); });
+  // The enlarged card (owner 2026-11-21): the round button on a card, or holding the card down, shows that card over most
+  // of the screen with its drawing large, and fills the form with its example as a tap on the card does, so "Your
+  // numbers" in the bottom bar, which shows above it, are this example's. A tap on either of the bar's buttons closes the
+  // card and goes on as it does on the page. A tap outside the card, Esc or the round button (now shrinking) closes it
+  // back into its card. While it is open the page under it stays still, and keyboard focus stays on the card and the bar
+  // and then goes back to where it was.
+  var zoom = document.getElementById("exZoom"), zBar = document.getElementById("jump"), zMain = document.querySelector("main"), zFab = document.getElementById("fab");
+  var zRoot = document.documentElement, zCard, zScrim, zName, zNote, zImg, zk = -1, zFrom = null, zRun = [], zDownOut = false, EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+  function zBuild() {
+    if (zCard) return;
+    zoom.innerHTML = '<div class="zscrim"></div><div class="zcard" role="dialog" aria-modal="true" aria-labelledby="zoomName" aria-describedby="zoomNote" tabindex="-1">' +
+      '<span class="ext" id="zoomName"></span><span class="exs" id="zoomNote"></span><div class="zpic"><img alt="" width="1080" height="900" ' +
+      'sizes="(min-width: 592px) 560px, calc(100vw - 32px)" decoding="async" draggable="false">' +
+      '<button type="button" class="exzoom" aria-label="Shrink back" title="Shrink back">' + ICON_SMALL + "</button></div></div>";
+    zCard = zoom.querySelector(".zcard"); zScrim = zoom.querySelector(".zscrim"); zName = zoom.querySelector("#zoomName"); zNote = zoom.querySelector("#zoomNote"); zImg = zoom.querySelector("img");
+  }
+  function zStill() { return !zCard.animate || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  function zStop() { zRun.forEach(function (a) { a.cancel(); }); zRun = []; }
+  // The enlarged card drawn over the small one, the same width, bottoms lined up: both drawings sit at the bottom
+  function zAt(a, b) { return "translate(" + (a.left - b.left) + "px," + (a.bottom - b.bottom) + "px) scale(" + (a.width / b.width) + ")"; }
+  function openZoom(k, from) {
+    var x = PRESETS[k], c = car.querySelector('.excard[data-k="' + k + '"]');
+    zBuild(); zStop();
+    if (exOn !== x) fill(x);
+    zk = k; zFrom = from; zDownOut = false;
+    zName.textContent = presetName(x); zNote.textContent = x.label[1];
+    zImg.style.backgroundImage = "url(" + x.art + ")";   // the card's own small drawing shows until the large one is in
+    zImg.srcset = x.art + " 360w, " + x.art.replace(/\.jpg$/, "-720.jpg") + " 720w, " + x.art.replace(/\.jpg$/, "-1080.jpg") + " 1080w";
+    zImg.src = x.art;
+    var gap = window.innerWidth - zRoot.clientWidth;   // a desktop scrollbar about to go: the page doesn't shift under the card
+    zRoot.classList.add("zoom");
+    if (gap > 0) { zRoot.style.paddingRight = gap + "px"; zBar.style.right = gap + "px"; }
+    zMain.inert = true; if (zFab) zFab.inert = true;
+    zoom.classList.remove("out"); zoom.hidden = false;
+    zCard.focus({ preventScroll: true });
+    document.addEventListener("keydown", zKey);
+    if (zStill() || !c) return;
+    var a = c.getBoundingClientRect(), b = zCard.getBoundingClientRect();
+    zRun.push(zScrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: "ease-out" }));
+    zRun.push(zCard.animate([{ transform: zAt(a, b), opacity: 0 }, { opacity: 1, offset: 0.3 }, { transform: "none", opacity: 1 }], { duration: 340, easing: EASE }));
+  }
+  function closeZoom(leaving) {   // leaving: on to the numbers or the quick answers, so it fades out instead of shrinking back
+    if (zk < 0) return;
+    var c = leaving ? null : car.querySelector('.excard[data-k="' + zk + '"]'), from = zFrom;
+    zk = -1; zFrom = null; held = null;
+    document.removeEventListener("keydown", zKey);
+    zRoot.classList.remove("zoom"); zRoot.style.paddingRight = ""; zBar.style.right = "";
+    zMain.inert = false; if (zFab) zFab.inert = false;
+    if (!leaving && from && from.isConnected) from.focus({ preventScroll: true });
+    zStop();
+    if (zStill()) { zoom.hidden = true; return; }
+    zoom.classList.add("out");
+    var b = zCard.getBoundingClientRect(), a = c && c.getClientRects().length ? c.getBoundingClientRect() : null, t = a ? 280 : 180;
+    zRun.push(zScrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: "ease-in", fill: "forwards" }));
+    var m = zCard.animate(a ? [{ transform: "none", opacity: 1 }, { opacity: 1, offset: 0.7 }, { transform: zAt(a, b), opacity: 0 }] : [{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: EASE, fill: "forwards" });
+    zRun.push(m);
+    m.onfinish = function () { if (zk < 0) { zoom.hidden = true; zoom.classList.remove("out"); zStop(); } };
+  }
+  function zKey(e) { if (e.key === "Escape") { e.preventDefault(); closeZoom(false); } }
+  zoom.addEventListener("pointerdown", function (e) { zDownOut = !e.target.closest(".zcard"); });
+  zoom.addEventListener("click", function (e) {   // outside the card counts only when the tap also started outside it
+    var out = zDownOut; zDownOut = false;
+    if (e.target.closest(".exzoom") || (out && !e.target.closest(".zcard"))) closeZoom(false);
+  });
+  zoom.addEventListener("contextmenu", function (e) { if (held) e.preventDefault(); });
+  zBar.addEventListener("click", function () { if (zk >= 0) closeZoom(true); }, true);   // before the bar's own jump runs
+  f.addEventListener("change", function (e) { if (e.target.name === "unit") nameCards(); });
   addRow(false); render();
+  drawCards();   // the example cards show from the start (owner 2026-11-21)
   linkCites(document.querySelector("main"));   // the quick answers and anything else written into the page
   if (openSource(location.hash)) window.addEventListener("load", function () { var li = openSource(location.hash); if (li) li.scrollIntoView({ block: "start" }); });
 })();
@@ -1114,7 +1282,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 //   above) and the tick draws in 300 ms.
 // - Magnetic button: with a mouse within 120 px, "+ Add another food" leans 0.35 of the way toward the pointer and springs
 //   back when it leaves (stiffness 150, damping 15). Phones have no pointer to follow, so it is mouse only.
-// Every button has motion (owner 2026-11-20): the press and spring back on all of them; the ripple and the magnetic lean
+// Every button has motion (owner 2026-11-20): the press and spring back on all of them, and on every expander line
+// (owner 2026-11-20, the same as the "Show a filled-in example" link) and on each example card's round enlarge button
+// (owner 2026-11-21); the ripple and the magnetic lean
 // also on the bottom bar's two buttons and the two round buttons in the quick answers. "Your numbers" in the bar is the
 // one exception while it is tertiary, before there is a number to see; once it turns purple it moves like the rest.
 // Springs have mass 1. Nothing moves when the system asks for reduced motion.
@@ -1194,7 +1364,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   });
 
   // Press and spring back on every button, and a ripple from the tap point on the bigger ones
-  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .expop button, .rm", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
+  // An example card is pressed as its whole li, so its round enlarge button moves with it; the button pressed on its own
+  // moves alone (owner 2026-11-21)
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .rm, .adv>summary, details.more>summary, .srcs>summary", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
@@ -1227,11 +1399,11 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // side only the nearest one leans, so they never run into each other, and the long "Your numbers" is measured from
   // the line through its middle, so it leans toward the pointer without swinging sideways.
   var mx = -1e4, my = -1e4, queued = 0, leaned = [];
-  function groups() {
-    var bar = document.getElementById("jump"), fab = document.getElementById("fab");
-    return [[document.getElementById("addFood")],
-      bar && !bar.classList.contains("away") ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
-      fab && !fab.classList.contains("away") ? [].slice.call(fab.querySelectorAll("a")) : []];
+  function groups() {   // with a card enlarged, only the bottom bar shows above it (owner 2026-11-21)
+    var bar = document.getElementById("jump"), fab = document.getElementById("fab"), zoomed = document.documentElement.classList.contains("zoom");
+    return [zoomed ? [] : [document.getElementById("addFood")],
+      bar && (zoomed || !bar.classList.contains("away")) ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
+      fab && !zoomed && !fab.classList.contains("away") ? [].slice.call(fab.querySelectorAll("a")) : []];
   }
   function pull() {
     queued = 0;
