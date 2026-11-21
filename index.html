@@ -67,15 +67,19 @@ header{position:relative}
    that they move up, never into the bar's place (the spacer before them gives way first). The page under it stays
    still. A tap outside the card, Esc or the round button closes it. */
 .zoom{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;padding:16px 16px calc(77px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
-.zoom::before{content:"";flex:0 1 calc(61px + env(safe-area-inset-bottom));min-height:0}
+/* The card is centred in the screen above the bottom bar's place, not the whole screen (owner 2026-11-21: "vertically
+   centered on the viewport minus the pinned bar reserved area's height"), so it sits higher */
 .zoom[hidden]{display:none}
 .zoom.out{pointer-events:none}
 .zscrim{position:fixed;inset:0;background:var(--scrim)}
-.zbox{position:relative;display:flex;flex-direction:column;flex-shrink:0;width:min(100%,560px,calc((100vh - 256px) * 1.2));margin:auto;outline:0;transition:padding-bottom .22s ease}
-@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 256px) * 1.2))}}
-.zbox.on{padding-bottom:52px}   /* the band's place, kept once it folds away, so the card doesn't move */
+.zbox{position:relative;display:flex;flex-direction:column;flex-shrink:0;width:min(100%,560px,calc((100vh - 290px) * 1.2));margin:auto;outline:0;touch-action:pan-y pinch-zoom}   /* a sideways swipe moves between the cards, up and down still scrolls */
+@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 290px) * 1.2))}}
+.zslide{display:flex;flex-direction:column;width:100%;transition:translate .22s ease}   /* the card and its band, which slide between the cards */
+/* A picked card has no band: it moves down half the band's height, so it is centred where the card and band were,
+   gliding there as the band folds or as a swipe brings it in; the dots stay put (owner 2026-11-21) */
+.zbox.on .zslide{translate:0 26px}
 .zpress{display:flex;flex-direction:column;width:100%;transform:scale(var(--ps,1));filter:drop-shadow(0 18px 48px rgba(0,0,0,.3))}
-.zcard{position:relative;display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden;cursor:pointer;transform-origin:0 100%;transition:border-color .2s,box-shadow .2s,border-radius .22s}
+.zcard{position:relative;display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden;cursor:pointer;transform-origin:0 100%;transition:border-color .2s,box-shadow .2s,border-radius .22s;-webkit-user-select:none;user-select:none}
 .zbox:not(.on) .zcard{border-bottom-width:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
 .zcard.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);cursor:auto}
 .zcard .ext{display:block;padding:14px 16px 0;font-size:1.15rem;font-weight:600;line-height:1.25}
@@ -93,7 +97,23 @@ header{position:relative}
 .zsel .ripple{background:#fff}
 .zsel:focus-visible{outline:2px solid var(--on-accent);outline-offset:-6px}
 .zbox.on .zsel{height:0;opacity:0;visibility:hidden;pointer-events:none;transition:height .22s ease,opacity .16s,visibility 0s linear .22s}
-@media (prefers-reduced-motion:reduce){.zbox,.zcard,.zsel,.zbox.on .zsel{transition:none}}
+/* Dots under the enlarged card (owner 2026-11-21, after Instagram's dots under a post of several photos): one for each
+   example card, so it's plain the cards swipe sideways, and a tap on one shows that card. A plain dot for each card; the
+   card being looked at, bigger and solid white; the card picked, the one the page shows numbers for, a purple ring around
+   its dot with a gap, as in her sketch (both when it is the one looked at). The band's place is kept above them once it
+   folds away (their top margin grows as the band shrinks), so neither the card nor the dots move. */
+.zdots{display:flex;justify-content:center;align-self:center;margin-top:4px;padding:0 6px;border-radius:999px;background:rgba(0,0,0,.32);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:margin-top .22s ease}   /* a dark capsule, so the dots read over whatever page is under them */
+.zbox.on .zdots{margin-top:55px}   /* the band's 52 px and the card's 1 px bottom border once picked: the dots stay put */
+.zdot{display:flex;align-items:center;justify-content:center;width:24px;height:30px;margin:0;padding:0;border:0;border-radius:8px;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform:scale(var(--ps,1))}
+.zdot i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);outline:2px solid transparent;outline-offset:3px;transition:width .2s ease,height .2s ease,background-color .2s ease,outline-color .2s ease}
+.zdot[aria-current="true"] i{width:9px;height:9px;background:#fff}
+.zdot.picked i{outline-color:#b7a6f0}   /* the light purple, on the dark capsule in both themes */
+.zdot:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+/* A short screen, like a phone on its side: lower dots, and the card a little wider for it, so its words wrap less and
+   the card, the band and the dots stay above the bottom bar's place */
+@media (max-height:500px){.zdot{height:20px}.zdots{margin-top:2px}.zbox.on .zdots{margin-top:53px}.zbox{width:min(100%,560px,calc((100vh - 276px) * 1.2))}}
+@media (max-height:500px){@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 276px) * 1.2))}}}
+@media (prefers-reduced-motion:reduce){.zbox,.zcard,.zsel,.zbox.on .zsel,.zdots,.zdot i,.zslide{transition:none}}
 html.zoom,html.zoom body{overflow:hidden}
 html.zoom .jump{z-index:50;transform:translateY(100%);pointer-events:none}
 html.zoom.zon .jump{transform:none;pointer-events:auto}
@@ -280,6 +300,13 @@ html{scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 .jump .cnt span{margin-right:-.2em}
 .jump .cnt i{font-style:normal;margin-left:-.2em}
 .jump .cnt{margin-left:-2px}   /* with the button's 6px gap, the space before "(" reads as one space */
+/* The count's number rolls from the number before to the new one (owner 2026-11-21), clipped to its line; the motion
+   script sets --tp from 100 (or -100 when it goes down) to 0. The number before is drawn by the CSS from data-was, so
+   it is never part of the button's text, and screen readers skip it. */
+.jump .tick{position:relative;display:inline-block;overflow:hidden;vertical-align:top;font-weight:inherit;--tp:0}
+.jump .tick .tk{display:inline-block;font-weight:inherit;transform:translateY(calc(var(--tp) * 1%))}
+.jump .tick[data-was]::after{content:attr(data-was);content:attr(data-was) / "";position:absolute;left:0;top:0;transform:translateY(calc((var(--tp) - 100) * 1%))}
+.jump .tick.down[data-was]::after{transform:translateY(calc((var(--tp) + 100) * 1%))}
 /* The icon keeps its size; on the smallest phones (320 px) the button's side padding and its words get a little smaller
    so the whole "(5 ready ✅👇)" fits */
 .jump svg{flex:none}
@@ -495,7 +522,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <script>
 (function () {
   var f = document.getElementById("f"), out = document.getElementById("result"), jumpRes = document.querySelector("#jump .jump-res");
-  var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form"), jumpCnt = document.querySelector("#jump .cnt");
+  var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form"), jumpCnt = document.querySelector("#jump .cnt"), shownCnt = 0;
   var box = document.getElementById("foodRows"), seq = 0;
   var kField = document.getElementById("kcalField"), kLabel = document.getElementById("kcalLabel"), kHint = document.getElementById("kcalHint");
   var FOODS = BowlFit.foods(), HAY = {};
@@ -860,7 +887,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
       '<li><svg viewBox="0 0 18 18" aria-hidden="true"><rect class="band" x="1" y="5" width="16" height="8"/><path class="gd" style="stroke-dasharray:3 2;stroke-width:1.6" d="M1 5h16M1 13h16"/></svg><span>The top edge should land in this band: from the elbow height down to ' + less + " lower.</span></li></ul>" +
       (mine ? "<p>" + mine + "</p>" : "") + "</div>";
   }
-  var lastHtml = null, howhEmpty = null;
+  var lastHtml = null, howhShut = false;   // "How the bowl height is worked out" closed by a tap
   function render() {
     syncActivity();
     var v = vals(), r = BowlFit.recommend(v);
@@ -985,7 +1012,18 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     n += cn.length + r.tips.filter(function (t) { return asks.indexOf(t) < 0; }).length;
     var ready = numbers > 0;
     [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
-    if (jumpCnt) { jumpCnt.hidden = !ready; jumpCnt.innerHTML = ready ? "(" + n + ' ready <span aria-hidden="true">✅<i>👇</i></span>)' : ""; }
+    // The number ticks from the one shown before to the new one, up or down (owner 2026-11-21), so it is only written
+    // when it changes, and not while an example is still being filled in, so a picked example ticks once, from the
+    // number before it to its own.
+    if (jumpCnt) {
+      jumpCnt.hidden = !ready;
+      var cnt = ready ? n : 0;
+      if (cnt !== shownCnt && !exBusy) {
+        var from = shownCnt; shownCnt = cnt;
+        jumpCnt.innerHTML = ready ? '(<b class="tick"><b class="tk">' + n + '</b></b> ready <span aria-hidden="true">✅<i>👇</i></span>)' : "";
+        if (ready) document.dispatchEvent(new CustomEvent("readytick", { detail: { from: from, to: cnt } }));
+      }
+    }
     // Only touch the result when it changed. Leaving a box fires "change" right as the next tap lands, and
     // redrawing then would swallow a tap on a folded section. Opened sections stay open when it does redraw.
     var html = h + "</div>";
@@ -993,11 +1031,13 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     lastHtml = html;
     var was = {};
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { was[d.getAttribute("data-k")] = d.open; });
-    if (empty !== howhEmpty) { was.howh = empty; howhEmpty = empty; }   // open while empty, folded once there is a number (owner 2026-11-20)
+    was.howh = !howhShut;   // always open, with or without numbers, until a tap closes it (owner 2026-11-21)
     out.innerHTML = html;
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { if (was[d.getAttribute("data-k")]) d.open = true; });
     linkCites(out);
   }
+  // a tap on its summary opens or closes it; that choice holds while more is typed or changed (owner 2026-11-21)
+  out.addEventListener("click", function (e) { var s = e.target.closest && e.target.closest('details[data-k="howh"] > summary'); if (s) howhShut = s.parentNode.open; });
   document.getElementById("addFood").addEventListener("click", function () { addRow(true); render(); });
   window.addEventListener("resize", function () { [].forEach.call(box.querySelectorAll(".fq"), fit); });   // a turned phone re-wraps the names
   f.addEventListener("submit", function (e) { e.preventDefault(); });
@@ -1035,39 +1075,46 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // and each visitor only gets a few look-ups. It also ticks "Liver values to watch" and "High triglycerides or cholesterol"
   // (owner 2026-11-20), and opens "Anything your vet is watching" so those ticks show; hiding the example closes it again.
   // It ticks "Eats very fast" too (owner 2026-11-20), so the example shows a slow feeder worth trying.
-  // The example is also the first card (owner 2026-11-21): "Show a filled-in example" outlines that card, and a tap on
-  // the card fills the same example.
+  // The example is also one of the cards, the second (owner 2026-11-21): "Show a filled-in example" outlines that card,
+  // and a tap on the card fills the same example. Its drawing has a raised, footed bowl, after our two-tone raised flower
+  // slow feeder but hand drawn, as its result recommends raised, footed bowls (owner 2026-11-21).
   var EX = { group: "Dogs", label: ["Small", "liver, high cholesterol"], art: "img/ex-dog-liver.jpg",
     species: "dog", weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
     size: "small",   // the example dog is 9.3 kg, a small dog (under 10 kg)
     foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["fastEater", "cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
-  // More examples behind the round button after the link (owner 2026-11-20): five typical dogs, the first being the
+  // More examples behind the round button after the link (owner 2026-11-20): five typical dogs, the second being the
   // example above, and three cats, from the cases tested, so each breed size, different elbow heights, meals a day and
-  // health boxes come up. label = a few words: size or age, then (with the weight in the units picked) what stands out.
+  // health boxes come up. They run from small to large, the dogs first and then the cats (owner 2026-11-21): the
+  // dachshund first and the example second, then medium, large and giant; the kitten, the adult cat, the older cat. label = a few words: size or age, then (with the weight in the units picked) what stands out.
   // whisker = cats' whisker span; kcal = calories per cup, for a food not in the list. Amounts give about the calories
   // each pet needs. art = the card's hand-drawn picture (owner 2026-11-20), drawn to show what the example is about.
-  // The small one that eats fast is a miniature dachshund with short legs (owner 2026-11-21, in place of a Pomeranian):
-  // 5 kg (11 lb), as the AKC gives 11 lb and under for the miniature and 5 to 6 in (13 to 15 cm) at the withers. Its elbow
-  // is taken as 6 cm (2.4 in): the FCI standard (No. 148) has the ground clearance, the floor to the bottom of the chest,
-  // at about a third of the height at the withers, so about 4.7 cm at 14 cm, and the elbow sits a little above that.
-  // Short legs is ticked for it. Half a cup twice a day gives about 96% of the calories it needs, as the Pomeranian had.
+  // The small one that eats fast is a dachshund with short legs (owner 2026-11-21, in place of a Pomeranian). Its result
+  // should include our raised bowls, the Sage one in particular, the bowl a dachshund eats from in a customer's review
+  // photo (owner 2026-11-21), so it is a standard dachshund rather than a miniature, 7.5 kg (16.5 lb, owner 2026-11-21:
+  // about 7 kg), as the AKC gives 16 to 32 lb and 8 to 9 in (20 to 23 cm) at the withers for the standard. Its elbow is taken as 12 cm (4.75 in): the FCI
+  // standard (No. 148) has the ground clearance, the floor to the bottom of the chest, at about a third of the height at
+  // the withers, so about 7.6 cm at 23 cm, and the AKC standard has the chest reaching down to the middle of the forearm,
+  // so the elbow sits above that. 12 cm gives a bowl height of 4.5 to 12 cm, which takes in our raised bowls of 8.5 to
+  // 11 cm. Short legs is ticked for it. Three meals of 0.35 cup of a small-breed food (452 kcal a cup) give about 94% of
+  // the calories it needs, and each meal stays small enough for a 200 ml slow feeder with the room a slow feeder needs.
   // The large dog brings food back up (owner 2026-11-20), so one example shows the megaesophagus sentence, in bold, and
   // the caution after it; it still eats one meal a day, which that tip's "smaller meals, more often" answers.
-  var PRESETS = [EX,
-    { group: "Dogs", label: ["Small", "short legs, eats fast"], art: "img/ex-dog-dachshund.jpg", species: "dog", weight: { cm: "5", "in": "11" }, elbow: { cm: "6", "in": "2.4" },
-      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.5"]], ticks: ["fastEater", "shortLegs"] },
+  var PRESETS = [
+    { group: "Dogs", label: ["Small", "short legs, eats fast"], art: "img/ex-dog-dachshund.jpg", species: "dog", weight: { cm: "7.5", "in": "16.5" }, elbow: { cm: "12", "in": "4.75" },
+      stage: "neutered", activity: "usual", meals: "3", size: "small", foods: [["purina-pro-plan-small-breed-chicken-rice-dry", "0.35"]], ticks: ["fastEater", "shortLegs"] },
+    EX,
     { group: "Dogs", label: ["Medium", "older, losing weight"], art: "img/ex-dog-medium.jpg", species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
       stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.1"]], ticks: ["senior", "cond:overweight"] },
     { group: "Dogs", label: ["Large", "brings food back up"], art: "img/ex-dog-large.jpg", species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
       stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis", "regurgitates"] },
     { group: "Dogs", label: ["Giant", "long ears"], art: "img/ex-dog-giant.jpg", species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
       stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
+    { group: "Cats", label: ["Kitten", "eats fast"], art: "img/ex-cat-kitten.jpg", species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
+      stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] },
     { group: "Cats", label: ["Adult", "flat face"], art: "img/ex-cat-adult.jpg", species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
       stage: "neutered", activity: "usual", meals: "2", foods: [["hills-sd-cat-adult-indoor-dry", "0.4"]], ticks: ["flatFace"] },
     { group: "Cats", label: ["Older", "kidney values"], art: "img/ex-cat-older.jpg", species: "cat", weight: { cm: "3.8", "in": "8.5" }, elbow: { cm: "11", "in": "4.25" }, whisker: { cm: "12", "in": "4.75" },
-      stage: "neutered", activity: "usual", meals: "3", foods: [["hills-pd-kd-chicken-pate-can-cat", "0.4"]], ticks: ["senior", "cond:kidney"] },
-    { group: "Cats", label: ["Kitten", "eats fast"], art: "img/ex-cat-kitten.jpg", species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
-      stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] }
+      stage: "neutered", activity: "usual", meals: "3", foods: [["hills-pd-kd-chicken-pate-can-cat", "0.4"]], ticks: ["senior", "cond:kidney"] }
   ];
   var KEEP = ["weight", "stage", "activity", "meals", "kcal", "elbow", "size", "whisker"];
   var DEF = {}; KEEP.forEach(function (n) { DEF[n] = document.getElementById(n).value; });   // the empty form's values
@@ -1104,6 +1151,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     exOn = x; exBusy = false;
     exBtn.textContent = "Clear & hide the example"; exBtn.parentNode.classList.add("on"); markCards();
     render();
+    // so it's plain where to look next (owner 2026-11-21): the bottom bar comes up, its purple "Your numbers" pops, and
+    // the count ticks to this example's (the bar and the motion scripts below listen)
+    document.dispatchEvent(new CustomEvent("expick"));
   }
   function clearAll() {
     exBusy = true;
@@ -1250,14 +1300,16 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // outside the card, Esc or the round button (now shrinking) closes it back into its card. While it is open the page
   // under it stays still, and keyboard focus stays on the card, its button and the bar, and then goes back to where it was.
   var zoom = document.getElementById("exZoom"), zBar = document.getElementById("jump"), zMain = document.querySelector("main"), zFab = document.getElementById("fab");
-  var zRoot = document.documentElement, zBox, zCard, zSel, zScrim, zName, zNote, zImg, zk = -1, zFrom = null, zRun = [], zDownOut = false, zDownIn = false, EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+  var zRoot = document.documentElement, zBox, zSlide, zDotBox, zDotEls = [], zCard, zSel, zScrim, zName, zNote, zImg, zk = -1, zFrom = null, zRun = [], zDownOut = false, zDownIn = false, EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
   function zBuild() {
     if (zCard) return;
     zoom.innerHTML = '<div class="zscrim"></div><div class="zbox" role="dialog" aria-modal="true" aria-labelledby="zoomName" aria-describedby="zoomNote" tabindex="-1">' +
-      '<div class="zpress"><div class="zcard"><span class="ext" id="zoomName"></span><span class="exs" id="zoomNote"></span><div class="zpic"><img alt="" width="1080" height="900" ' +
+      '<div class="zslide"><div class="zpress"><div class="zcard"><span class="ext" id="zoomName"></span><span class="exs" id="zoomNote"></span><div class="zpic"><img alt="" width="1080" height="900" ' +
       'sizes="(min-width: 592px) 560px, calc(100vw - 32px)" decoding="async" draggable="false">' +
       '<button type="button" class="exzoom" aria-label="Shrink back" title="Shrink back">' + ICON_SMALL + "</button></div></div>" +
-      '<button type="button" class="zsel">Tap to select this example</button></div></div>';   // the band, joined to the card's bottom edge (owner 2026-11-21)
+      '<button type="button" class="zsel">Tap to select this example</button></div></div>' +   // the band, joined to the card's bottom edge (owner 2026-11-21)
+      '<div class="zdots" role="group" aria-label="Example cards">' + PRESETS.map(function (x, k) { return '<button type="button" class="zdot" data-k="' + k + '" tabindex="-1"><i></i></button>'; }).join("") + "</div></div>";
+    zSlide = zoom.querySelector(".zslide"); zDotBox = zoom.querySelector(".zdots"); zDotEls = [].slice.call(zoom.querySelectorAll(".zdot"));
     zBox = zoom.querySelector(".zbox"); zCard = zoom.querySelector(".zcard"); zSel = zoom.querySelector(".zsel"); zScrim = zoom.querySelector(".zscrim");
     zName = zoom.querySelector("#zoomName"); zNote = zoom.querySelector("#zoomNote"); zImg = zoom.querySelector("img");
   }
@@ -1271,16 +1323,42 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     zBox.classList.toggle("on", on); zCard.classList.toggle("on", on);
     zRoot.classList.toggle("zon", on); zBar.inert = !on;
   }
-  function openZoom(k, from) {
-    var x = PRESETS[k], c = car.querySelector('.excard[data-k="' + k + '"]'), on = exOn === x;
-    zBuild(); zStop();
-    zk = k; zFrom = from; zDownOut = zDownIn = false;
+  // The dots (owner 2026-11-21): which card is looked at, which is picked (a ring), their names in the units picked. Only
+  // the dot of the card looked at takes the Tab key, and keyboard focus on a dot follows it from card to card.
+  function zDots(cur) {
+    var had = zDotEls.indexOf(document.activeElement) >= 0;
+    zDotEls.forEach(function (b, k) {
+      var x = PRESETS[k], picked = exOn === x;
+      b.classList.toggle("picked", picked);
+      if (k === cur) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+      b.tabIndex = k === cur ? 0 : -1;
+      b.setAttribute("aria-label", presetLabel(x) + (picked ? ", picked" : ""));
+    });
+    if (had && zDotEls[cur]) zDotEls[cur].focus({ preventScroll: true });
+  }
+  function zSet(a) { return a + " 360w, " + a.replace(/\.jpg$/, "-720.jpg") + " 720w, " + a.replace(/\.jpg$/, "-1080.jpg") + " 1080w"; }
+  // Card k in the enlarged view, picked or not as it is, and the drawings of the cards on either side loading now, so a
+  // swipe to them shows them at once
+  function zFill(k) {
+    var x = PRESETS[k];
+    zk = k;
     zName.textContent = presetName(x); zNote.textContent = x.label[1];
     zImg.style.backgroundImage = "url(" + x.art + ")";   // the card's own small drawing shows until the large one is in
-    zImg.srcset = x.art + " 360w, " + x.art.replace(/\.jpg$/, "-720.jpg") + " 720w, " + x.art.replace(/\.jpg$/, "-1080.jpg") + " 1080w";
+    zImg.srcset = zSet(x.art);
     zImg.src = x.art;
+    if (exOn === x && document.activeElement === zSel) zBox.focus({ preventScroll: true });   // the band is going away
+    zMark(exOn === x); zDots(k);
+    [k - 1, k + 1].forEach(function (j) {
+      if (j < 0 || j >= PRESETS.length) return;
+      var im = new Image(); im.sizes = zImg.sizes; im.srcset = zSet(PRESETS[j].art); im.src = PRESETS[j].art;
+    });
+  }
+  function openZoom(k, from) {
+    var c = car.querySelector('.excard[data-k="' + k + '"]'), on = exOn === PRESETS[k];
+    zBuild(); zStop();
+    zFrom = from; zDownOut = zDownIn = false;
+    zFill(k);
     var gap = window.innerWidth - zRoot.clientWidth;   // a desktop scrollbar about to go: the page doesn't shift under the card
-    zMark(on);
     zRoot.classList.add("zoom");
     if (gap > 0) { zRoot.style.paddingRight = gap + "px"; zBar.style.right = gap + "px"; }
     zMain.inert = true; if (zFab) zFab.inert = true;
@@ -1292,18 +1370,20 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     zRun.push(zScrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: "ease-out" }));
     zRun.push(zCard.animate([{ transform: zAt(a, b), opacity: 0 }, { opacity: 1, offset: 0.3 }, { transform: "none", opacity: 1 }], { duration: 340, easing: EASE }));
     if (!on) zRun.push(zSel.animate([{ opacity: 0 }, { opacity: 0, offset: 0.6 }, { opacity: 1 }], { duration: 400, easing: "ease-out" }));   // the band comes in as the card lands
+    zRun.push(zDotBox.animate([{ opacity: 0 }, { opacity: 0, offset: 0.6 }, { opacity: 1 }], { duration: 400, easing: "ease-out" }));   // and so do the dots
   }
   function zPick() {
     if (zk < 0) return;
     var x = PRESETS[zk], kb = document.activeElement === zSel;
     if (exOn !== x) fill(x);
-    zMark(true);
+    zMark(true); zDots(zk);
     if (kb) jumpRes.focus({ preventScroll: true });   // from the button, keyboard focus goes on to "Your numbers"
   }
   function closeZoom(leaving) {   // leaving: on to the numbers or the quick answers, so it fades out instead of shrinking back
     if (zk < 0) return;
     var c = leaving ? null : car.querySelector('.excard[data-k="' + zk + '"]'), from = zFrom, btn = !zBox.classList.contains("on");
-    zk = -1; zFrom = null; held = null;
+    zk = -1; zFrom = null; held = null; zDrag = null;
+    zSlide.style.transform = zSlide.style.opacity = "";
     document.removeEventListener("keydown", zKey);
     zRoot.classList.remove("zoom", "zon"); zRoot.style.paddingRight = ""; zBar.style.right = ""; zBar.inert = false;
     zMain.inert = false; if (zFab) zFab.inert = false;
@@ -1314,14 +1394,93 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var b = zCard.getBoundingClientRect(), a = c && c.getClientRects().length ? c.getBoundingClientRect() : null, t = a ? 280 : 180;
     zRun.push(zScrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: "ease-in", fill: "forwards" }));
     if (btn) zRun.push(zSel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-in", fill: "forwards" }));
+    zRun.push(zDotBox.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-in", fill: "forwards" }));
     var m = zCard.animate(a ? [{ transform: "none", opacity: 1 }, { opacity: 1, offset: 0.7 }, { transform: zAt(a, b), opacity: 0 }] : [{ opacity: 1 }, { opacity: 0 }], { duration: t, easing: EASE, fill: "forwards" });
     zRun.push(m);
     m.onfinish = function () { if (zk < 0) { zoom.hidden = true; zoom.classList.remove("out"); zStop(); } };
   }
-  function zKey(e) { if (e.key === "Escape") { e.preventDefault(); closeZoom(false); } }
+  function zKey(e) {
+    if (e.key === "Escape") { e.preventDefault(); closeZoom(false); }
+    else if ((e.key === "ArrowRight" || e.key === "ArrowLeft") && !e.altKey && !e.ctrlKey && !e.metaKey) { e.preventDefault(); zGo(e.key === "ArrowRight" ? 1 : -1, 0); }
+  }
+  // Left and right between the cards (owner 2026-11-21): a sideways swipe on the enlarged card, or the arrow keys, shows the
+  // next or the previous card in the same place, picked or not as it is. The card follows the finger, then slides all
+  // the way off that way and the next one slides all the way in from the other side, short and light (0.16 s out, 0.26 s
+  // in), gliding up or down too when one has the band and the other not (owner 2026-11-21); a short quick flick
+  // is enough. Past the first or the last card it only gives a little and settles back. The row under it scrolls along,
+  // so the card shrinks back into its own place when it is closed. A swipe never picks a card.
+  var zDrag = null, zSwiped = false;
+  function zFade(dx) { return Math.max(0.8, 1 - Math.abs(dx) / (zBox.offsetWidth || 1) * 0.35).toFixed(3); }   // only a little, so the page under it doesn't show through much
+  function zRowTo(k) {   // the row under the card scrolls so this card is in view
+    var b = car.querySelector('.excard[data-k="' + k + '"]'), ul = car.querySelector("ul");
+    if (!b || !ul) return;
+    var r = b.getBoundingClientRect(), u = ul.getBoundingClientRect();
+    if (r.left >= u.left && r.right <= u.right) return;
+    ul.scrollTo({ left: Math.max(0, ul.scrollLeft + r.left - u.left - 16), behavior: zStill() ? "auto" : "smooth" });
+  }
+  function zBack(dx, d) {   // back to the middle from where the finger left it; from the keyboard at the end, a small nudge
+    zSlide.style.transform = zSlide.style.opacity = "";
+    if (zStill()) return;
+    if (dx) zRun.push(zSlide.animate([{ transform: "translateX(" + dx + "px)", opacity: zFade(dx) }, { transform: "none", opacity: 1 }], { duration: 220, easing: EASE }));
+    else if (d) zRun.push(zSlide.animate([{ transform: "none" }, { transform: "translateX(" + (-d * 12) + "px)", offset: 0.35 }, { transform: "none" }], { duration: 260, easing: "ease-out" }));
+  }
+  // Card k, sliding in from the side of d (1: from the right, the next one; -1: from the left); dx: where the finger let go
+  // of the card before it, 0 from the keyboard or a dot. The dots show the new card at once.
+  function zTo(k, d, dx) {
+    if (zk < 0 || k === zk) return;
+    if (k < 0 || k >= PRESETS.length) { zBack(dx, d); return; }
+    zFrom = zFrom && zFrom.classList.contains("exzoom") ? car.querySelector('.exzoom[data-z="' + k + '"]') : car.querySelector('.excard[data-k="' + k + '"]');
+    zRowTo(k);
+    zStop();
+    zSlide.style.transform = zSlide.style.opacity = "";
+    zDots(k);
+    if (zStill()) { zFill(k); return; }
+    var w = zBox.offsetWidth + 32, a = zSlide.animate([{ transform: "translateX(" + dx + "px)", opacity: zFade(dx) }, { transform: "translateX(" + (-d * w) + "px)", opacity: 0.35 }],
+      { duration: 160, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" });
+    zRun.push(a);
+    a.onfinish = function () {
+      if (zk < 0) return;
+      zFill(k); a.cancel();
+      zRun.push(zSlide.animate([{ transform: "translateX(" + (d * w) + "px)", opacity: 0.35 }, { transform: "none", opacity: 1 }], { duration: 260, easing: EASE }));
+    };
+  }
+  function zGo(d, dx) { if (zk >= 0) zTo(zk + d, d, dx); }   // d: 1 the next card, -1 the previous one
+  zoom.addEventListener("pointerdown", function (e) {
+    zSwiped = false;
+    zDrag = e.button > 0 || !e.target.closest(".zbox") ? null : { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, on: false, v: 0, lt: e.timeStamp, lx: e.clientX };
+  });
+  zoom.addEventListener("pointermove", function (e) {
+    var g = zDrag;
+    if (!g || e.pointerId !== g.id || zk < 0) return;
+    var dx = e.clientX - g.x, dy = e.clientY - g.y;
+    if (!g.on) {
+      if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { zDrag = null; return; }   // up or down: the usual scroll
+      if (Math.abs(dx) < 10) return;
+      g.on = true; zStop();
+      try { zBox.setPointerCapture(e.pointerId); } catch (err) { /* the finger may already be gone */ }
+      document.dispatchEvent(new CustomEvent("zdrag"));   // the press lets go, as the card now moves with the finger
+    }
+    var k = zk + (dx < 0 ? 1 : -1);
+    g.dx = k < 0 || k >= PRESETS.length ? dx * 0.25 : dx;   // past the first or the last card it only gives a little
+    if (e.timeStamp > g.lt) { g.v = (e.clientX - g.lx) / (e.timeStamp - g.lt); g.lt = e.timeStamp; g.lx = e.clientX; }
+    if (!zStill()) { zSlide.style.transform = "translateX(" + g.dx + "px)"; zSlide.style.opacity = zFade(g.dx); }
+  });
+  function zEnd(e) {
+    var g = zDrag;
+    if (!g || e.pointerId !== g.id) return;
+    zDrag = null;
+    if (!g.on || zk < 0) return;
+    zSwiped = true; setTimeout(function () { zSwiped = false; }, 350);   // the click this finger leaves behind doesn't pick the card
+    var far = Math.abs(g.dx) > zBox.offsetWidth * 0.22 || (Math.abs(g.dx) > 24 && Math.abs(g.v) > 0.45 && (g.v < 0) === (g.dx < 0));
+    if (e.type === "pointerup" && far) zGo(g.dx < 0 ? 1 : -1, g.dx); else zBack(g.dx);
+  }
+  zoom.addEventListener("pointerup", zEnd);
+  zoom.addEventListener("pointercancel", zEnd);
   zoom.addEventListener("pointerdown", function (e) { zDownOut = !e.target.closest(".zbox"); zDownIn = !!e.target.closest(".zcard") && !e.target.closest(".exzoom"); });
   zoom.addEventListener("click", function (e) {   // outside the card counts only when the tap also started outside it, and the card only when it started on the card
-    var out = zDownOut, on = zDownIn; zDownOut = zDownIn = false;
+    if (zSwiped) { zSwiped = false; zDownOut = zDownIn = false; return; }
+    var out = zDownOut, on = zDownIn, dot = e.target.closest(".zdot"); zDownOut = zDownIn = false;
+    if (dot) { var t = +dot.getAttribute("data-k"); zTo(t, t > zk ? 1 : -1, 0); return; }
     if (e.target.closest(".exzoom")) closeZoom(false);
     else if (e.target.closest(".zsel") || (on && e.target.closest(".zcard"))) zPick();
     else if (out && !e.target.closest(".zbox")) closeZoom(false);
@@ -1352,6 +1511,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 // picked, with a white ripple in the band (owner 2026-11-21); the ripple and the magnetic lean
 // also on the bottom bar's two buttons and the two round buttons in the quick answers. "Your numbers" in the bar is the
 // one exception while it is tertiary, before there is a number to see; once it turns purple it moves like the rest.
+// The enlarged card follows a sideways swipe and slides on to the next card (owner 2026-11-21: light motion); it is
+// written with the card itself, further up.
 // Springs have mass 1. Nothing moves when the system asks for reduced motion.
 (function () {
   "use strict";
@@ -1433,7 +1594,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // moves alone (owner 2026-11-21). The enlarged card presses as a whole (its .zpress) while it isn't picked yet, as a tap
   // on it picks it, and its "Tap to select this example" band, joined to it, moves with it, the ripple in the band; once
   // picked a tap on it does nothing, so it stays still (owner 2026-11-21).
-  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .zbox:not(.on) .zpress, .rm, .adv>summary, details.more>summary, .srcs>summary", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a, .zsel";
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .zbox:not(.on) .zpress, .zdot, .rm, .adv>summary, details.more>summary, .srcs>summary", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a, .zsel";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
@@ -1456,12 +1617,37 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
       el.classList.remove("down");
       document.removeEventListener("pointerup", up, true);
       document.removeEventListener("pointercancel", up, true);
+      document.removeEventListener("zdrag", up, true);
     }
     document.addEventListener("pointerup", up, true);
     document.addEventListener("pointercancel", up, true);
+    document.addEventListener("zdrag", up, true);   // the enlarged card being swiped sideways lets go of the press
     var rp = e.target.closest(RIPPLE);   // the pressed button's own, or the band inside the enlarged card that presses
     if (rp && el.contains(rp)) ripple(rp, e);
   }, true);
+
+  // An example picked (owner 2026-11-21: users didn't know where to look next): the bottom bar, if it was already showing,
+  // rises the last 6 px into place (it slides up from below by itself if it was away), and its purple "Your numbers"
+  // pops: up to 1.06 and back on a spring. The count in it rolls from the number before to the new one, upward when it
+  // grows and downward when it shrinks, on the spring of the RedNote note's "Like Burst", whose like count rolls up by
+  // one (stiffness 300, damping 10), the pop on the same spring (the note's heart goes to 1.3, too big for a wide
+  // button). Nothing moves for reduced motion.
+  document.addEventListener("expick", function () {
+    var bar = document.getElementById("jump"), b = bar && bar.querySelector(".jump-res.ready");
+    if (!b || reduce.matches) return;
+    if (!bar.classList.contains("away") && !document.documentElement.classList.contains("zoom") && bar.animate)
+      bar.animate([{ transform: "translateY(6px)" }, { transform: "none" }], { duration: 260, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" });
+    spring(b, "--ps", 1.06, 1600, 80);
+    setTimeout(function () { spring(b, "--ps", 1, 300, 10); }, 90);
+  });
+  document.addEventListener("readytick", function (e) {
+    var t = document.querySelector("#jump .cnt .tick"), d = e.detail || {};
+    if (!t || reduce.matches || !d.to || d.from === d.to) return;
+    var up = d.to > d.from;
+    if (d.from > 0) t.setAttribute("data-was", d.from);   // the number before, drawn by the CSS, so it is never in the button's text
+    t.classList.toggle("down", !up);
+    spring(t, "--tp", 0, 300, 10, up ? 100 : -100);
+  });
 
   // Magnetic buttons, mouse only: "+ Add another food", the bottom bar's buttons and the round buttons. Of buttons side by
   // side only the nearest one leans, so they never run into each other, and the long "Your numbers" is measured from
@@ -1552,6 +1738,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   set();
   document.addEventListener("focusin", set);
   document.addEventListener("focusout", function () { setTimeout(set, 120); });
+  // An example just picked (owner 2026-11-21): the strip comes up even if the page was last scrolled up, so the purple
+  // "Your numbers" shows where its numbers are; not over the keyboard, and not once the result is in view.
+  document.addEventListener("expick", function () { up = false; lastY = window.scrollY; set(); });
   function jump(e) {
     var a = e.target.closest("a"), t = a && document.querySelector(a.getAttribute("href"));
     if (!t) return;
