@@ -28,6 +28,9 @@
   // raised more than 1 ft 29 (not significant). Giant breeds (over 45 kg): floor 17, 1 ft or less 15 (not
   // significant), more than 1 ft 39 (RR 2.29). One study, 98 GDV cases in all.
   var MEGA = "Dogs with megaesophagus are fed from a raised position on purpose, on their vet's plan. If you're unsure, ask your vet.";
+  // The two sentences that close the large-dog tip for a pet that brings food back up; the page cites each one.
+  var MEGA_RAISE = "If it's megaesophagus (a widened food pipe), vet guides advise a raised bowl so gravity helps food reach the stomach.",
+    BLOAT_RAISE = "For a large dog, raising the bowl for this is your vet's call, because raised bowls have been linked to bloat in large breeds.";
   var GUIDE = "It is one study with 98 bloat cases, so treat the cut-off as a guide. ";
   var NOTES = {
     large: "Height matters for large breeds (adults 23 to 45 kg). In the one study that measured it, bloat (GDV) cases per 1,000 dog-years were 18 with a floor bowl, 56 with a bowl raised 1 ft (30.5 cm) or less, which is 3.06 times the risk, and 29 above 1 ft, which was not a significant difference. " + GUIDE + MEGA,
@@ -142,32 +145,83 @@
   // Our bowls, sizes as listed in our Etsy shop (November 2026). rimCm = how tall the bowl is: the floor to its top edge,
   // the same point the bowl height in the result is measured to. The page says "tall", never "rim", because "rim" read
   // as two different heights (owner 2026-11-20).
-  // url = the bowl's own listing in our Etsy shop; img = a clean photo of it, copied into img/ (2026-11-16)
+  // url = the bowl's own listing in our Etsy shop; img = the photo picked for its card, copied into img/ (2026-11-16)
   // top = its place in the list shown before anything is typed: our best sellers, in the owner's order. It is a
   // static list, the same six for a cat or a dog (owner 2026-11-19: lilac plate, two-tone raised flower, the big-dog
   // Pink Planet third, raised lilac pedestal, sage, and the butter yellow line-and-dots plate sixth).
   // ml: null = no capacity known, so nothing is claimed either way; mlAbout = an estimate, shown as "about".
-  // dogOnly = made for dogs, not cats.
-  var PRODUCTS = [
-    { name: "Lilac flower ceramic slow feeder plate", slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310, top: 1,
+  // dogOnly = made for dogs, not cats. slow = a slow feeder.
+  // Every bowl we sell is here, with every option that changes its size or height, sold-out ones too (owner
+  // 2026-11-20). Colours and feet don't change the fit, so they share
+  // the bowl. options = the listing's other sizes or heights. Each becomes a bowl of its own in PRODUCTS, from the same
+  // listing, and its url picks that option on Etsy (pick = the option's value; variation1 = the listing's second choice).
+  // Its photo follows optionPhoto below. rimAbout = the height is an estimate, shown as "about"; on = what the height is
+  // measured with; adds = the add-on that changes the height; shows = the add-on the card photo already shows.
+  var BOWLS = [
+    { name: "Lilac flower ceramic slow feeder plate", listing: 4517774070, slow: true, tilted: false, widthCm: 14.8, rimCm: 3.5, ml: 310, top: 1,
       url: "https://www.etsy.com/listing/4517774070/ceramic-slow-feeder-cat-bowl-lilac", img: "img/lilac-flower-plate.jpg" },
-    { name: "Butter yellow ceramic slow feeder plate, medium", slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400, top: 6,
-      url: "https://www.etsy.com/listing/4517744488/ceramic-slow-feeder-cat-bowl-butter", img: "img/butter-yellow-plate.jpg" },
-    { name: "Lilac flower slow feeder on a pedestal", slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310, top: 4,
+    // The line-and-dots plate: medium 15.5 cm across, 4 cm tall, 400 ml; large 19.1 cm, 4 cm, 650 ml (the listing's two
+    // size charts), each in butter yellow or pink. The large one's photo is the listing's photo of the large plate,
+    // which is pink, so its name says both colours.
+    { name: "Butter yellow ceramic slow feeder plate, medium", listing: 4517744488, slow: true, tilted: false, widthCm: 15.5, rimCm: 4, ml: 400, top: 6,
+      url: "https://www.etsy.com/listing/4517744488/ceramic-slow-feeder-cat-bowl-butter", img: "img/butter-yellow-plate.jpg",
+      options: [{ name: "Pink or butter yellow ceramic slow feeder plate, large", widthCm: 19.1, ml: 650, pick: 6778088974, img: "img/line-dots-plate-large.jpg" }] },
+    { name: "Lilac flower slow feeder on a pedestal", listing: 4533246949, slow: true, tilted: false, widthCm: 14.8, rimCm: 8.5, ml: 310, top: 4,
       url: "https://www.etsy.com/listing/4533246949/lilac-elevated-slow-feeder-ceramic-pet", img: "img/lilac-flower-pedestal.jpg" },
-    { name: "Sage green raised tilted slow feeder", slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200, top: 5,
+    { name: "Sage green raised tilted slow feeder", listing: 4517348136, slow: true, tilted: true, widthCm: 14.8, rimCm: 11, ml: 200, top: 5,
       url: "https://www.etsy.com/listing/4517348136/sage-green-ceramic-slow-feeder-bowl", img: "img/sage-green-raised-tilted.jpg" },
-    { name: "Two-tone raised tilted flower slow feeder", slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200, top: 2,
+    { name: "Two-tone raised tilted flower slow feeder", listing: 4504867658, slow: true, tilted: true, widthCm: 14.5, rimCm: 10.5, ml: 200, top: 2,
       url: "https://www.etsy.com/listing/4504867658/raised-flower-ceramic-slow-feeder-bowl", img: "img/two-tone-raised-tilted-flower.jpg" },
     // Plate 21.6 cm across, 3.5 cm tall; the optional bamboo stand is 7 cm tall (listing, measured by hand by the maker).
     // About 650 ml: the estimate on the listing's size chart (2026-11-16, from its size; the maker gives none).
-    // Made for medium to large dogs (owner 2026-11-10). Photo: the listing's second photo, a tricolor Rough Collie
-    // eating from it, so the size reads at a glance (owner 2026-11-19). The name is the owner's: "Large dog ceramic slow
-    // feeder pink planet style" (2026-11-19), "large dog" first, about four lines on the card.
-    { name: "Large dog ceramic slow feeder Pink Planet style", slow: true, tilted: false, widthCm: 21.6, rimCm: 3.5, ml: 650, mlAbout: true, top: 3,
-      dogOnly: true, extra: "Optional bamboo stand, 7 cm (2.8 in) tall",
-      url: "https://www.etsy.com/listing/4614433467/pink-planet-ceramic-slow-feeder-dog-bowl", img: "img/pink-planet-plate.jpg" }
+    // Made for medium to large dogs (owner 2026-11-10). Photo: the one the owner picked for it, a tricolor Rough Collie
+    // eating from it on its bamboo stand, so the size reads at a glance (owner 2026-11-19). The name is the owner's:
+    // "Large dog ceramic slow feeder pink planet style" (2026-11-19), "large dog" first, about four lines on the card.
+    // On its stand (the listing's other style) the plate sits down into the stand, so its top edge is about 7.5 cm from
+    // the floor, not 3.5 + 7 cm: measured on the owner's side photo of it, with the stand's 7 cm as the scale.
+    { name: "Large dog ceramic slow feeder Pink Planet style", listing: 4614433467, slow: true, tilted: false, widthCm: 21.6, rimCm: 3.5, ml: 650, mlAbout: true, top: 3,
+      dogOnly: true, extra: "Optional bamboo stand, 7 cm (2.8 in) tall", shows: "stand",
+      url: "https://www.etsy.com/listing/4614433467/pink-planet-ceramic-slow-feeder-dog-bowl", img: "img/pink-planet-plate.jpg",
+      options: [{ adds: "stand", rimCm: 7.5, rimAbout: true, on: "on its bamboo stand", pick: 7406742080 }] },
+    // The two waffle cone bowls, 13 cm across and about 350 ml. On the raised foot the tilted food bowl is 11.5 cm tall
+    // and the flat water bowl 10 cm: the maker's size chart draws both from the floor to the top. (Its table and our
+    // listings say 5 and 6.5 cm, which is the bowl alone, not the height with the foot.) The smooth pink foot is the
+    // same size, and so are the sold-out colours.
+    { name: "Pink raised tilted food bowl, waffle cone foot", listing: 4517778769, slow: false, tilted: true, widthCm: 13, rimCm: 11.5, ml: 350, mlAbout: true,
+      url: "https://www.etsy.com/listing/4517778769/hand-painted-pink-ceramic-pet-bowl", img: "img/waffle-tilted-food-bowl.jpg" },
+    { name: "Yellow raised water bowl, waffle cone foot", listing: 4517775646, slow: false, tilted: false, widthCm: 13, rimCm: 10, ml: 350, mlAbout: true,
+      url: "https://www.etsy.com/listing/4517775646/ceramic-pet-water-bowl-raised-waffle", img: "img/waffle-flat-water-bowl.jpg" }
   ];
+
+  // The photo on an option's card (owner 2026-11-20): the bowl's own card photo, whatever the colour, feet or other
+  // option, except
+  //  - a different size (across or holds): that size's photo, so the card shows the size it describes;
+  //  - a different height from an add-on, like a stand: that option's photo, unless the bowl's photo shows the add-on
+  //    already. The Pink Planet's photo, the one picked for it, shows its stand, so the plate on its stand keeps it.
+  // In any other case an option's own photo is not used, even when one is set.
+  function optionPhoto(b, o) {
+    var size = (o.widthCm !== undefined && o.widthCm !== b.widthCm) || (o.ml !== undefined && o.ml !== b.ml);
+    var height = o.rimCm !== undefined && o.rimCm !== b.rimCm && !(o.adds && o.adds === b.shows);
+    return (size || height) && o.img ? o.img : b.img;
+  }
+  // Each bowl, then each of its options as a bowl of its own: the bowl's details, the option's changes, its own link
+  // and photo. An option is not in the static list (top) and doesn't repeat the note about the add-on it is (extra).
+  var PRODUCTS = [];
+  BOWLS.forEach(function (b) {
+    var base = {}, k;
+    for (k in b) if (k !== "options") base[k] = b[k];
+    PRODUCTS.push(base);
+    (b.options || []).forEach(function (o) {
+      var p = {};
+      for (k in base) if (k !== "top" && k !== "extra") p[k] = base[k];
+      for (k in o) if (k !== "pick" && k !== "img") p[k] = o[k];
+      p.url = b.url + "?variation1=" + o.pick;
+      p.img = optionPhoto(b, o);
+      // a bowl sold with or without an add-on (the stand): each card knows the other one's height, for its note
+      if (o.adds) { base.addOn = p.addOn = o.adds; base.withAddOn = false; p.withAddOn = true; base.otherRimCm = p.rimCm; p.otherRimCm = b.rimCm; }
+      PRODUCTS.push(p);
+    });
+  });
 
   function num(v) { var n = parseFloat(v); return isFinite(n) && n > 0 ? n : null; }
   function cm(v, unit) { var n = num(v); return n === null ? null : (unit === "in" ? n * IN_CM : n); }
@@ -293,9 +347,14 @@
     var out = { feeding: feed, height: null, minWidthCm: null, capacityMl: null, mealMl: mealMl ? r1(mealMl) : null, needFood: needFood, fedKcalDay: fedKcalDay,
                 needGramsPerCup: !!(grams && gMeal && !gCup), slowFeeder: !!i.fastEater,
                 tips: [], nutritionTips: [], cautions: [], products: [], productNote: "", shop: SHOP,
+                // the Bowl line each bowl tip is about, so the page puts that line's "*" there, not always on Slow
+                // feeder (owner 2026-11-20): height = Bowl height, width = Dish width, holds = Holds at least,
+                // slow = Slow feeder, tilted = Tilted bowl
+                tipRows: {},
                 // tips that only ask for something still to fill in; they also stay in tips, but a page that counts
                 // what is ready (owner 2026-11-20) leaves them out
                 asks: [] };
+    function tip(t, row) { out.tips.push(t); out.tipRows[t] = row; }
 
     // The energy behind the calories: resting energy, the factor used and why, and the table of levels for this
     // pet (kcal only when the weight is known). Then what the ticked health conditions mean for feeding.
@@ -315,11 +374,20 @@
       feed.lossLo = Math.round(feed.kcalLo * LOSS_SHARE[sp]); feed.lossHi = Math.round(feed.kcalHi * LOSS_SHARE[sp]);
     }
 
-    // size: "large" (23-45 kg) or "giant" (over 45 kg); the old flag largeBreed means one of the two
+    // size: "small" (under 10 kg) or "medium" (10-23 kg), which get the usual elbow rule, "large" (23-45 kg) or "giant"
+    // (over 45 kg); the old flag largeBreed means one of the two. Small and medium are two choices on the page because
+    // owners think of their dog that way (owner 2026-11-20), though the result is the same. Small under 10 kg as in
+    // veterinary studies that sort dogs by size; medium up to 23 kg, where the bloat study's "large" starts.
     var size = !dog ? "" : (i.size === "large" || i.size === "giant") ? i.size : (i.largeBreed ? "both" : "");
     var big = size !== "";
+    // A large breed with an elbow height goes by the elbow, like any dog, with the large-breed note beside it as a
+    // reference, and no raised bowl ruled out (owner 2026-11-20). Without an elbow height, the 1 ft rule below.
+    var byElbow = size === "large" && !!elbow;
+    // a flat face or long ears: a tilted bowl is worth trying, and the result says so in a row of its own (owner
+    // 2026-11-20), and our tilted bowls come first in the cards
+    out.tilted = !!(i.flatFace || (dog && i.longEars));
     var lo = elbow ? Math.max(0, elbow - BELOW_ELBOW_CM) : null, hi = elbow;
-    if (big) {
+    if (big && !byElbow) {
       out.height = { floor: true, text: "" };
       if (size === "large") {
         if (!elbow) out.height.text = "On the floor, or raised above " + show(FT_CM) + ". Add the elbow height for the upper limit.";
@@ -345,18 +413,19 @@
       out.height = { minCm: r1(lo), maxCm: r1(hi), text: "Between " + show(lo) + " and " + show(hi) + " off the floor, measured to the top edge.",
         // the sum behind it, written out under the page's picture of how the height is worked out (owner 2026-11-20)
         sum: { elbow: show(hi), less: show(BELOW_ELBOW_CM), low: lo > 0 ? show(lo) : null } };
-      if (lo < 3) out.tips.push("A flat plate on the floor already sits in this range.");
-      if (i.senior) out.tips.push("Older or stiff: aim for the higher end, so the head doesn't have to drop as far.");
+      if (lo < 3) tip("A flat plate on the floor already sits in this range.", "height");
+      if (i.senior) tip("Older or stiff: aim for the higher end, so the head doesn't have to drop as far.", "height");
+      if (byElbow) out.cautions.push(NOTES.large);
     } else {
-      out.tips.push("Measure from the floor to your pet's elbow, standing, to get a height.");
+      tip("Measure from the floor to your pet's elbow, standing, to get a height.", "height");
       out.asks.push(out.tips[out.tips.length - 1]);
       out.elbowAsk = out.tips[out.tips.length - 1];   // the page shows this one as a note to its Bowl height line
     }
     if (whisker) {
       out.minWidthCm = r1(whisker);
-      out.tips.push("Pick a dish at least " + show(whisker) + " across, so the whiskers don't brush the sides.");
+      tip("Pick a dish at least " + show(whisker) + " across, so the whiskers don't brush the sides.", "width");
     } else if (!dog) {
-      out.tips.push("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.");
+      tip("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.", "holds");   // no Dish width line yet: the bowl's size line
       out.asks.push(out.tips[out.tips.length - 1]);
     }
     if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
@@ -369,34 +438,55 @@
     if (feed && dog) out.nutritionTips.push("Breed matters too: Newfoundlands seem to need fewer calories than Great Danes of the same size (Merck).");
     if (big && i.stage === "young") out.nutritionTips.push("Large-breed puppy: choose a growth food whose label says it includes growth of large size dogs.");
     out.tips = out.tips.concat(out.nutritionTips);
-    if (i.fastEater) out.tips.push(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
-      : "A slow feeder or puzzle feeder spreads the meal out. A feline vet consensus recommends small meals from puzzle feeders, partly because cats that gorge may vomit.");
+    if (i.fastEater) tip(dog ? "A slow feeder makes each meal take longer. Eating very fast is a bloat risk factor, and VCA's vets suggest a puzzle feeder or slow-down bowl for large and giant dogs."
+      : "A slow feeder or puzzle feeder spreads the meal out. A feline vet consensus recommends small meals from puzzle feeders, partly because cats that gorge may vomit.", "slow");
     // Brings food back up without retching: that is regurgitation, a passive motion with no effort from the belly,
     // often undigested food from the food pipe (esophagus), not vomiting (Merck, Vomiting in Dogs; The Digestive
     // System in Animals). Gravity helps: for megaesophagus Merck has dogs fed with the forelimbs higher than the
     // hindlimbs and held there 10-15 minutes, with frequent small meals; for reflux in the food pipe, small frequent
     // meals of soft, low-fat food (Merck, Esophagitis). A slow feeder is for eating fast, so it stays as it was.
-    if (i.regurgitates) out.tips.push("Brings food back up: that's usually the food pipe (esophagus), not the stomach, so have your vet check it. " +
-      (size ? "Smaller meals, more often, help. For a large dog, raising the bowl for this is your vet's call, because of the bloat risk above."
+    // For a large dog the tip says outright that vets do advise a raised bowl when it's megaesophagus, before the bloat
+    // caution, so the caution doesn't read as the page saying never raise it (owner 2026-11-20). Merck, Dilatation of the
+    // Esophagus: "Feeding from an elevated position with the forelimbs higher than the hindlimbs ... allows gravity to
+    // assist food passage into the stomach"; Hill's (Wooten, DVM, 2020): food bowls "must be elevated enough from the
+    // floor so that the dog does not have to bend down at all to eat". Research is thin: one study of 12 dogs fed
+    // upright in Bailey chairs (Haines 2019, JAAHA) found food cleared very differently from dog to dog.
+    if (i.regurgitates) tip("Brings food back up: that's usually the food pipe (esophagus), not the stomach, so have your vet check it. " +
+      (size ? "Smaller meals, more often, help. " + MEGA_RAISE + " " + BLOAT_RAISE
         : elbow ? "Aim for the top of the range so gravity helps, and give smaller meals more often."
-        : "A higher bowl lets gravity help, and smaller meals more often help too."));
+        : "A higher bowl lets gravity help, and smaller meals more often help too."), "height");
+    // The page cites these after a tip's text, as source numbers linked to its Sources list: raised bowls and bloat in
+    // large breeds are in Glickman 2000, Cornell's Riney Canine Health Center ("Using a raised food bowl" is a risk
+    // factor; "Avoid raised food bowls") and a SurgerySTAT column of the American College of Veterinary Surgeons ("not
+    // feeding from an elevated food bowl") (owner 2026-11-20: add these sources). A key can be a whole tip or one of its
+    // sentences; the page puts each one's sources before that sentence's full stop.
+    // tipStrong: sentences the page shows in bold. The megaesophagus sentence is bold wherever it shows (owner
+    // 2026-11-20); its source numbers stay as they are.
+    out.tipSources = {}; out.tipStrong = [];
+    if (i.regurgitates && size) {
+      out.tipSources[MEGA_RAISE] = ["merck-megaesophagus", "hills-megaesophagus"];
+      out.tipSources[BLOAT_RAISE] = ["glickman-gdv", "cornell-gdv", "acvs-gdv"];
+      out.tipStrong.push(MEGA_RAISE);
+    }
     // Sick or lip licking on an empty stomach, often at night or early morning: bilious vomiting, thought to come
     // from bile flowing back into the stomach. Ferguson et al., JAAHA 2016, 20 dogs: treated with more frequent
     // meals, late evening meals, acid reducers and other medicines; 12 of the 17 dogs that kept the diagnosis
     // improved, and it should be a diagnosis of exclusion. Lip licking is a sign of nausea (Merck). No bowl change.
-    if (dog && i.emptyStomach) out.tips.push("Empty stomach: lip licking can be a sign of nausea. Vets use smaller meals through the day and a small late-evening meal, sometimes with medicine; in one study 12 of 17 dogs improved. Let your vet rule out other causes first.");
-    if (i.flatFace) out.tips.push("Flat face: a wide, shallow or tilted bowl is easier to eat from.");
-    if (i.longEars) out.tips.push("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.");
-    if (dog && i.shortLegs) out.tips.push("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.");
+    if (dog && i.emptyStomach) tip("Empty stomach: lip licking can be a sign of nausea. Vets use smaller meals through the day and a small late-evening meal, sometimes with medicine; in one study 12 of 17 dogs improved. Let your vet rule out other causes first.", "holds");   // smaller meals: the amount a meal, so the bowl's size line
+    if (i.flatFace) tip("Flat face: a wide, shallow or tilted bowl is easier to eat from.", "tilted");
+    if (i.longEars) tip("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.", "tilted");
+    if (dog && i.shortLegs) tip("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.", "height");
 
-    // Always end with our bowls: the ones that may fit, or else the closest ones and how far each is from the numbers.
+    // Always end with our bowls: the ones that may fit, then the closest ones and how far each is from the numbers.
     // Never a dead end with no bowl (owner 2026-11-16). The list is there before anything is typed and re-ranks with
     // every input; it says "may fit", never "fit" (owner 2026-11-15).
     function card(p, notes) {
       var holds = p.ml ? (p.mlAbout ? "about " : "") + p.ml + " ml" : "";
-      return { name: p.name, size: show(p.widthCm) + " across, " + show(p.rimCm) + " tall" + (holds ? ", holds " + holds : ""),
-               note: notes && notes.length ? notes.join(", ").replace(/^./, function (c) { return c.toUpperCase(); }) + "." : "",
-               specs: [show(p.widthCm) + " across", show(p.rimCm) + " tall"].concat(holds ? ["Holds " + holds] : [])
+      var tall = (p.rimAbout ? "about " : "") + show(p.rimCm) + " tall" + (p.on ? " " + p.on : "");
+      function cap(t) { return t.replace(/^./, function (c) { return c.toUpperCase(); }); }
+      return { name: p.name, size: show(p.widthCm) + " across, " + tall + (holds ? ", holds " + holds : ""),
+               note: notes && notes.length ? cap(notes.join(", ")) + "." : "",
+               specs: [show(p.widthCm) + " across", cap(tall)].concat(holds ? ["Holds " + holds] : [])
                  .concat(p.extra ? [p.extra] : []),
                url: p.url, img: p.img };
     }
@@ -408,51 +498,161 @@
       out.productNote = "PawsOnMe bowls that may fit these numbers:";   // the original heading (owner 2026-11-19)
       return out;
     }
-    var ranked = rankProducts(out, size, i.flatFace || i.longEars,
-                              (!!i.senior || !!i.regurgitates) && !size && !!out.height && out.height.minCm !== undefined, dog);
-    var fits = ranked.filter(function (r) { return r.score === 0; });
-    out.products = (fits.length ? fits : ranked).slice(0, 3).map(function (r) { return card(r.p, r.notes); });
-    out.productNote = fits.length ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
+    var rankSize = byElbow ? "" : size;
+    var ranked = rankProducts(out, rankSize, out.tilted,
+                              (!!i.senior || !!i.regurgitates) && !rankSize && !!out.height && out.height.minCm !== undefined, dog, cm(i.elbow, i.unit));
+    // One card per listing: its size closest to the numbers, which is the first one in the ranked order (owner
+    // 2026-11-20: a big meal gets the large line-and-dots plate, not the medium).
+    var seen = {};
+    ranked = ranked.filter(function (r) { if (seen[r.p.listing]) return false; seen[r.p.listing] = true; return true; });
+    // A flat face or long ears: our tilted bowls come first, then the rest, each in its ranked order (owner 2026-11-20:
+    // "make sure the recommended products prioritize the tilted feeders I have from psom store")
+    if (out.tilted) ranked = ranked.filter(function (r) { return r.p.tilted; }).concat(ranked.filter(function (r) { return !r.p.tilted; }));
+    // The ones that may fit come first, best fit first, then the closest ones fill the row to three, each saying how far
+    // off it is (owner 2026-11-20).
+    // A raised bowl is needed when the suggested height starts above what a plate on the floor reaches (5 cm). Then
+    // the slow feeders that are raised already, on a foot or on their own stand, come before the flat ones wherever
+    // slow feeders are picked below (owner 2026-11-20).
+    var raise = !!(out.height && out.height.minCm !== undefined && out.height.minCm > FLOOR_RIM_CM);
+    function raisedFirst(list) {
+      return raise ? list.filter(function (r) { return r.p.rimCm > FLOOR_RIM_CM; })
+        .concat(list.filter(function (r) { return r.p.rimCm <= FLOOR_RIM_CM; })) : list;
+    }
+    var slow = ranked.filter(function (r) { return r.p.slow; }), other = ranked.filter(function (r) { return !r.p.slow; }), picks;
+    if (!out.slowFeeder) {
+      // A slow feeder optional (the result says "Optional", nothing ticked that calls for one): the first three go by
+      // the other numbers alone, then two slow feeders as cards 4 and 5, five cards in all: the closest slow feeders
+      // not shown yet, the raised ones first when a raised bowl is needed (owner 2026-11-20).
+      picks = ranked.slice(0, 3);
+      picks = picks.concat(raisedFirst(slow.filter(function (r) { return picks.indexOf(r) < 0; })).slice(0, 2));
+    } else {
+      // A slow feeder worth trying: only slow feeders, ranked on everything together, the raised ones first when a
+      // raised bowl is needed, then the ones without a foot or a stand (owner 2026-11-20). Bowls that aren't slow
+      // feeders (the waffle cone food and water bowls) only come in when there are fewer than three slow feeders to
+      // show, the closest of them on all the numbers, saying they aren't slow feeders (owner 2026-11-20).
+      picks = raisedFirst(slow).slice(0, 3);
+      if (picks.length < 3) picks = picks.concat(other.slice(0, 3 - picks.length).map(function (r) {
+        return { p: r.p, score: r.score + 1, notes: r.notes.concat(["not a slow feeder"]) };
+      }));
+    }
+    // At least one of the first two cards is a slow feeder (owner 2026-11-20). If neither is, the closest slow feeder
+    // not among them (the raised ones first when a raised bowl is needed) moves up to second place; if it isn't shown
+    // yet, it is added there. The row is 3 to 5 cards (owner: "The carousel can be 3 or 4 or 5…as long as you provide
+    // more than 3 or equal to 3"), so an added card past five drops the last one.
+    if (picks.length > 1 && !picks[0].p.slow && !picks[1].p.slow) {
+      var best = raisedFirst(slow.filter(function (r) { return r !== picks[0] && r !== picks[1]; }))[0];
+      if (best) {
+        picks = picks.filter(function (r) { return r !== best; });
+        picks.splice(1, 0, best);
+        if (picks.length > 5) picks = picks.slice(0, 5);
+      }
+    }
+    // never fewer than three cards while there are bowls to show
+    if (picks.length < 3) picks = picks.concat(ranked.filter(function (r) { return picks.indexOf(r) < 0; }).slice(0, 3 - picks.length));
+    out.products = picks.map(function (r) { return card(r.p, r.notes); });
+    out.productNote = picks.some(function (r) { return r.score === 0; }) ? "PawsOnMe bowls that may fit these numbers:" : "The closest PawsOnMe bowls to these numbers:";
     return out;
   }
 
   // How far off, said gently: the numbers are a reference, not a reason not to buy (owner 2026-11-19).
-  // Under 1 cm "slightly", up to 5 cm "a bit", more "quite a bit"; capacity as an approximate "~". The height note names
+  // Under 1 cm "slightly", otherwise "a bit", never "quite" (owner 2026-11-20); a bowl more than 5 cm shorter than the
+  // suggested height also says to use a stand ("suggest using a stand to increase the bowl height", her words).
+  // Capacity as an approximate "~". The height note names
   // the suggested height it is compared with ("a bit shorter than the suggested 12.2 cm"), so the gap never reads as a
   // second height of the bowl (owner 2026-11-20: "Rim 1.2 cm" next to "Rim 11 cm high" looked like two different rims).
-  function howMuch(d) { return d < 1 ? "slightly" : d <= 5 ? "a bit" : "quite a bit"; }
+  function howMuch(d) { return d < 1 ? "slightly" : "a bit"; }
+
+  // How a height compares with the suggested range: null when it is in it, else which way and how far.
+  function off(rim, h) {
+    if (rim < h.minCm) return { d: h.minCm - rim, way: "shorter", to: h.minCm };
+    if (rim > h.maxCm) return { d: rim - h.maxCm, way: "taller", to: h.maxCm };
+    return null;
+  }
+  function said(o) { return howMuch(o.d) + " " + o.way + " than the suggested " + show(o.to); }
+  // The height part of a card's note. More than 5 cm short also says to use a stand (owner 2026-11-20: ", suggest using
+  // a stand to increase the bowl height"). A bowl sold with or without an add-on that changes its height, like the
+  // Pink Planet's bamboo stand, says which of the two the note is about and how the other compares, in a few words
+  // (owner 2026-11-20), e.g. "a bit shorter than the suggested 12.2 cm (4.8 in) with the stand, even shorter without
+  // it", or "may fit without the stand, a bit taller than the suggested 6 cm (2.4 in) with it".
+  // How tall a stand under this bowl would bring its top edge into the suggested range, in whole cm (rounded inwards,
+  // so the whole range still lands inside it).
+  function standText(rim, h) {
+    var lo = h.minCm - rim, hi = h.maxCm - rim, a = Math.ceil(lo), b = Math.floor(hi);
+    if (a > b) { a = r1(lo); b = r1(hi); }
+    return "a stand about " + a + " to " + b + " cm (" + r1(a / IN_CM) + " to " + r1(b / IN_CM) + " in) tall";
+  }
+  // The stand tip, with the stand's height in it (owner 2026-11-20): for any bowl more than 5 cm short, and for a flat
+  // plate (5 cm or less) whenever the
+  // suggested height starts above what a plate on the floor reaches, so a flat slow feeder can still be suggested,
+  // with the stand that would make it fit. A large breed's floor-or-1-ft rule has no low end, so it never gets one.
+  function heightNote(p, h) {
+    var a = off(p.rimCm, h);
+    var tip = a && a.way === "shorter" && (a.d > 5 || (h.minCm > FLOOR_RIM_CM && p.rimCm <= FLOOR_RIM_CM))
+      ? ", suggest using " + standText(p.rimCm, h) + " to increase the bowl height" : "";
+    if (!p.addOn) return a ? said(a) + tip : "";
+    var b = off(p.otherRimCm, h), add = "the " + p.addOn;
+    var mine = p.withAddOn ? "with " + add : "without " + add, other = p.withAddOn ? "without it" : "with it";
+    if (!a && !b) return "";
+    if (!a) return "may fit " + mine + ", " + said(b) + " " + other;
+    if (!b) return said(a) + " " + mine + tip + ", may fit " + other;
+    if (a.way === b.way && b.d > a.d) return said(a) + " " + mine + ", even " + b.way + " " + other + tip;
+    return said(a) + " " + mine + ", " + said(b) + " " + other + tip;
+  }
+
+  // The note for a large breed without an elbow height, from the bloat study's height bands [Glickman 2000]: on the floor
+  // or raised above 1 ft (raised 1 ft or less carried 3.06 times the risk, above 1 ft was not significantly different).
+  // The Pink Planet's own bamboo stand puts it under 1 ft, so its card says so, as every note for a bowl with or without
+  // a stand says how the other one compares. A large breed with an elbow height goes by the elbow instead, and giant
+  // breeds get anything up to 1 ft, which all our bowls are, so neither gets a note here.
+  function breedNote(p, size) {
+    if (size !== "large" || p.rimCm > FLOOR_RIM_CM) return "";
+    if (p.addOn && p.otherRimCm > FLOOR_RIM_CM && p.otherRimCm <= FT_CM)
+      return "may fit without the " + p.addOn + ", but the " + p.addOn + " puts it under 1 ft (30.5 cm), the height linked to more bloat in large breeds";
+    return "";
+  }
 
   // Our bowls ranked by how far each is from the numbers: 0 = fits. A rim 5 cm off counts like a bowl that holds
-  // nothing extra; capacity and width count by the share that's missing. Large breeds only get the flat plates,
-  // because raised bowls of 1 ft or less carried 3.06 times the bloat risk; giant breeds anything up to 1 ft.
+  // nothing extra; capacity and width count by the share that's missing. A large breed with an elbow height is ranked
+  // by the elbow, like any dog (owner 2026-11-20); without one it gets bowls on the floor or raised above 1 ft, because
+  // raised bowls of 1 ft or less carried 3.06 times the bloat risk and above 1 ft was not significantly different (owner
+  // 2026-11-20: not every raised bowl ruled out); all our raised bowls are under 1 ft, so the flat plates. Giant breeds:
+  // anything up to 1 ft.
   // Ties follow what was ticked: tilted bowls first for a flat face or long ears; for an older or stiff pet, or one
   // that brings food back up, the higher rims first, as the tips say to aim for the higher end of the range;
   // for a large or giant breed the wider plates first. A bowl with no capacity from the maker stays in the
   // "may fit" list, and when capacity matters its card says the capacity isn't listed yet.
-  function rankProducts(out, size, tiltFirst, highFirst, dog) {
-    var h = out.height, need = out.capacityMl, w = out.minWidthCm;
+  // A bowl that can't hold even one meal comes after every bowl that can, the bigger ones first (owner 2026-11-20:
+  // the whole day's food in one meal needs the biggest bowl, the Pink Planet plate, first, whatever its height).
+  function rankProducts(out, size, tiltFirst, highFirst, dog, elbowCm) {
+    var h = out.height, need = out.capacityMl, meal = out.mealMl, w = out.minWidthCm;
     return PRODUCTS.map(function (p, k) {
       var notes = [], score = 0, d;
       if (p.dogOnly && !dog) return null;
       if (size) {
-        if (p.rimCm > FLOOR_RIM_CM && (size !== "giant" || p.rimCm > FT_CM)) return null;
+        // large: on the floor or above 1 ft (and not above the elbow, when it's known), never raised 1 ft or less;
+        // giant: up to 1 ft; size unknown ("both"): the floor
+        if (size === "large" ? p.rimCm > FLOOR_RIM_CM && (p.rimCm <= FT_CM || (elbowCm && p.rimCm > elbowCm))
+            : size === "giant" ? p.rimCm > FT_CM : p.rimCm > FLOOR_RIM_CM) return null;
+        d = breedNote(p, size);
+        if (d) notes.push(d);
       } else if (h && h.minCm !== undefined) {
-        if (p.rimCm < h.minCm) { d = h.minCm - p.rimCm; score += d / 5; notes.push(howMuch(d) + " shorter than the suggested " + show(h.minCm)); }
-        else if (p.rimCm > h.maxCm) { d = p.rimCm - h.maxCm; score += d / 5; notes.push(howMuch(d) + " taller than the suggested " + show(h.maxCm)); }
+        d = off(p.rimCm, h);
+        if (d) score += d.d / 5;
+        if (heightNote(p, h)) notes.push(heightNote(p, h));
       }
       if (need && p.ml === null) notes.push("capacity not listed yet");
       else if (need && p.ml < need) { score += (need - p.ml) / need; notes.push("holds ~" + (need - p.ml) + " ml less than suggested"); }
       if (w && p.widthCm < w) { d = w - p.widthCm; score += d / w; notes.push(show(d) + " " + howMuch(d) + " narrower than the whisker span"); }
-      if (out.slowFeeder && !p.slow) { score += 1; notes.push("not a slow feeder"); }
-      return { p: p, k: k, score: score, notes: notes };
+      return { p: p, k: k, score: score, notes: notes, small: need && meal && p.ml !== null && p.ml < meal ? 1 : 0 };
     }).filter(Boolean).sort(function (a, b) {
-      return (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0)
+      return (a.small - b.small) || (a.small ? b.p.ml - a.p.ml : 0) || (a.score - b.score) || (tiltFirst ? (b.p.tilted ? 1 : 0) - (a.p.tilted ? 1 : 0) : 0)
         || (highFirst ? b.p.rimCm - a.p.rimCm : 0) || (size ? b.p.widthCm - a.p.widthCm : 0) || (a.k - b.k);
     });
   }
 
   var api = { recommend: recommend, feeding: feeding, food: food, foods: foods, rowMl: rowMl, unitName: unitName,
-              MER: MER, LEVELS: LEVELS, CONDITIONS: CONDITIONS, SOURCES: SOURCES, PRODUCTS: PRODUCTS, CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP,
+              MER: MER, LEVELS: LEVELS, CONDITIONS: CONDITIONS, SOURCES: SOURCES, PRODUCTS: PRODUCTS, BOWLS: BOWLS, optionPhoto: optionPhoto,
+              CUP_ML: CUP_ML, OZ_G: OZ_G, SHOP: SHOP,
               BELOW_ELBOW_CM: BELOW_ELBOW_CM, show: show };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.BowlFit = api;
 })(this);

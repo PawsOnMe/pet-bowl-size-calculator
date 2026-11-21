@@ -20,6 +20,21 @@ h3{font-size:1.02rem;margin:1.4em 0 .3em}
 /* "Show a filled-in example" at the end of the intro, a purple text link (owner 2026-11-19). It never splits across two
    lines, and the padding gives it a bigger tap area without moving the text around it. */
 .ex{display:inline-block;margin:-10px -4px;padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;cursor:pointer}
+/* The three-dot button after "Show a filled-in example" (owner 2026-11-20): filled, in the purple of the other round
+   buttons and about their size; it opens a popover with example pets to fill the form with */
+.exmore{display:inline-flex;vertical-align:-.27em;margin:-12px -12px -12px calc(.35em - 12px);padding:12px;border:0;background:none;color:var(--accent);cursor:pointer;-webkit-tap-highlight-color:transparent;transform:scale(var(--ps,1))}
+.exmore svg{display:block;width:1.2em;height:1.2em}
+.exmore .bg{fill:currentColor}.exmore circle:not(.bg){fill:var(--on-accent)}
+.exmore:focus-visible{outline:2px solid var(--accent);outline-offset:-10px;border-radius:999px}
+header{position:relative}
+.expop{position:absolute;z-index:20;left:0;width:min(300px,100%);padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.expop::after{content:"";position:absolute;left:var(--caret,40px);bottom:-7px;width:12px;height:12px;background:var(--card);border:1px solid var(--line);border-width:0 1px 1px 0;transform:rotate(45deg)}
+.expop.below::after{top:-7px;bottom:auto;transform:rotate(225deg)}
+.expop .exlist{position:relative;overflow-y:auto;overscroll-behavior:contain}
+.expop .exh{margin:4px 8px 0;font-size:.82rem;font-weight:600;color:var(--muted)}
+.expop button{display:block;width:100%;margin:0;padding:8px;border:0;border-radius:10px;background:none;font:inherit;font-size:.94rem;line-height:1.3;text-align:left;color:var(--ink);cursor:pointer;transform:scale(var(--ps,1))}
+.expop button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (hover:hover){.expop button:hover{background:var(--accent-soft)}}
 .ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:18px 0}
 fieldset{border:0;padding:0;margin:0 0 14px}
@@ -79,6 +94,17 @@ table.rer tr.on td{background:var(--accent-soft);font-weight:600}
    lines (owner 2026-11-20: as a bullet of its own it looked like something unrelated). The asterisk is drawn by CSS,
    so the label still reads "Bowl height". */
 dt.ast::after{content:"*";content:"*"/""}
+.fn.note{margin-top:12px}
+/* "* Additional advice" ends in a thin grey line out to the right edge, like a separator, easier to read (owner
+   2026-11-20). The elbow note of the empty result has none (owner 2026-11-20). The line starts right after the
+   last word: it takes no room on the line and is cut off at the edge. */
+.fn.star.note{overflow:hidden}
+.fn.star.note::after{content:"";display:inline-block;width:100vw;margin:0 -100vw 0 10px;border-top:1px solid var(--line);vertical-align:middle}
+.fn.note+.tips{margin-top:4px}
+/* "- Results tailored for you 💛" after "Your numbers" (owner 2026-11-20): grey and smaller, kept in one piece if it has to wrap */
+#result h2 .sub{font-size:.85rem;font-weight:400;color:var(--muted);white-space:nowrap;letter-spacing:0}   /* the same as the "*" lines (.fn) */
+/* on the smallest phones it doesn't fit on the title's line: it goes under it, without the dash */
+@media (max-width:359px){#result h2 .sub{display:block;margin-top:2px}#result h2 .dash{display:none}}
 .conds p{margin:8px 0 0}
 details.more{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line)}
 details.more>summary{cursor:pointer;font-weight:600;color:var(--accent)}
@@ -231,7 +257,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <header>
 <p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
 <h1>Pet Nutrition & Bowl Calculator</h1>
-<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button></p>
+<p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button><button type="button" class="exmore" id="exMore" aria-label="More examples" aria-haspopup="menu" aria-expanded="false" aria-controls="exPop"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle class="bg" cx="12" cy="12" r="11"/><circle cx="7.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="16.8" cy="12" r="1.7"/></svg></button></p>
+<div class="expop" id="exPop" role="menu" aria-label="Examples" hidden></div>
 </header>
 
 <form id="f" class="card" autocomplete="off">
@@ -241,7 +268,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <fieldset><legend>Units</legend><div class="seg">
 <label><input type="radio" name="unit" value="cm" checked><span>Metric (cm, kg)</span></label>
 <label><input type="radio" name="unit" value="in"><span>US (inches, lb)</span></label></div></fieldset>
-<h2 class="part">Nutrition</h2>
+<h2 class="part">For Nutrition</h2>
 <div class="field"><label for="weight"><span class="dog-only">Dog</span><span class="cat-only">Cat</span> weight (<span id="u3">kg</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
 <div class="field"><label for="stage">Life stage</label>
@@ -265,7 +292,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <input id="meals" name="meals" type="number" min="1" step="1" value="2" inputmode="numeric"></div>
 <div class="field" id="kcalField"><label for="kcal" id="kcalLabel">Calories per cup (kcal/cup)</label>
 <input id="kcal" name="kcal" type="number" min="0" step="1" inputmode="numeric">
-<span class="hint" id="kcalHint">Printed on the food bag as kcal/cup.</span></div>
+<span class="hint" id="kcalHint">Printed on the food bag as kcal/cup. Or choose food brand above we'll auto-calculate for you!</span></div>
 <details class="adv"><summary>Anything your vet is watching (optional)</summary>
 <span class="hint">Tick anything your vet is keeping an eye on. The result then adds what vet sources say about feeding for it.</span>
 <div class="checks">
@@ -275,17 +302,18 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <label><input type="checkbox" name="cond" value="lipids"> High triglycerides or cholesterol on blood tests</label>
 <label><input type="checkbox" name="cond" value="overweight" id="condOverweight"> Working on weight loss</label>
 </div></details>
-<h2 class="part">Bowl</h2>
+<h2 class="part">For Bowl</h2>
 <div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
 <div class="field dog-only"><label for="size">Breed size</label>
 <select id="size" name="size">
-<option value="">Small or medium</option>
+<option value="small">Small: adults under 10 kg (22 lb)</option>
+<option value="medium">Medium: adults 10 to 23 kg (22 to 50 lb)</option>
 <option value="large">Large: adults 23 to 45 kg (50 to 99 lb)</option>
 <option value="giant">Giant: adults over 45 kg (99 lb)</option>
 </select>
-<span class="hint">Large and giant breeds get a separate height rule, from a study of 1,637 dogs.</span></div>
+<span class="hint">Large and giant breeds get a separate height rule, from a study of 1,637 dogs [1].</span></div>
 <div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
 <input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Tip to tip, across the face.</span></div>
@@ -305,14 +333,14 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <section id="qa">
 <h2>Quick answers</h2>
 <h3>How high should my dog's food bowl be?</h3>
-<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the top edge of the bowl between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
+<p>No veterinary guideline sets a height. A common rule of thumb from pet-product guides puts the top edge of the bowl between your dog's elbow height and about 2 to 3 inches (5 to 7.5 cm) below it. A floor bowl is fine for most healthy dogs, so a raised bowl is a comfort choice [35]. For large and giant breeds, a study found the bloat risk depended on whether the bowl was above or below 1 ft (30.5 cm); see the next answer.</p>
 <h3>Are raised bowls safe for large dogs?</h3>
 <p>It depends on the height and on how big the breed is. A study followed 1,637 dogs of 11 large and giant breeds and asked whether the bowl was on the floor, raised 1 ft (30.5 cm) or less, or raised more than 1 ft [1][2]. In this study, large meant breeds of 23 to 45 kg (50 to 99 lb) and giant meant over 45 kg (99 lb) [10]. Bloat (GDV) cases per 1,000 dog-years:</p>
 <ul>
 <li>Large breeds: floor 18, raised 1 ft or less 56 (3.06 times the risk), raised more than 1 ft 29 (not a significant difference).</li>
 <li>Giant breeds: floor 17, raised 1 ft or less 15 (not a significant difference), raised more than 1 ft 39 (2.29 times the risk).</li>
 </ul>
-<p>So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][9]. Dogs with megaesophagus are fed from a raised position on purpose: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [8]. If you're unsure, ask your vet.</p>
+<p>So going by this study, a raised bowl for a large breed would sit above 30.5 cm and for a giant breed at 30.5 cm or lower. It is one study with 98 bloat cases split into small groups; a review says the height results could be chance, and the authors didn't explain them [2]. An internet survey with 1,114 bloat cases found no clear effect of bowl height, though it published no numbers on this [2][9]. Dogs with megaesophagus are fed from a raised position on purpose [36]: front legs higher than back legs, then upright for at least 10 to 15 minutes after meals [8]. If you're unsure, ask your vet.</p>
 <h3>How tall should a cat's bowl be?</h3>
 <p>Most healthy cats eat fine from the floor. For an older or stiff cat, a small lift, with the top edge of the bowl a little below the elbow, can make meals easier. No study has measured this, so treat it as a comfort tweak.</p>
 <h3>How wide should a cat's bowl be? Is whisker fatigue real?</h3>
@@ -339,14 +367,14 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <section class="sources">
 <details class="srcs"><summary><h2>Sources</h2></summary>
 <ol>
-<li>Glickman LT, et al. Non-dietary risk factors for gastric dilatation-volvulus in large and giant breed dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/11128539/">PubMed</a></li>
+<li data-src="glickman-gdv">Glickman LT, et al. Non-dietary risk factors for gastric dilatation-volvulus in large and giant breed dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/11128539/">PubMed</a></li>
 <li>Buckley L. Are dogs that are fed from a raised bowl at an increased risk of gastric dilation volvulus compared with floor-fed dogs? Veterinary Evidence. <a href="https://www.pure.ed.ac.uk/ws/portalfiles/portal/59772063/57_599_1_PB.pdf">PDF</a></li>
 <li>Slovak JE, Foster TE. Evaluation of whisker stress in cats. Journal of Feline Medicine and Surgery, 2021. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10812207/">PMC</a></li>
 <li>Buckley L. "Go slow" feeding bowls: how effective are they? Conference poster, Harper Adams University, 2016. <a href="https://hau.repository.guildhe.ac.uk/id/eprint/15072/">Repository</a></li>
 <li data-src="pna">Pet Nutrition Alliance. Calculating Calories Based on Pet Needs. <a href="https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf">PDF</a></li>
 <li>Merck Veterinary Manual. Dog and Cat Foods. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/dog-and-cat-foods">Merck</a></li>
 <li>Whole Dog Journal. In the Fine Print: Nutritional Adequacy Statements. <a href="https://www.whole-dog-journal.com/food/in-the-fine-print-nutritional-adequacy-statements/">Article</a></li>
-<li>Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals">Merck</a></li>
+<li data-src="merck-megaesophagus">Merck Veterinary Manual. Dilatation of the Esophagus in Small Animals. <a href="https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/dilatation-of-the-esophagus-in-small-animals">Merck</a></li>
 <li>Pipan M, et al. An Internet-based survey of risk factors for surgical gastric dilatation-volvulus in dogs. JAVMA, 2012. <a href="https://pubmed.ncbi.nlm.nih.gov/22657929/">PubMed</a></li>
 <li>Glickman LT, et al. Incidence of and breed-related risk factors for gastric dilatation-volvulus in dogs. JAVMA, 2000. <a href="https://pubmed.ncbi.nlm.nih.gov/10638316/">PubMed</a></li>
 <li>VCA Animal Hospitals. Nutritional considerations for large and giant breed dogs. <a href="https://vcahospitals.com/know-your-pet/nutritional-considerations-for-large-and-giant-breed-dogs">VCA</a></li>
@@ -371,6 +399,10 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <li data-src="merck-nausea">Merck Veterinary Manual. Overview of Motion Sickness (signs of nausea). <a href="https://www.merckvetmanual.com/nervous-system/motion-sickness/overview-of-motion-sickness">Merck</a></li>
 <li data-src="ferguson">Ferguson L, Wennogle SA, Webb CB. Bilious vomiting syndrome in dogs: retrospective study of 20 cases (2002–2012). Journal of the American Animal Hospital Association, 2016. <a href="https://pubmed.ncbi.nlm.nih.gov/27008323/">PubMed</a></li>
 <li data-src="fediaf">FEDIAF. Nutritional Guidelines for Complete and Complementary Pet Food for Cats and Dogs, September 2025, Table VII-9. <a href="https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025.pdf">FEDIAF</a></li>
+<li data-src="cornell-gdv">Cornell University College of Veterinary Medicine, Riney Canine Health Center. Gastric dilatation volvulus (GDV) or "bloat". Updated April 2025. <a href="https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/gastric-dilatation-volvulus-gdv-or-bloat">Cornell</a></li>
+<li data-src="acvs-gdv">Robbins. Surgery STAT: Prevent gastric dilatation volvulus with laparoscopic assisted gastropexy. SurgerySTAT, a column of the American College of Veterinary Surgeons and DVM Newsmagazine, 2009. <a href="https://www.dvm360.com/view/surgery-stat-prevent-gastric-dilatation-volvulus-with-laparoscopic-assisted-gastropexy">dvm360</a></li>
+<li data-src="wdj-elevated">Bailey J. All About Elevated Dog Bowls. Whole Dog Journal, 2022. <a href="https://www.whole-dog-journal.com/lifestyle/dog-gear/all-about-elevated-dog-bowls/">Article</a></li>
+<li data-src="hills-megaesophagus">Wooten S. Managing Megaesophagus in Dogs. Hill's Pet Nutrition, 2020. <a href="https://www.hillspet.com/dog-care/healthcare/megaesophagus-in-dogs">Hill's</a></li>
 </ol>
 </details>
 </section>
@@ -617,6 +649,20 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   }
   // A sentence with its sources before the full stop: "... help [24]."
   function cite(text, ids) { return esc(String(text).replace(/\.$/, "")) + " " + refs(ids) + "."; }
+  // A tip with its sources: each key of map found in it (the whole tip, or one of its sentences) gets its sources
+  // before that sentence's full stop, so a tip can cite one thing in the middle and another at the end. A sentence in
+  // strong is bold, without its source numbers.
+  function citeTip(t, map, strong) {
+    map = map || {}; strong = strong || [];
+    var keys = Object.keys(map).concat(strong).filter(function (k, n, all) { return all.indexOf(k) === n && t.indexOf(k) >= 0; }), out = "", at = 0;
+    keys.sort(function (a, b) { return t.indexOf(a) - t.indexOf(b); }).forEach(function (k) {
+      var start = t.indexOf(k), body = k.replace(/\.$/, "");
+      if (start < at) return;
+      out += esc(t.slice(at, start)) + (strong.indexOf(k) >= 0 ? "<strong>" + esc(body) + "</strong>" : esc(body)) + (map[k] ? " " + refs(map[k]) : "") + (body.length < k.length ? "." : "");
+      at = start + k.length;
+    });
+    return out + esc(t.slice(at));
+  }
   // Every source number on the page, like [5], is a link to that entry in the Sources list (owner 2026-11-19). A tap
   // opens the folded Sources and the browser jumps to the entry; its Back button returns to the text. A link from
   // elsewhere that ends in #source-5 opens the list at entry 5 the same way.
@@ -735,7 +781,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   var KEYARROW = '<path d="M9 2v14M5.5 5.5 9 2l3.5 3.5M5.5 12.5 9 16l3.5-3.5"/>';
   function howHeight(r, species) {
     var hh = r.height || {}, s = hh.sum, less = nb(BowlFit.show(BowlFit.BELOW_ELBOW_CM)), mine = "";
-    if (hh.floor) mine = "Large and giant breeds also have a 1&nbsp;ft (30.5&nbsp;cm) rule for bloat risk, so the Bowl height line above can differ from this band.";
+    if (hh.floor) mine = "Large and giant breeds also have a 1&nbsp;ft (30.5&nbsp;cm) rule for bloat risk, so the Bowl height line above can differ from this band " + refs(["glickman-gdv"]) + ".";
     else if (s && s.low) mine = "For your pet: " + nb(s.elbow) + " − " + nb(s.less) + " = " + nb(s.low) + ". So the top edge of the bowl goes between these two heights.";
     else if (s) mine = "For your pet: the elbow is " + nb(s.elbow) + " off the floor, less than " + nb(s.less) + ", so the band runs from the floor up to the elbow.";
     return '<div class="howh">' + howArt(species) + "<ul>" +
@@ -744,7 +790,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
       '<li><svg viewBox="0 0 18 18" aria-hidden="true"><rect class="band" x="1" y="5" width="16" height="8"/><path class="gd" style="stroke-dasharray:3 2;stroke-width:1.6" d="M1 5h16M1 13h16"/></svg><span>The top edge should land in this band: from the elbow height down to ' + less + " lower.</span></li></ul>" +
       (mine ? "<p>" + mine + "</p>" : "") + "</div>";
   }
-  var lastHtml = null;
+  var lastHtml = null, howhEmpty = null;
   function render() {
     syncActivity();
     var v = vals(), r = BowlFit.recommend(v);
@@ -758,8 +804,13 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var one = real.length === 1 ? real[0] : null, known = one && BowlFit.food(one.id), perCup = !!one && one.unit === "cups";
     kField.hidden = !one || !!(known && known.kcalKg) || one.unit === "unit";
     kLabel.textContent = perCup ? "Calories per cup (kcal/cup)" : "Calories per kg (kcal/kg)";
-    kHint.textContent = "Printed on the food bag as " + (perCup ? "kcal/cup." : "kcal/kg.");
-    var h = "<h2>Your numbers</h2><h3>Nutrition</h3><dl>";
+    // the owner's words (2026-11-20): picking the food above fills in its calories
+    kHint.textContent = "Printed on the food bag as " + (perCup ? "kcal/cup." : "kcal/kg.") + " Or choose food brand above we'll auto-calculate for you!";
+    // "Your numbers" alone was hard to place, so it says what it is in grey after it (owner 2026-11-20)
+    // The empty result: no number yet (the same test as the purple "Your numbers"). Its "*" note says how to measure the
+    // elbow; the "* Additional advice" bullets only come with a real result. The two never show together (owner 2026-11-20).
+    var empty = !((r.energy && r.energy.rer) || r.feeding || r.fedKcalDay || (r.height && +v.elbow > 0) || r.minWidthCm || r.capacityMl);
+    var h = '<h2>Your numbers <span class="sub"><span class="dash">- </span>Results tailored for you <span aria-hidden="true">💛</span></span></h2><h3>Nutrition</h3><dl>';
     var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
     // Nutrition first: what the pet needs, how much to feed, what it eats now; then the bowl
     // Resting energy and the factor behind the calories, then a table of every level with its calories for this
@@ -800,23 +851,46 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var nt = r.nutritionTips || [];
     if (nt.length) h += fold("tips", "Tips (" + nt.length + ")", '<ul class="tips">' + nt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>");
     h += "<h3>Bowl</h3><dl>";
+    // The bullets under the bowl are additional advice from what was ticked, with a grey "* Additional advice" line right
+    // over them like the elbow note. Each bullet's "*" goes on the Bowl line it is about, never by default on Slow feeder
+    // (owner 2026-11-20): "Older or stiff" on Bowl height, "Eats very fast" on Slow feeder, a flat face or long ears on
+    // Tilted bowl, and so on (tipRows in bowlfit.js). The bullets also go in the order of their starred lines, top to
+    // bottom: the first bullet is about the first starred line, the second about the second (owner 2026-11-20); two
+    // about the same line keep their order.
+    var LINES = ["height", "width", "holds", "slow", "tilted"];
+    function lineOf(t) {
+      var k = (r.tipRows || {})[t] || "holds";
+      return (k === "width" && !r.minWidthCm) || (k === "tilted" && !r.tilted) ? "holds" : k;   // a line not shown: the bowl's size line
+    }
+    var bt = empty ? [] : r.tips.filter(function (t) { return nt.indexOf(t) < 0 && t !== r.elbowAsk; })   // the elbow note is its own line
+      .map(function (t, k) { return [t, k]; })
+      .sort(function (a, b) { return LINES.indexOf(lineOf(a[0])) - LINES.indexOf(lineOf(b[0])) || a[1] - b[1]; })
+      .map(function (x) { return x[0]; });
+    var star = {};
+    bt.forEach(function (t) { star[lineOf(t)] = 1; });
+    function dt(text, on) { return "<dt" + (on ? ' class="ast"' : "") + ">" + text + "</dt>"; }
     // "Bowl height", not "rim height": the floor to the top edge of the bowl, the same as "tall" on the bowl cards (owner
     // 2026-11-20: "rim" read as two different heights). The line asks for the elbow when there is none (a large breed's
     // says so at the end), so it gets the go-to button then.
     var ht = r.height ? r.height.text : "Add the elbow height.";
+    // the large- or giant-breed 1 ft rule comes from one study: its source number, a link to it in Sources (owner 2026-11-20)
+    if (r.height && r.height.floor) ht = ht.replace(/\.( |$)/, " " + refs(["glickman-gdv"]) + ".$1");
     if (r.height && +v.elbow > 0) n++;
-    h += "<dt" + (r.elbowAsk ? ' class="ast"' : "") + ">Bowl height</dt><dd>" + (!(+v.elbow > 0) && /Add the elbow height/.test(ht) ? need(ht, ["elbow", "Go to the elbow height"])
+    h += dt("Bowl height", (r.elbowAsk && empty) || star.height) + "<dd>" + (!(+v.elbow > 0) && /Add the elbow height/.test(ht) ? need(ht, ["elbow", "Go to the elbow height"])
       : r.height && +v.elbow > 0 ? edit(esc(ht), ["elbow", "Change the elbow height"]) : esc(ht)) + "</dd>";
-    if (r.minWidthCm) { h += "<dt>Dish width</dt><dd>" + edit("At least " + r.minWidthCm + " cm across", ["whisker", "Change the whisker span"]) + "</dd>"; n++; }
+    if (r.minWidthCm) { h += dt("Dish width", star.width) + "<dd>" + edit("At least " + r.minWidthCm + " cm across", ["whisker", "Change the whisker span"]) + "</dd>"; n++; }
     if (r.capacityMl) n++;
-    h += "<dt>Holds at least</dt><dd>" + (r.capacityMl ? edit(r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)", foodEdit("amount"))
+    h += dt("Holds at least", star.holds) + "<dd>" + (r.capacityMl ? edit(r.capacityMl + " ml (" + (r.capacityMl / BowlFit.CUP_ML).toFixed(1) + " cups)", foodEdit("amount"))
       : r.needFood ? need("Pick the food from the list, so its weight can be turned into volume.", foodGoal(true)) : need("Add the food per meal.", foodGoal(false))) + "</dd>";
-    h += "<dt>Slow feeder</dt><dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd></dl>";
-    if (r.elbowAsk) h += '<p class="fn ask"><span aria-hidden="true">*&nbsp;</span>' + esc(r.elbowAsk) + "</p>";
+    h += dt("Slow feeder", star.slow) + "<dd>" + (r.slowFeeder ? "Worth trying" : "Optional") + "</dd>";
+    // a flat face or long ears ticked: a row of its own after Slow feeder, only then (owner 2026-11-20)
+    if (r.tilted) h += dt("Tilted bowl", star.tilted) + "<dd>Worth trying</dd>";
+    h += "</dl>";
+    if (r.elbowAsk && empty) h += '<p class="fn star ask"><span aria-hidden="true">*&nbsp;</span>' + esc(r.elbowAsk) + "</p>";
     h += fold("howh", "How the bowl height is worked out", howHeight(r, v.species));
-    r.cautions.forEach(function (c) { h += '<p class="caution">' + esc(c) + "</p>"; });
-    var bt = r.tips.filter(function (t) { return nt.indexOf(t) < 0 && t !== r.elbowAsk; });   // the elbow note is written above
-    if (bt.length) h += '<ul class="tips">' + bt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    // No box with the large- or giant-breed numbers in the result (owner 2026-11-20): those numbers are in the quick
+    // answer on raised bowls for large dogs, and the Bowl height line cites the study.
+    if (bt.length) h += '<p class="fn star note"><span aria-hidden="true">*&nbsp;</span>Additional advice</p><ul class="tips">' + bt.map(function (t) { return "<li>" + citeTip(t, r.tipSources, r.tipStrong) + "</li>"; }).join("") + "</ul>";
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
     // Our bowls as upright cards in a row that scrolls sideways (a phone shows two and a half): the listing's main
     // photo on top, then the name and sizes, and the whole card opens that bowl on Etsy (owner 2026-11-16)
@@ -838,7 +912,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     // only ask for something still to fill in ("Measure from the floor to your pet's elbow...") are not counted.
     numbers = n;
     var asks = r.asks || [];
-    n += cn.length + r.cautions.length + r.tips.filter(function (t) { return asks.indexOf(t) < 0; }).length;
+    n += cn.length + r.tips.filter(function (t) { return asks.indexOf(t) < 0; }).length;
     var ready = numbers > 0;
     [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
     if (jumpCnt) { jumpCnt.hidden = !ready; jumpCnt.innerHTML = ready ? "(" + n + ' ready <span aria-hidden="true">✅<i>👇</i></span>)' : ""; }
@@ -849,6 +923,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     lastHtml = html;
     var was = {};
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { was[d.getAttribute("data-k")] = d.open; });
+    if (empty !== howhEmpty) { was.howh = empty; howhEmpty = empty; }   // open while empty, folded once there is a number (owner 2026-11-20)
     out.innerHTML = html;
     [].forEach.call(out.querySelectorAll("details[data-k]"), function (d) { if (was[d.getAttribute("data-k")]) d.open = true; });
     linkCites(out);
@@ -858,17 +933,66 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   f.addEventListener("submit", function (e) { e.preventDefault(); });
   f.addEventListener("input", render);
   f.addEventListener("change", render);
+  // "Meals a day" splits the same food a day (owner 2026-11-20): once the meals are set, changing them keeps the food
+  // a day. Going from 3 meals to 1 puts the three meals' food into one: each amount becomes three times as much, the
+  // pet still eats the same a day, and the bowl has to hold three times as much. Setting the meals for the first time,
+  // after typing the amounts (the box sits below them), only says how many meals those amounts are for. Amounts are
+  // worked out again from what was typed, so going back gives the typed amounts back without rounding drift; typing an
+  // amount, or changing its unit, makes that the new start.
+  var mealsBox = document.getElementById("meals"), mealsWas = +mealsBox.value || 0, mealsSet = false;
+  function amountText(x, unit) { var m = Math.pow(10, unit === "g" ? 0 : unit === "oz" ? 1 : 2); return String(Math.round(x * m) / m); }
+  function startAt(row) { row.dataset.base = row.querySelector(".fa").value; row.dataset.baseMeals = mealsSet ? String(mealsWas) : ""; }
+  mealsBox.addEventListener("input", function () {
+    var m = +mealsBox.value;
+    if (!(m >= 1)) return;   // half typed: wait for a number
+    [].forEach.call(box.querySelectorAll(".frow"), function (row) {
+      var fa = row.querySelector(".fa");
+      if (!(+fa.value > 0)) return;
+      if (!row.dataset.base) startAt(row);
+      if (!row.dataset.baseMeals) row.dataset.baseMeals = String(m);   // the first time: these amounts are for m meals
+      else fa.value = amountText(+row.dataset.base * +row.dataset.baseMeals / m, row.querySelector(".fu").value);
+    });
+    mealsWas = m; mealsSet = true;
+  });
+  box.addEventListener("input", function (e) { if (e.target.classList.contains("fa")) startAt(e.target.closest(".frow")); });
+  box.addEventListener("change", function (e) { if (e.target.classList.contains("fu")) startAt(e.target.closest(".frow")); });
   // "Show a filled-in example" at the end of the intro (owner 2026-11-19): one tap fills the form with an example dog,
   // so a visitor sees a whole result before typing anything. The link then reads "Hide the example", and a second tap
-  // puts back exactly what was in the form before: the food lines are set aside as they were, nothing is retyped.
+  // clears every input back to the empty form (owner 2026-11-20; before, it put back what had been typed).
   // Weight and elbow are kept in both unit systems, so the example uses the units already picked, and switching units
   // while it shows keeps the same dog (9.3 kg doesn't turn into 9.3 lb). No broth in it: a broth is looked up at USDA,
   // and each visitor only gets a few look-ups. It also ticks "Liver values to watch" and "High triglycerides or cholesterol"
   // (owner 2026-11-20), and opens "Anything your vet is watching" so those ticks show; hiding the example closes it again.
-  var EX = { weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
-    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
+  // It ticks "Eats very fast" too (owner 2026-11-20), so the example shows a slow feeder worth trying.
+  var EX = { species: "dog", weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
+    size: "small",   // the example dog is 9.3 kg, a small dog (under 10 kg)
+    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["fastEater", "cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
+  // More examples behind the three-dot button after the link (owner 2026-11-20): four typical dogs and three cats, from
+  // the cases tested, so each breed size, different elbow heights, meals a day and health boxes come up. label = a few
+  // words: size or age, then (with the weight in the units picked) what stands out. whisker = cats' whisker span;
+  // kcal = calories per cup, for a food not in the list. Amounts give about the calories each pet needs.
+  var PRESETS = [
+    { group: "Dogs", label: ["Small", "eats fast"], species: "dog", weight: { cm: "6", "in": "13" }, elbow: { cm: "17", "in": "6.75" },
+      stage: "neutered", activity: "usual", meals: "2", size: "small", foods: [["rc-small-adult-dry", "0.6"]], ticks: ["fastEater"] },
+    { group: "Dogs", label: ["Medium", "older, losing weight"], species: "dog", weight: { cm: "18", "in": "40" }, elbow: { cm: "27", "in": "10.5" },
+      stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.1"]], ticks: ["senior", "cond:overweight"] },
+    { group: "Dogs", label: ["Large", "one meal a day"], species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
+      stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis"] },
+    { group: "Dogs", label: ["Giant", "long ears"], species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
+      stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
+    { group: "Cats", label: ["Adult", "flat face"], species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
+      stage: "neutered", activity: "usual", meals: "2", foods: [["hills-sd-cat-adult-indoor-dry", "0.4"]], ticks: ["flatFace"] },
+    { group: "Cats", label: ["Older", "kidney values"], species: "cat", weight: { cm: "3.8", "in": "8.5" }, elbow: { cm: "11", "in": "4.25" }, whisker: { cm: "12", "in": "4.75" },
+      stage: "neutered", activity: "usual", meals: "3", foods: [["hills-pd-kd-chicken-pate-can-cat", "0.4"]], ticks: ["senior", "cond:kidney"] },
+    { group: "Cats", label: ["Kitten", "eats fast"], species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
+      stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] }
+  ];
   var KEEP = ["weight", "stage", "activity", "meals", "kcal", "elbow", "size", "whisker"];
-  var exBtn = document.getElementById("example"), exShow = exBtn.textContent, exWas = null, exBusy = false;
+  var DEF = {}; KEEP.forEach(function (n) { DEF[n] = document.getElementById(n).value; });   // the empty form's values
+  // exOn = the example filled in now (the link's, or one from the popover); exWas = the species and units picked before
+  // the first one. Hiding clears every input, whichever example filled it, back to the empty form as it was before the
+  // examples, in those species and units (owner 2026-11-20).
+  var exBtn = document.getElementById("example"), exShow = exBtn.textContent, exOn = null, exWas = null, exBusy = false;
   function pickRadio(name, v) {
     var r = f.querySelector('input[name="' + name + '"][value="' + v + '"]');
     if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); }   // moves the toggle too
@@ -877,48 +1001,101 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   function allBoxes() { return [].slice.call(f.querySelectorAll('input[type="checkbox"]')); }
   function boxKey(c) { return c.name === "cond" ? "cond:" + c.value : c.name; }   // the health boxes share one name
   var adv = f.querySelector("details.adv");
-  function showExample() {
-    exWas = { species: checked("species"), unit: checked("unit"), rows: [].slice.call(box.children), val: {},
-      on: allBoxes().filter(function (c) { return c.checked; }), adv: adv.open };
-    KEEP.forEach(function (n) { exWas.val[n] = document.getElementById(n).value; });
+  function fill(x) {
+    if (!exOn) exWas = { species: checked("species"), unit: checked("unit") };
     exBusy = true;
-    pickRadio("species", "dog"); syncActivity();
+    pickRadio("species", x.species); syncActivity();
     var u = checked("unit") === "in" ? "in" : "cm";
-    exWas.rows.forEach(function (row) { box.removeChild(row); });
-    EX.foods.forEach(function (x) {
+    [].slice.call(box.children).forEach(function (row) { box.removeChild(row); });
+    x.foods.forEach(function (y) {
       var row = addRow(false), q = row.querySelector(".fq");
-      row.dataset.id = x[0]; q.value = title(BowlFit.food(x[0])); row.querySelector(".fa").value = x[1];
+      row.dataset.id = y[0]; q.value = title(BowlFit.food(y[0])); row.querySelector(".fa").value = y[1];
       setUnits(row); fit(q);
     });
-    var v = { weight: EX.weight[u], elbow: EX.elbow[u], stage: EX.stage, activity: EX.activity, meals: EX.meals, kcal: "", size: "", whisker: "" };
+    var v = { weight: x.weight[u], elbow: x.elbow[u], stage: x.stage, activity: x.activity, meals: x.meals, kcal: x.kcal || "",
+      size: x.size || DEF.size, whisker: x.whisker ? x.whisker[u] : "" };
     KEEP.forEach(function (n) { document.getElementById(n).value = v[n]; });
-    allBoxes().forEach(function (c) { tickBox(c, EX.ticks.indexOf(boxKey(c)) >= 0); });
-    adv.open = true;
-    exBusy = false;
+    allBoxes().forEach(function (c) { tickBox(c, x.ticks.indexOf(boxKey(c)) >= 0); });
+    adv.open = x.ticks.some(function (t) { return t.indexOf("cond:") === 0; });   // so the health boxes it ticks show
+    mealsWas = +mealsBox.value; mealsSet = true;
+    [].forEach.call(box.querySelectorAll(".frow"), startAt);
+    exOn = x; exBusy = false;
     exBtn.textContent = "Hide the example";
     render();
   }
-  function hideExample() {
-    var was = exWas;
-    exWas = null; exBusy = true;
+  function clearAll() {
+    exBusy = true;
     [].slice.call(box.children).forEach(function (row) { box.removeChild(row); });
-    was.rows.forEach(function (row) { box.appendChild(row); fit(row.querySelector(".fq")); });
-    if (!box.children.length) addRow(false);
-    pickRadio("species", was.species); pickRadio("unit", was.unit); syncActivity();
-    KEEP.forEach(function (n) { document.getElementById(n).value = was.val[n]; });
-    allBoxes().forEach(function (c) { tickBox(c, was.on.indexOf(c) >= 0); });
-    adv.open = was.adv;
-    exBusy = false;
+    addRow(false);
+    pickRadio("species", exWas ? exWas.species : "dog"); pickRadio("unit", exWas ? exWas.unit : "cm"); syncActivity();
+    KEEP.forEach(function (n) { document.getElementById(n).value = DEF[n]; });
+    allBoxes().forEach(function (c) { tickBox(c, false); });
+    adv.open = false;
+    mealsWas = +mealsBox.value || 0; mealsSet = false;
+    exOn = null; exWas = null; exBusy = false;
     exBtn.textContent = exShow;
     render();
   }
-  exBtn.addEventListener("click", function () { if (exWas) hideExample(); else showExample(); });
-  f.addEventListener("change", function (e) {   // units switched while the example shows: the same dog in the new units
-    if (!exWas || exBusy || e.target.name !== "unit") return;
+  exBtn.addEventListener("click", function () { closePop(); if (exOn) clearAll(); else fill(EX); });
+  f.addEventListener("change", function (e) {   // units switched while an example shows: the same pet in the new units
+    if (!exOn || exBusy || e.target.name !== "unit") return;
     var u = e.target.value === "in" ? "in" : "cm", old = u === "in" ? "cm" : "in";
-    ["weight", "elbow"].forEach(function (n) { var el = document.getElementById(n); if (el.value === EX[n][old]) el.value = EX[n][u]; });
+    ["weight", "elbow", "whisker"].forEach(function (n) { var el = document.getElementById(n); if (exOn[n] && el.value === exOn[n][old]) el.value = exOn[n][u]; });
     render();
   });
+  // The popover: a speech bubble pointing at the three-dot button, Dogs then Cats (owner 2026-11-20). It opens above or
+  // below the button, on the side with more room on screen (owner 2026-11-20); if even that side is too short, the list
+  // scrolls.
+  // A tap on an example fills the form with it; a tap outside, Escape or the button again closes it.
+  var moreBtn = document.getElementById("exMore"), pop = document.getElementById("exPop");
+  function presetLabel(x) { var us = checked("unit") === "in"; return x.label[0] + ", " + x.weight[us ? "in" : "cm"] + (us ? " lb" : " kg") + ", " + x.label[1]; }
+  function placePop() {
+    var hb = pop.offsetParent.getBoundingClientRect(), b = moreBtn.querySelector("svg").getBoundingClientRect(), list = pop.firstChild;
+    list.style.maxHeight = "";
+    var up = b.top - 20, down = document.documentElement.clientHeight - b.bottom - 20, below = down > up;   // 12 px for the tip, 8 to the edge
+    if (pop.offsetHeight > (below ? down : up)) {
+      var m = Math.max(120, (below ? down : up) - (pop.offsetHeight - list.offsetHeight)), rows = [].slice.call(list.children);
+      // end the list halfway down a row, so it's plain there's more: the last row that starts in view if at least half
+      // of it fits, else the one before
+      var k = rows.filter(function (r) { return r.offsetTop < m; }).length - 1;
+      if (k > 0 && rows[k].offsetTop + rows[k].offsetHeight / 2 > m) k--;
+      if (k >= 0) m = rows[k].offsetTop + rows[k].offsetHeight / 2;
+      list.style.maxHeight = m + "px";
+    }
+    var w = pop.offsetWidth, h = pop.offsetHeight, mid = b.left + b.width / 2 - hb.left;
+    var left = Math.max(0, Math.min(mid - w / 2, hb.width - w));
+    pop.classList.toggle("below", below);
+    pop.style.left = left + "px";
+    pop.style.top = (below ? b.bottom - hb.top + 12 : b.top - hb.top - h - 12) + "px";
+    pop.style.setProperty("--caret", Math.max(14, Math.min(mid - left - 6, w - 26)) + "px");
+  }
+  function openPop() {
+    var h = "", g = "";
+    PRESETS.forEach(function (x, k) {
+      if (x.group !== g) { g = x.group; h += '<p class="exh" role="presentation">' + esc(g) + "</p>"; }
+      h += '<button type="button" role="menuitem" data-k="' + k + '">' + esc(presetLabel(x)) + "</button>";
+    });
+    pop.innerHTML = '<div class="exlist">' + h + "</div>"; pop.hidden = false; moreBtn.setAttribute("aria-expanded", "true");
+    placePop();
+    pop.querySelector("button").focus({ preventScroll: true });
+  }
+  function closePop(back) {
+    if (pop.hidden) return;
+    pop.hidden = true; moreBtn.setAttribute("aria-expanded", "false");
+    if (back) moreBtn.focus({ preventScroll: true });
+  }
+  moreBtn.addEventListener("click", function () { if (pop.hidden) openPop(); else closePop(true); });
+  pop.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("button[data-k]");
+    if (b) { closePop(); fill(PRESETS[+b.getAttribute("data-k")]); }
+  });
+  pop.addEventListener("keydown", function (e) {   // up and down move between the examples
+    var items = [].slice.call(pop.querySelectorAll("button")), k = items.indexOf(document.activeElement);
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); items[(k + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus(); }
+  });
+  document.addEventListener("click", function (e) { if (!pop.hidden && !pop.contains(e.target) && !moreBtn.contains(e.target)) closePop(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !pop.hidden) closePop(true); });
+  window.addEventListener("resize", function () { if (!pop.hidden) placePop(); });
   addRow(false); render();
   linkCites(document.querySelector("main"));   // the quick answers and anything else written into the page
   if (openSource(location.hash)) window.addEventListener("load", function () { var li = openSource(location.hash); if (li) li.scrollIntoView({ block: "start" }); });
@@ -1015,7 +1192,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   });
 
   // Press and spring back on every button, and a ripple from the tap point on the bigger ones
-  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .rm", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .expop button, .rm", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
