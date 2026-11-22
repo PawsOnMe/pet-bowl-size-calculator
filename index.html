@@ -33,9 +33,13 @@ header{position:relative}
 /* The examples as a row of hand-drawn cards (owner 2026-11-20, in place of the popover): they open inline under the
    intro and push the form down, about three cards and part of the next across a phone, and the row scrolls sideways.
    Each card: its name in two lines, then its drawing, in the hand-drawn style of the bowl height picture. The card
-   filled in is outlined like a picked toggle. */
-.excar{margin:14px -16px 0;overflow:hidden}
-.excar ul{display:flex;gap:10px;margin:0;padding:2px 16px 4px;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:16px;overscroll-behavior-x:contain;scrollbar-width:none}
+   filled in is outlined like a picked toggle: a purple ring 4 px thick, 2 px outside its grey border (owner 2026-11-22:
+   twice as thick as before, with a gap, the card the same size). The row scrolls, so it clips: 6 px above and below
+   the cards leave the ring room, and its margins give that back, so the cards and the form stay where they were: the
+   top one is -4 px because it collapses with the intro's 16 px bottom margin (16 - 4 = 12, then 6 px of padding = 18 px
+   from the intro to the cards, as before), the bottom one -2 px for the 2 px more padding under them. */
+.excar{margin:-4px -16px -2px;overflow:hidden}
+.excar ul{display:flex;gap:10px;margin:0;padding:6px 16px;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:16px;overscroll-behavior-x:contain;scrollbar-width:none}
 .excar ul::-webkit-scrollbar{display:none}
 @media (hover:hover){.excar ul{scrollbar-width:thin}}
 /* A pressed card springs back with its round enlarge button on it (the press moves the whole li); holding a card down
@@ -45,8 +49,9 @@ header{position:relative}
 .excard .ext{display:block;padding:8px 7px 0;font-size:.74rem;font-weight:600;line-height:1.25;white-space:nowrap}
 .excard .exs{display:block;padding:1px 7px 14px;font-size:.72rem;line-height:1.25;color:var(--muted)}   /* 14 px under the words: the round button on the line below them never covers them (owner 2026-11-21) */
 .excard img{display:block;width:100%;height:auto;aspect-ratio:6/5;margin-top:auto;background:#fcf4ee;pointer-events:none;-webkit-user-drag:none}
-.excard[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.excard[aria-pressed="true"]{outline:4px solid var(--accent);outline-offset:2px}
 .excard:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.excard[aria-pressed="true"]:focus-visible{outline:4px solid var(--accent);outline-offset:2px;box-shadow:inset 0 0 0 2px var(--accent)}   /* the picked card with the keyboard on it: the ring stays, the focus shows inside */
 /* Each card's small round enlarge button (owner 2026-11-21), on its right edge where the words meet the drawing (.exz is
    a box the size of the drawing, so its top edge is that line). In the card colour with the usual grey border and a
    purple icon, like the ? button in the bottom bar; the tap area reaches 6 px past the circle. A tap on it, or holding
@@ -72,16 +77,18 @@ header{position:relative}
 .zoom[hidden]{display:none}
 .zoom.out{pointer-events:none}
 .zscrim{position:fixed;inset:0;background:var(--scrim)}
-.zbox{position:relative;display:flex;flex-direction:column;flex-shrink:0;width:min(100%,560px,calc((100vh - 290px) * 1.2));margin:auto;outline:0;touch-action:pan-y pinch-zoom}   /* a sideways swipe moves between the cards, up and down still scrolls */
-@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 290px) * 1.2))}}
+.zbox{position:relative;display:flex;flex-direction:column;flex-shrink:0;width:min(100%,560px,calc((100vh - 290px) * 1.2 + 16px));margin:auto;outline:0;touch-action:pan-y pinch-zoom}   /* a sideways swipe moves between the cards, up and down still scrolls */
+@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 290px) * 1.2 + 16px))}}   /* + 16 px: the ring's room; where the height sets the width, the card keeps its width (owner 2026-11-22) */
 .zslide{display:flex;flex-direction:column;width:100%;transition:translate .22s ease}   /* the card and its band, which slide between the cards */
 /* A picked card has no band: it moves down half the band's height, so it is centred where the card and band were,
    gliding there as the band folds or as a swipe brings it in; the dots stay put (owner 2026-11-21) */
 .zbox.on .zslide{translate:0 26px}
-.zpress{display:flex;flex-direction:column;width:100%;transform:scale(var(--ps,1));filter:drop-shadow(0 18px 48px rgba(0,0,0,.3))}
-.zcard{position:relative;display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden;cursor:pointer;transform-origin:0 100%;transition:border-color .2s,box-shadow .2s,border-radius .22s;-webkit-user-select:none;user-select:none}
+/* The card and its band are 8 px narrower on each side than the space for them (owner 2026-11-22: the card may shrink a little for it),
+   so the ring round a picked card, 4 px out and 4 px thick, ends where the card's edge was: 16 px from a phone's sides */
+.zpress{display:flex;flex-direction:column;width:calc(100% - 16px);align-self:center;transform:scale(var(--ps,1));filter:drop-shadow(0 18px 48px rgba(0,0,0,.3))}
+.zcard{position:relative;display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden;cursor:pointer;transform-origin:0 100%;outline:4px solid transparent;outline-offset:4px;transition:border-color .2s,box-shadow .2s,border-radius .22s,outline-color .2s;-webkit-user-select:none;user-select:none}
 .zbox:not(.on) .zcard{border-bottom-width:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
-.zcard.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);cursor:auto}
+.zcard.on{outline-color:var(--accent);cursor:auto}   /* picked: a 4 px ring like the row's, 4 px outside its grey border here, as a 2 px gap all but vanished next to the big card's dark border (owner 2026-11-22: try 2 px, and 4 px on the enlarged card if that is too small) */
 .zcard .ext{display:block;padding:14px 16px 0;font-size:1.15rem;font-weight:600;line-height:1.25}
 .zcard .exs{display:block;padding:2px 16px 12px;font-size:1rem;line-height:1.3;color:var(--muted)}
 .zpic{position:relative}
@@ -111,8 +118,8 @@ header{position:relative}
 .zdot:focus-visible{outline:2px solid #fff;outline-offset:-3px}
 /* A short screen, like a phone on its side: lower dots, and the card a little wider for it, so its words wrap less and
    the card, the band and the dots stay above the bottom bar's place */
-@media (max-height:500px){.zdot{height:20px}.zdots{margin-top:2px}.zbox.on .zdots{margin-top:53px}.zbox{width:min(100%,560px,calc((100vh - 276px) * 1.2))}}
-@media (max-height:500px){@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 276px) * 1.2))}}}
+@media (max-height:500px){.zdot{height:20px}.zdots{margin-top:2px}.zbox.on .zdots{margin-top:53px}.zbox{width:min(100%,560px,calc((100vh - 276px) * 1.2 + 16px))}}
+@media (max-height:500px){@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 276px) * 1.2 + 16px))}}}
 @media (prefers-reduced-motion:reduce){.zbox,.zcard,.zsel,.zbox.on .zsel,.zdots,.zdot i,.zslide{transition:none}}
 html.zoom,html.zoom body{overflow:hidden}
 html.zoom .jump{z-index:50;transform:translateY(100%);pointer-events:none}
@@ -237,6 +244,7 @@ dt{color:var(--muted)}dd{margin:0;font-weight:600}
 .nw{white-space:nowrap}
 a.goto{display:inline-flex;vertical-align:-.27em;margin:-12px -12px -12px calc(.3em - 12px);padding:12px;color:var(--accent);-webkit-tap-highlight-color:transparent;transform:scale(var(--ps,1))}
 a.goto svg{display:block;width:1.2em;height:1.2em}
+a.minfo + a.goto{vertical-align:-.372em}   /* the pencil right after the "Change noted" pill: its circle level with the pill's middle (owner 2026-11-22); the pill keeps its words on the line's baseline, so the pencil moves, 0.1em lower */
 a.goto circle{fill:currentColor}
 a.goto path{fill:none;stroke:var(--on-accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 a.goto:focus-visible{outline:2px solid var(--accent);outline-offset:-10px;border-radius:999px}
@@ -340,12 +348,21 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 /* In the quick answers (owner 2026-11-19): two round buttons float at the bottom right, one above the other: back to
    the form (a pencil) and back to Your numbers (the strip's chart icon). Like the strip, both stay tertiary until the
    result has a number to see: the card colour, the usual grey border, a purple icon. Then both turn the purple primary
-   style. They only show while the quick answers are on screen. */
-.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;display:flex;flex-direction:column;gap:12px;transition:opacity .2s ease-out,transform .2s ease-out,visibility 0s}
+   style. They only show while the quick answers are on screen. 20 px apart (12 until owner 2026-11-22), so the count's
+   badge on the lower one has room under the pencil. */
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;display:flex;flex-direction:column;gap:20px;transition:opacity .2s ease-out,transform .2s ease-out,visibility 0s}
 .fab.away{opacity:0;transform:translateY(12px);pointer-events:none;visibility:hidden;transition:opacity .2s ease-out,transform .2s ease-out,visibility 0s .2s}
 .fab a{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line),0 2px 10px rgba(0,0,0,.18);-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,box-shadow .2s}
 .fab a.ready{background:var(--accent);color:var(--on-accent);box-shadow:inset 0 0 0 1px var(--accent),0 2px 10px rgba(0,0,0,.18)}
 .fab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* Once there are numbers, how many are ready sits on the Your numbers button's top right (owner 2026-11-22): a yellow
+   badge with black figures, ringed in the page's own background (the quick answers have no card behind them), so it
+   stands off the button. The button no longer clips what is in it, so the badge can sit over its edge and move and
+   press with it; the tap ripple stays inside the circle in .rclip instead. */
+.fab a.fab-res{overflow:visible}
+.fab .rclip{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+.fab-badge{position:absolute;top:-4px;right:-4px;z-index:1;box-sizing:content-box;min-width:10px;height:16px;padding:0 3px;border:2px solid var(--bg);border-radius:999px;background:#f2c94c;color:#1c1a18;font-size:11px;font-weight:700;line-height:16px;text-align:center;font-variant-numeric:tabular-nums;pointer-events:none}
+.fab-badge[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){.jump,.jump a,.fab,.fab a{transition:none}}
 /* Motion on every button (owner 2026-11-20), from the same RedNote note as the motion above: a press shrinks it and it
    springs back; the bar's buttons and the round buttons also get the ripple from the tap point, white on the purple
@@ -543,7 +560,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 </nav>
 <nav class="fab away" id="fab" aria-label="Back to">
 <a class="fab-form" href="#f" aria-label="Back to the form" title="Back to the form"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.2 15.6L15.6 5.2a2.26 2.26 0 0 1 3.2 3.2L8.4 18.8 4 20z"/><path d="M13.6 7.2l3.2 3.2"/></svg></a>
-<a class="fab-res" href="#result" aria-label="Your numbers" title="Your numbers"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg></a>
+<a class="fab-res" href="#result" aria-label="Your numbers" title="Your numbers"><span class="rclip" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg><span class="fab-badge" aria-hidden="true" hidden></span></a>
 </nav>
 <script src="foods.js"></script>
 <script src="bowlfit.js"></script>
@@ -551,6 +568,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 (function () {
   var f = document.getElementById("f"), out = document.getElementById("result"), jumpRes = document.querySelector("#jump .jump-res");
   var fabRes = document.querySelector("#fab .fab-res"), fabForm = document.querySelector("#fab .fab-form"), jumpCnt = document.querySelector("#jump .cnt"), shownCnt = 0;
+  var fabBadge = document.querySelector("#fab .fab-badge");
   var box = document.getElementById("foodRows"), seq = 0;
   var kField = document.getElementById("kcalField"), kLabel = document.getElementById("kcalLabel"), kHint = document.getElementById("kcalHint");
   var FOODS = BowlFit.foods(), HAY = {};
@@ -1024,10 +1042,14 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     // "in 1 meal", not "1 meals" (owner's screenshot, 2026-11-21); the pill after it links to the meals advice (owner 2026-11-21).
     // A space before the pill, so it can go to the next line with the pencil; "Change noted" itself never splits.
     // Food a day is a recommendation: the meals the advice recommends when they differ from the ones typed (owner 2026-11-21)
-    var mealsFd = fd ? fd.mealsRec || fd.meals : 0;
-    var inMeals = fd ? " in " + mealsFd + (mealsFd === 1 ? " meal" : " meals") + (star.food ? ' <a class="minfo" href="#adv-meals" aria-label="Change noted: the meals a day advice, below"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 10.8v6"/><circle cx="12" cy="7.4" r="1.2" fill="currentColor" stroke="none"/></svg>Change&nbsp;noted</a>' : "") : "";
+    // The pill shows only when those meals differ from the ones typed (owner 2026-11-21): a kitten already on 4 meals keeps
+    // its age advice below, with its "*", but nothing on this line changed, so no "Change noted".
+    var mealsFd = fd ? fd.mealsRec || fd.meals : 0, pillOn = !!(fd && star.food && fd.mealsRec);
+    var inMeals = fd ? " in " + mealsFd + (mealsFd === 1 ? " meal" : " meals") + (pillOn ? ' <a class="minfo" href="#adv-meals" aria-label="Change noted: the meals a day advice, below"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 10.8v6"/><circle cx="12" cy="7.4" r="1.2" fill="currentColor" stroke="none"/></svg>Change&nbsp;noted</a>' : "") : "";
     if (fd && (fd.unit || fd.mix)) n++;
-    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + edit(rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + inMeals, foodEdit("food")) + "</dd>";
+    // With the "Change noted" pill, the pencil right after it goes to the "Meals a day" box, not to the food (owner
+    // 2026-11-22): the change it notes is the meals. Without the pill it goes to the food, as before.
+    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + edit(rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + inMeals, pillOn ? ["meals", "Change the meals a day"] : foodEdit("food")) + "</dd>";
     // Two or more foods: the same mix as typed, scaled to the calories Food a day goes by (owner 2026-11-21), food by food
     // in the order typed, then the owner's wording (2026-11-21): "about ... in X meals, if keeping the current ratio of
     // your 2 kinds of main food per meal."
@@ -1037,10 +1059,13 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
         inMeals + ", if keeping the current ratio of your " + fd.mix.length + " kinds of main food per meal.", foodEdit("food")) + "</dd>";
     }
     if (r.fedKcalDay) n++;
-    if (r.fedKcalDay) h += (r.takeaway ? '<dt class="hastake' + (star.eats ? " ast" : "") + '">Eats now' + takeaway(r.takeaway) : "<dt" + (star.eats ? ' class="ast"' : "") + ">Eats now") + "</dt><dd>" + edit("About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
+    // A bracket sits right after the phrase it describes (owner 2026-11-21): the "× RER" is what the pet eats now, so it
+    // follows "About N kcal a day", before the first comma. At the end of the line it read as the weight-loss calories.
+    if (r.fedKcalDay) h += (r.takeaway ? '<dt class="hastake' + (star.eats ? " ast" : "") + '">Eats now' + takeaway(r.takeaway) : "<dt" + (star.eats ? ' class="ast"' : "") + ">Eats now") + "</dt><dd>" + edit("About " + r.fedKcalDay + " kcal a day" +
+      (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : "") +
+      (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
       // with a To lose weight line, the Calories a day comparison first, then the share of the weight-loss calories (owner 2026-11-21)
-      (fd && fd.lossLo ? ", " + (fd.lossLo === fd.lossHi ? Math.round(r.fedKcalDay / fd.lossHi * 100) : Math.round(r.fedKcalDay / fd.lossHi * 100) + " to " + Math.round(r.fedKcalDay / fd.lossLo * 100)) + "% of the weight-loss calories" : "") +
-      (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : ""), foodEdit("amount")) + "</dd>";
+      (fd && fd.lossLo ? ", " + (fd.lossLo === fd.lossHi ? Math.round(r.fedKcalDay / fd.lossHi * 100) : Math.round(r.fedKcalDay / fd.lossHi * 100) + " to " + Math.round(r.fedKcalDay / fd.lossLo * 100)) + "% of the weight-loss calories" : ""), foodEdit("amount")) + "</dd>";
     h += "</dl>";
     // The detail stays folded until tapped (owner 2026-11-16): the table of levels, the health notes and the tips.
     function fold(key, summary, body) { return '<details class="more" data-k="' + key + '"><summary>' + summary + "</summary>" + body + "</details>"; }
@@ -1112,6 +1137,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     n += cn.length + r.tips.filter(function (t) { return asks.indexOf(t) < 0; }).length;
     var ready = numbers > 0;
     [jumpRes, fabRes, fabForm].forEach(function (b) { if (b) b.classList.toggle("ready", ready); });
+    // the same count on the round Your numbers button, as a badge (owner 2026-11-22), and in its name for screen readers
+    if (fabBadge) { fabBadge.hidden = !ready; fabBadge.textContent = ready ? n : ""; fabRes.setAttribute("aria-label", ready ? "Your numbers, " + n + " ready" : "Your numbers"); }
     // The number ticks from the one shown before to the new one, up or down (owner 2026-11-21), so it is only written
     // when it changes, and not while an example is still being filled in, so a picked example ticks once, from the
     // number before it to its own.
@@ -1214,7 +1241,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     { group: "Dogs", label: ["Giant", "long ears"], art: "img/ex-dog-giant.jpg", species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
       stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
     { group: "Cats", label: ["Kitten", "eats fast"], art: "img/ex-cat-kitten.jpg", species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
-      stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] },
+      stage: "young", activity: "usual", meals: "2", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] },   // 2 meals (4 until owner 2026-11-22), so it shows the "Change noted" pill: a kitten is advised 3
     { group: "Cats", label: ["Adult", "flat face"], art: "img/ex-cat-adult.jpg", species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
       stage: "neutered", activity: "usual", meals: "2", foods: [["hills-sd-cat-adult-indoor-dry", "0.4"]], ticks: ["flatFace"] },
     { group: "Cats", label: ["Adult", "overweight, 1 big meal"], art: "img/ex-cat-tuxedo.jpg", species: "cat", weight: { cm: "6.4", "in": "14" }, elbow: { cm: "13", "in": "5" }, whisker: { cm: "14", "in": "5.5" },
@@ -1705,7 +1732,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     s.style.width = s.style.height = d + "px";
     s.style.left = (e.clientX - r.left - d / 2) + "px";
     s.style.top = (e.clientY - r.top - d / 2) + "px";
-    b.appendChild(s);
+    (b.querySelector(".rclip") || b).appendChild(s);   // a button that shows something over its edge clips the ripple in .rclip
     s.animate([{ transform: "scale(0)", opacity: 0.28 }, { transform: "scale(1)", opacity: 0 }],
       { duration: 450, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" }).onfinish = function () { s.remove(); };
   }
