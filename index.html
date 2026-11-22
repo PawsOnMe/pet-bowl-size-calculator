@@ -190,9 +190,15 @@ dt.ast::after{content:"*";content:"*"/""}
 /* The link after "in N meals" to the meals advice (owner 2026-11-21): a hollow pill, an "i" in a circle at its front with
    room to the border, then "Change noted" in smaller type, as a "*" and then an "ⓘ" were too easy to miss. Above the
    pencil's wide tap area, and easier to tap than it looks. */
-a.minfo{position:relative;z-index:1;display:inline-block;padding:0 8px 0 4px;border:1.5px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:.72em;font-weight:600;line-height:1.45;vertical-align:baseline;white-space:nowrap}   /* its words on the line's baseline (owner 2026-11-21) */
+a.minfo{position:relative;z-index:1;display:inline-block;padding:0 .376em 0 1.616em;border:1.5px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:.72em;font-weight:600;line-height:1.45;vertical-align:baseline;white-space:nowrap}   /* its words on the line's baseline (owner 2026-11-21) */
 a.minfo::after{content:"";position:absolute;inset:-9px -4px}
-a.minfo svg{width:1.3em;height:1.3em;margin-right:4px;vertical-align:-.32em;fill:none;stroke:currentColor;stroke-width:2}
+/* The sides (owner 2026-11-22). The (i) is centred in the 1.45em line, its ring about .156em from the border above and below
+   (.075em plus the ring's own inset), and twice that on its left (owner, the same day): left .231em, so the ring is .312em
+   from the border. From the (i) to the words about .22em, so padding-left 1.616em = .231 + 1.3 + .085, the C's own side space
+   making up the rest. After the last letter, doubled and then halved again (owner, the same day): about .46em to the border,
+   level with the middle, where the top of the d comes as close to the round end as the (i) comes to the C; padding-right
+   .376em plus the d's own side space. */
+a.minfo svg{position:absolute;left:.231em;top:calc(50% - .65em);width:1.3em;height:1.3em;fill:none;stroke:currentColor;stroke-width:2}
 #adv-meals{scroll-margin:24px 0 120px}
 /* The first sentence a link on the page jumped to (owner 2026-11-21): a light purple background until a tap elsewhere.
    The text on it stays 9:1 or more, and the purple links in it 4.6:1 (light) and 5.2:1 (dark). */
