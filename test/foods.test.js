@@ -100,13 +100,13 @@ assert.strictEqual(r.fedKcalDay, 446);
 r = recommend({ ...day, foods: [...mixed.foods, { id: "homemade-broth", amount: 60, unit: "g", kcal100: 40 / 236.6 * 100 }] });
 assert.strictEqual(r.fedKcalDay, 428);
 // One food plus water is still a one-food meal, so how much to feed stays, whichever row comes first:
-// 793.5 kcal / 1.013 kcal per g = 783 g a day. A 16 kcal broth, 60 ml x 2 meals = 19.2 kcal, comes off first:
-// 774.3 / 1.013 = 764 g. No food amount typed, so there is no "eats now".
+// about 794 kcal a day, the number the page shows, / 1.013 kcal per g = 784 g a day. A 16 kcal broth, 60 ml x 2 meals
+// = 19.2 kcal, comes off first: 774.8 / 1.013 = 765 g. No food amount typed, so there is no "eats now".
 const hills = { id: "hills-pd-id-turkey-can-dog", unit: "g" }, pet = { species: "dog", unit: "in", weight: 30, stage: "neutered", mealsPerDay: 2 };
 r = recommend({ ...pet, foods: [hills, { id: "water", amount: 60, unit: "g" }] });
-assert.deepStrictEqual([r.feeding.dayHi, r.feeding.unit, r.fedKcalDay], [783, "g", null]);
+assert.deepStrictEqual([r.feeding.dayHi, r.feeding.unit, r.fedKcalDay], [784, "g", null]);
 r = recommend({ ...pet, foods: [{ id: "water", amount: 60, unit: "g", kcal100: 16 }, hills] });
-assert.strictEqual(r.feeding.dayHi, 764);
+assert.strictEqual(r.feeding.dayHi, 765);
 // Water alone never reads as "eats 0 kcal"
 assert.strictEqual(recommend({ species: "dog", weight: 10, foods: [{ id: "water", amount: 100, unit: "g" }] }).fedKcalDay, null);
 console.log("foods tests passed (" + FOODS.length + " foods)");

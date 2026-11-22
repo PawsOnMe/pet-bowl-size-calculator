@@ -118,6 +118,13 @@
       cat: "Start at about 70% and aim to lose about 1% a week. Never starve a cat: it can cause hepatic lipidosis." }
   };
   var LOSS_SHARE = { dog: 0.6, cat: 0.7 };   // Merck: start weight loss at 60% of MER for dogs, 70% for cats
+  // The "To lose weight" line, shown when "Working on weight loss" is ticked: that share of the calories a day as the
+  // page shows them, rounded. Food a day and Eats now go by these same numbers.
+  function lossOf(i, kcalLo, kcalHi) {
+    if (!Array.isArray(i.conditions) || i.conditions.indexOf("overweight") < 0) return null;
+    var s = LOSS_SHARE[i.species === "cat" ? "cat" : "dog"];
+    return { share: s, lo: Math.round(kcalLo * s), hi: Math.round(kcalHi * s) };
+  }
   function conditionNotes(species, list) {
     var cat = species === "cat", out = [];
     ["kidney", "liver", "pancreatitis", "lipids", "overweight"].forEach(function (k) {
@@ -285,8 +292,8 @@
     var real = rows.filter(function (r) { return !isWater(r); });
     return real.length === 1 ? real[0] : null;
   }
-  // How much to feed when the meal is one food: calories a day from weight and life stage, then that food's amount.
-  // A broth with known calories takes its share of the day first (its amount x its calories x meals a day).
+  // How much to feed: the calories to feed a day (below), then each food's amount. A broth with known calories takes
+  // its share of the day first (its amount x its calories x meals a day).
   function feedingFoods(i, rows) {
     var w = num(i.weight);
     if (!w) return null;
@@ -295,13 +302,33 @@
     var rer = 70 * Math.pow(kg, 0.75), meals = num(i.mealsPerDay) || 2;
     var res = { rer: Math.round(rer), kcalLo: Math.round(rer * f[0]), kcalHi: Math.round(rer * f[1]), meals: meals };
     var row = oneFood(rows), fd = row ? food(row.id) : null, per = row ? kcalPer(row, fd, i.labelKcal) : null;
+    var broth = 0;
+    rows.forEach(function (r) { if (isWater(r) && num(r.amount)) broth += num(r.amount) * (kcalPer(r, food(r.id)) || 0) * meals; });
+    // Food a day goes by the number on the "To lose weight" line when that line shows, else by the number on the
+    // "Calories a day" line (owner 2026-11-21), the numbers as shown, so each amount can be worked out from the page:
+    // the border collie's 521 to 607 kcal / 369 kcal a cup = 1.41 to 1.64 cups.
+    var ls = lossOf(i, res.kcalLo, res.kcalHi), tLo = ls ? ls.lo : res.kcalLo, tHi = ls ? ls.hi : res.kcalHi;
+    var lo = Math.max(0, tLo - broth), hi = Math.max(0, tHi - broth);
+    var real = rows.filter(function (r) { return !isWater(r); });
     if (per) {
-      var broth = 0;
-      rows.forEach(function (r) { if (isWater(r) && num(r.amount)) broth += num(r.amount) * (kcalPer(r, food(r.id)) || 0) * meals; });
-      var lo = Math.max(0, rer * f[0] - broth), hi = Math.max(0, rer * f[1] - broth);
       var p = row.unit === "g" ? 1 : row.unit === "oz" ? 10 : 100, rd = function (x) { return Math.round(x * p) / p; };
       res.unit = row.unit; res.dayLo = rd(lo / per); res.dayHi = rd(hi / per); res.meal = rd(hi / per / meals);
       res.unitName = unitName(row.unit, fd, res.dayHi);
+    } else if (real.length > 1) {
+      // Two or more foods (owner 2026-11-21): the amounts typed for one meal, in the same mix, scaled up or down to
+      // those calories (a broth's calories taken off first, as above). Each food needs an amount and known calories,
+      // or there is no mix to scale. The example dog: 180 g + 10 g a meal is about 531 kcal a day; to reach about
+      // 671 that is about 227 g + 13 g a meal, 682 g + 38 g a day.
+      var mealKcal = 0, ok = true;
+      real.forEach(function (r) { var k = kcalPer(r, food(r.id)); if (!k || !num(r.amount)) ok = false; else mealKcal += num(r.amount) * k; });
+      if (ok && mealKcal > 0) {
+        var sLo = lo / (mealKcal * meals), sHi = hi / (mealKcal * meals);
+        res.mix = real.map(function (r) {
+          var q = r.unit === "g" ? 1 : r.unit === "oz" ? 10 : 100, rq = function (x) { return Math.round(x * q) / q; }, a = num(r.amount);
+          return { id: r.id, unit: r.unit, dayLo: rq(a * meals * sLo), dayHi: rq(a * meals * sHi), mealLo: rq(a * sLo), mealHi: rq(a * sHi),
+                   unitName: unitName(r.unit, food(r.id), rq(a * meals * sHi)) };
+        });
+      }
     }
     return res;
   }
@@ -369,9 +396,26 @@
       after: dog ? SLED : null };
     var conds = Array.isArray(i.conditions) ? i.conditions : [];
     out.conditionNotes = conditionNotes(sp, conds);
-    if (feed && conds.indexOf("overweight") >= 0) {
-      feed.lossShare = LOSS_SHARE[sp];
-      feed.lossLo = Math.round(feed.kcalLo * LOSS_SHARE[sp]); feed.lossHi = Math.round(feed.kcalHi * LOSS_SHARE[sp]);
+    var lossK = feed ? lossOf(i, feed.kcalLo, feed.kcalHi) : null;
+    if (lossK) { feed.lossShare = lossK.share; feed.lossLo = lossK.lo; feed.lossHi = lossK.hi; }
+    // The takeaway (owner 2026-11-21): what the pet eats now against what it needs, as one of three, so it is plain at a
+    // glance what to change: "increase", "reduce" or "keep". Within about 10% of the target counts as keep, as feeding
+    // amounts are adjusted in steps of about 10% by the pet's weight over time (Today's Veterinary Nurse, Olson 2022).
+    // The target is the weight-loss calories when "Working on weight loss" is ticked, else the calories a day. With one
+    // food of known calories it also gives that food's amount a meal, in its unit; a broth with calories takes its share
+    // of the day first.
+    if (fedKcalDay && feed) {
+      var tLo = feed.lossLo || feed.kcalLo, tHi = feed.lossHi || feed.kcalHi;
+      var tk = { status: fedKcalDay < tLo * 0.9 ? "increase" : fedKcalDay > tHi * 1.1 ? "reduce" : "keep", kcalLo: tLo, kcalHi: tHi, fed: fedKcalDay, loss: !!feed.lossLo };
+      var solo = rows ? oneFood(rows) : null, perU = solo ? kcalPer(solo, food(solo.id), i.labelKcal) : null;
+      if (perU && num(solo.amount)) {
+        var nM = num(i.mealsPerDay) || 2, brothDay = 0;
+        rows.forEach(function (r) { if (isWater(r) && num(r.amount)) brothDay += num(r.amount) * (kcalPer(r, food(r.id)) || 0) * nM; });
+        var pr = solo.unit === "g" ? 1 : solo.unit === "oz" ? 10 : 100, rdU = function (x) { return Math.round(x * pr) / pr; };
+        tk.foodId = solo.id; tk.unit = solo.unit; tk.now = num(solo.amount);
+        tk.mealLo = rdU(Math.max(0, tLo - brothDay) / perU / nM); tk.mealHi = rdU(Math.max(0, tHi - brothDay) / perU / nM);
+      }
+      out.takeaway = tk;
     }
 
     // size: "small" (under 10 kg) or "medium" (10-23 kg), which get the usual elbow rule, "large" (23-45 kg) or "giant"
@@ -428,6 +472,26 @@
       tip("Optional: measure your cat's whisker span, tip to tip, and pick a dish at least that wide.", "holds");   // no Dish width line yet: the bowl's size line
       out.asks.push(out.tips[out.tips.length - 1]);
     }
+    // The meals Food a day recommends (owner 2026-11-21; the advice and its sources are below, with the tips): at least 3
+    // for a puppy or kitten, 2 for a large or giant dog or one losing weight on 1 meal, else the meals typed.
+    var nMeals = num(i.mealsPerDay) || 2;
+    var mealsRec = i.stage === "young" ? Math.max(nMeals, 3) : nMeals === 1 && ((dog && big) || conds.indexOf("overweight") >= 0) ? 2 : nMeals;
+    if (feed && mealsRec !== nMeals) feed.mealsRec = mealsRec;
+    // The bowl holds one meal, worked out after the food and the meals are set (owner 2026-11-20): what is typed for a
+    // meal, or with no amount the food a day / the meals. The same food a day in a third as many meals needs a bowl three
+    // times as big. Changing the meals never changes typed amounts (owner 2026-11-21).
+    // Working on weight loss, the recommendation is the yardstick for the bowl (owner 2026-11-21), and so it is when the
+    // meals advised differ from the meals typed (owner, the same day: a large dog on 1 meal, a kitten on 2): it holds one
+    // meal of Food a day, its high end as shown / the meals Food a day gives, with any water or broth typed for a meal.
+    // The tuxedo cat: 0.48 cups / 2 meals = 0.24 cup a meal, 57 ml, x 2 for a slow feeder = 114 ml, so 150 ml (from the
+    // 1 cup it eats now it was 500 ml). Without a Food a day line (a food's calories not known) it stays with what is typed.
+    if (feed && (feed.lossLo || feed.mealsRec) && rows && (feed.unit || feed.mix)) {
+      var mR = feed.mealsRec || feed.meals, solo1 = oneFood(rows), recMl = 0;
+      (feed.unit ? [{ id: solo1.id, unit: feed.unit, amount: feed.dayHi / mR }]
+        : feed.mix.map(function (m) { return { id: m.id, unit: m.unit, amount: m.dayHi / mR }; }))
+        .concat(rows.filter(isWater)).forEach(function (row) { var ml = rowMl(row); recMl = ml === null || recMl === null ? null : recMl + ml; });
+      if (recMl) { mealMl = recMl; out.mealMl = r1(recMl); out.mealRec = true; }
+    }
     if (mealMl) out.capacityMl = up50(mealMl * (out.slowFeeder ? ROOM.slow : ROOM.regular));
     // Nutrition tips also go in nutritionTips, so a page can show them with the calories
     if (feed) out.nutritionTips.push("These calories are a starting point. Pets can differ by up to 50%, so check body condition every few weeks.");
@@ -462,7 +526,7 @@
     // sentences; the page puts each one's sources before that sentence's full stop.
     // tipStrong: sentences the page shows in bold. The megaesophagus sentence is bold wherever it shows (owner
     // 2026-11-20); its source numbers stay as they are.
-    out.tipSources = {}; out.tipStrong = [];
+    out.tipSources = {}; out.tipStrong = []; out.tipAlso = {};   // tipAlso: other lines a tip is about, for their "*" too
     if (i.regurgitates && size) {
       out.tipSources[MEGA_RAISE] = ["merck-megaesophagus", "hills-megaesophagus"];
       out.tipSources[BLOAT_RAISE] = ["glickman-gdv", "cornell-gdv", "acvs-gdv"];
@@ -476,6 +540,39 @@
     if (i.flatFace) tip("Flat face: a wide, shallow or tilted bowl is easier to eat from.", "tilted");
     if (i.longEars) tip("Long ears: a narrower opening or a tilted bowl keeps the ears out of the food.", "tilted");
     if (dog && i.shortLegs) tip("Short legs, long back: go by the elbow measurement, not by weight. Size charts based on weight don't account for leg length.", "height");
+    // How many meals a day (owner 2026-11-21: advice by age, and for the cases the sources name, as additional advice with
+    // its "*" on Holds at least, the bowl's size line, like the empty-stomach tip: the bowl holds one meal; and on Eats now,
+    // as it is about what the pet eats too, owner the same day; and right after "in N meals" on Food a day, a link to it).
+    // Merck, Feeding Practices in Small Animals: puppies from weaning to 6 months fed three times a day, 6-12 months
+    // twice; small-breed puppies may need more than three. Cornell Feline Health Center: kittens three meals a day until
+    // six months, twice daily from six months to a year, and adults once or twice a day, so no advice for adult cats.
+    // Large and giant dogs on one meal a day: Merck (Gastric Dilation and Volvulus) advises several small meals rather
+    // than one large one for dogs at risk of bloat; Raghavan et al. 2004 (JAAHA, 11 high-risk breeds): the risk rose
+    // with the volume of each meal whatever the number of meals, and was highest with a larger meal once a day. (A newer
+    // Dog Aging Project study, McCord et al. 2026, found no link with the number of meals itself, so the tip is about
+    // each meal's size.) Weight loss on one meal a day: Merck, divide the day's calories into several meals rather than
+    // one large one; in cats, six meals a day did not speed weight loss compared with two (Witzel-Rollins et al. 2022,
+    // 23 cats). Healthy adult dogs of other sizes: once or twice a day is fine (Merck), so no advice.
+    var MEALS_PUPPY = "Puppy: 3 meals a day until about 6 months, then 2 until 12 months; small breeds may need more than 3.",
+      MEALS_KITTEN = "Kitten: 3 meals a day until 6 months, then 2 until a year.",
+      MEALS_BIG = "One meal a day: for a large or giant dog, vets advise 2 or more smaller meals instead.",
+      MEALS_BIG_WHY = "In a study of breeds at risk of bloat, the risk rose with the size of each meal and was highest with one large meal a day.",
+      MEALS_LOSS = "Weight loss: split the day's food into 2 or more meals rather than one large one.",
+      MEALS_LOSS_CATS = "In cats, 6 meals a day didn't speed weight loss compared with 2.";
+    // Food a day is a recommendation, so its "in N meals" says the meals this advice recommends when they differ from
+    // the ones typed (owner 2026-11-21; mealsRec, worked out above, before the bowl). What it eats now stays with the
+    // meals typed; the bowl then holds one meal of what is recommended (above).
+    if (i.stage === "young") {
+      tip(dog ? MEALS_PUPPY : MEALS_KITTEN, "holds"); out.tipAlso[dog ? MEALS_PUPPY : MEALS_KITTEN] = ["food", "eats"];
+      out.tipSources[dog ? MEALS_PUPPY : MEALS_KITTEN] = [dog ? "merck-feeding" : "cornell-cat-meals"];
+    } else if (nMeals === 1 && dog && big) {
+      tip(MEALS_BIG + " " + MEALS_BIG_WHY, "holds"); out.tipAlso[MEALS_BIG + " " + MEALS_BIG_WHY] = ["food", "eats"];
+      out.tipSources[MEALS_BIG] = ["merck-gdv"]; out.tipSources[MEALS_BIG_WHY] = ["raghavan"];
+    } else if (nMeals === 1 && conds.indexOf("overweight") >= 0) {
+      tip(dog ? MEALS_LOSS : MEALS_LOSS + " " + MEALS_LOSS_CATS, "holds"); out.tipAlso[dog ? MEALS_LOSS : MEALS_LOSS + " " + MEALS_LOSS_CATS] = ["food", "eats"];
+      out.tipSources[MEALS_LOSS] = ["merck-obesity"];
+      if (!dog) out.tipSources[MEALS_LOSS_CATS] = ["witzel"];
+    }
 
     // Always end with our bowls: the ones that may fit, then the closest ones and how far each is from the numbers.
     // Never a dead end with no bowl (owner 2026-11-16). The list is there before anything is typed and re-ranks with

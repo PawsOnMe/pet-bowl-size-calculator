@@ -484,3 +484,131 @@ assert.ok(r.energy.levels.some((l) => l.on && l.lo === 1.6 && l.src.includes("fe
 assert.strictEqual(recommend({ species: "cat", weight: 4, stage: "neutered", activity: "working" }).energy.key, "neutered");
 assert.strictEqual(recommend({ species: "cat", weight: 4, stage: "young", activity: "active" }).energy.key, "young");   // kittens go by growth
 console.log("energy and condition tests passed");
+
+// The takeaway under "Eats now" (owner 2026-11-21): what the pet eats against what it needs, "increase", "reduce" or
+// "keep", within about 10% counting as keep (Today's Veterinary Nurse, Olson 2022: amounts adjusted in steps of about 10%)
+{
+  const base = { species: "dog", unit: "cm", stage: "neutered", activity: "usual", mealsPerDay: "3", size: "small", weight: "7.5" };
+  // 7.5 kg neutered: 1.6 x 70 x 7.5^0.75 = 508 kcal; 0.35 cup x 452 kcal x 3 = 475 kcal, 94%: keep, the amount a meal kept
+  let t = recommend(Object.assign({}, base, { foods: [{ id: "purina-pro-plan-small-breed-chicken-rice-dry", amount: "0.35", unit: "cups" }] })).takeaway;
+  assert.deepStrictEqual([t.status, t.fed, t.kcalHi, t.unit, t.now], ["keep", 475, 508, "cups", 0.35]);
+  // working on weight loss: the target is 60% of the calories a day (Merck), 1.3 cups twice a day of 369 kcal is far above
+  t = recommend({ species: "dog", unit: "cm", stage: "neutered", activity: "low", mealsPerDay: "2", size: "medium", weight: "22.5", conditions: ["overweight"],
+    foods: [{ id: "purina-one-lamb-rice-dry", amount: "1.3", unit: "cups" }] }).takeaway;
+  assert.deepStrictEqual([t.status, t.loss, t.kcalLo, t.kcalHi, t.mealLo, t.mealHi], ["reduce", true, 521, 607, 0.71, 0.82]);
+  // two foods: no single amount, so calories a day; 531 of 671 kcal (79%) is more than 10% under: increase
+  t = recommend({ species: "dog", unit: "cm", stage: "intact", activity: "usual", mealsPerDay: "3", weight: "9.3",
+    foods: [{ id: "hills-pd-id-low-fat-can-dog", amount: "180", unit: "g" }, { id: "jffd-turkey-whole-wheat-macaroni", amount: "10", unit: "g" }] }).takeaway;
+  assert.deepStrictEqual([t.status, t.fed, t.kcalHi, t.unit], ["increase", 531, 671, undefined]);
+  // the 10% edges: 90% of the target is still keep, under it is increase; 110% is keep, over it is reduce
+  const at = (kcal) => recommend(Object.assign({}, base, { mealsPerDay: "1", foods: [{ id: "any-dry", amount: String(kcal / 400), unit: "cups" }], labelKcal: "400" })).takeaway.status;
+  assert.deepStrictEqual([at(508 * 0.9 + 1), at(508 * 0.9 - 2), at(508 * 1.1 - 1), at(508 * 1.1 + 2)], ["keep", "increase", "keep", "reduce"]);
+  // nothing to compare without a weight or without amounts
+  assert.strictEqual(recommend(Object.assign({}, base, { weight: "", foods: [{ id: "any-dry", amount: "0.5", unit: "cups" }], labelKcal: "400" })).takeaway, undefined);
+  assert.strictEqual(recommend(Object.assign({}, base, { foods: [{ id: "any-dry", amount: "", unit: "cups" }], labelKcal: "400" })).takeaway, undefined);
+}
+console.log("takeaway tests passed");
+
+// Meals a day advice (owner 2026-11-21): by age, a large or giant dog on one meal, weight loss on one meal; each on
+// Holds at least ("holds"), with its sources; none for healthy adults
+{
+  const meal = (inp) => { const r = recommend(inp); const t = r.tips.filter((x) => /^(Puppy|Kitten|One meal a day|Weight loss: split)/.test(x)); return { t, rows: t.map((x) => r.tipRows[x]), src: r.tipSources }; };
+  let m = meal({ species: "dog", weight: 5, stage: "young", mealsPerDay: 2 });
+  assert.deepStrictEqual(m.t, ["Puppy: 3 meals a day until about 6 months, then 2 until 12 months; small breeds may need more than 3."]);
+  assert.deepStrictEqual([m.rows, m.src[m.t[0]]], [["holds"], ["merck-feeding"]]);
+  assert.deepStrictEqual(recommend({ species: "dog", weight: 5, stage: "young", mealsPerDay: 2 }).tipAlso[m.t[0]], ["food", "eats"]);   // its "*" after "in N meals" and on Eats now too (owner 2026-11-21)
+  m = meal({ species: "cat", weight: 1.5, stage: "young", mealsPerDay: 4 });
+  assert.deepStrictEqual([m.t, m.rows, m.src[m.t[0]]], [["Kitten: 3 meals a day until 6 months, then 2 until a year."], ["holds"], ["cornell-cat-meals"]]);
+  m = meal({ species: "dog", weight: 32, stage: "intact", size: "large", mealsPerDay: 1 });
+  assert.strictEqual(m.t.length, 1); assert.ok(/^One meal a day: for a large or giant dog, vets advise 2 or more smaller meals instead\. In a study of breeds at risk of bloat/.test(m.t[0]));
+  assert.deepStrictEqual([m.src["One meal a day: for a large or giant dog, vets advise 2 or more smaller meals instead."], m.src["In a study of breeds at risk of bloat, the risk rose with the size of each meal and was highest with one large meal a day."]], [["merck-gdv"], ["raghavan"]]);
+  assert.strictEqual(meal({ species: "dog", weight: 60, stage: "neutered", size: "giant", mealsPerDay: 1 }).t.length, 1);
+  assert.strictEqual(meal({ species: "dog", weight: 32, stage: "intact", size: "large", mealsPerDay: 2 }).t.length, 0);   // 2 meals: nothing to add
+  assert.strictEqual(meal({ species: "dog", weight: 8, stage: "neutered", size: "small", mealsPerDay: 1 }).t.length, 0);   // a small adult: once a day is fine
+  assert.strictEqual(meal({ species: "cat", weight: 4, stage: "neutered", mealsPerDay: 1 }).t.length, 0);   // an adult cat: once or twice is fine
+  m = meal({ species: "dog", weight: 22.5, stage: "neutered", size: "medium", mealsPerDay: 1, conditions: ["overweight"] });
+  assert.deepStrictEqual([m.t, m.src[m.t[0]]], [["Weight loss: split the day's food into 2 or more meals rather than one large one."], ["merck-obesity"]]);
+  m = meal({ species: "cat", weight: 6, stage: "neutered", mealsPerDay: 1, conditions: ["overweight"] });
+  assert.deepStrictEqual([m.t, m.src["In cats, 6 meals a day didn't speed weight loss compared with 2."]], [["Weight loss: split the day's food into 2 or more meals rather than one large one. In cats, 6 meals a day didn't speed weight loss compared with 2."], ["witzel"]]);
+  assert.strictEqual(meal({ species: "dog", weight: 22.5, stage: "neutered", size: "medium", mealsPerDay: 2, conditions: ["overweight"] }).t.length, 0);
+  m = meal({ species: "dog", weight: 32, stage: "neutered", size: "large", mealsPerDay: 1, conditions: ["overweight"] });   // one tip, not two saying the same
+  assert.deepStrictEqual(m.t.map((x) => x.slice(0, 14)), ["One meal a day"]);
+  m = meal({ species: "dog", weight: 20, stage: "young", size: "large", mealsPerDay: 1 });   // a puppy gets the puppy advice
+  assert.deepStrictEqual(m.t.map((x) => x.slice(0, 6)), ["Puppy:"]);
+}
+console.log("meal advice tests passed");
+
+// Food a day for two or more foods (owner 2026-11-21): the typed mix scaled to the calories a day
+{
+  const exDog = { species: "dog", unit: "cm", weight: 9.3, stage: "intact", activity: "usual", mealsPerDay: 3,
+    foods: [{ id: "hills-pd-id-low-fat-can-dog", amount: "180", unit: "g" }, { id: "jffd-turkey-whole-wheat-macaroni", amount: "10", unit: "g" }] };
+  let mix = recommend(exDog).feeding.mix;
+  assert.deepStrictEqual(mix.map((m) => [m.id, m.dayLo, m.dayHi, m.mealHi, m.unitName]), [["hills-pd-id-low-fat-can-dog", 682, 682, 227, "g"], ["jffd-turkey-whole-wheat-macaroni", 38, 38, 13, "g"]]);
+  assert.strictEqual(recommend(exDog).feeding.unit, undefined);   // not the one-food line
+  mix = recommend(Object.assign({}, exDog, { stage: "neutered", activity: "low" })).feeding.mix;   // a range of calories: a range of amounts
+  // 447 to 522 kcal, the numbers the page shows; one meal as typed is 177.07 kcal: 180 g x 447 / 177.07 = 454 g ... 531 g
+  assert.deepStrictEqual(mix.map((m) => [m.dayLo, m.dayHi]), [[454, 531], [25, 29]]);
+  assert.strictEqual(recommend(Object.assign({}, exDog, { foods: [exDog.foods[0], { id: exDog.foods[1].id, amount: "", unit: "g" }] })).feeding.mix, undefined);   // an amount missing: no mix
+  assert.strictEqual(recommend(Object.assign({}, exDog, { foods: [exDog.foods[0], { id: "any-dry", amount: "0.2", unit: "cups" }] })).feeding.mix, undefined);   // calories unknown: no mix
+  assert.ok(recommend(Object.assign({}, exDog, { foods: [exDog.foods[0]] })).feeding.unit);   // one food: the one-food line as before
+}
+console.log("mixed food a day tests passed");
+
+// Food a day is a recommendation (owner 2026-11-21): the weight-loss calories when losing weight, the meals advised
+{
+  const tux = { species: "cat", unit: "cm", weight: 6.4, stage: "neutered", activity: "low", mealsPerDay: 1, elbow: 13, whisker: 14, fastEater: true, conditions: ["overweight"],
+    foods: [{ id: "purina-cat-chow-complete", amount: "1", unit: "cups" }] };
+  let f = recommend(tux).feeding;
+  assert.deepStrictEqual([f.lossLo, f.dayLo, f.dayHi, f.meals, f.mealsRec], [197, 0.48, 0.48, 1, 2]);   // 197 kcal / 411 a cup, in 2 meals
+  f = recommend(Object.assign({}, tux, { conditions: [] })).feeding;   // not losing weight: the calories a day, the meals typed
+  assert.deepStrictEqual([f.dayLo, f.mealsRec], [0.69, undefined]);
+  f = recommend({ species: "dog", unit: "cm", weight: 32, stage: "intact", activity: "usual", mealsPerDay: 1, size: "large", foods: [{ id: "purina-pro-plan-sensitive-salmon-rice-dry", amount: "3.75", unit: "cups" }] }).feeding;
+  assert.strictEqual(f.mealsRec, 2);   // a large dog on 1 meal: 2 advised
+  f = recommend({ species: "cat", unit: "cm", weight: 2, stage: "young", activity: "usual", mealsPerDay: 2, labelKcal: "420", foods: [{ id: "any-dry", amount: "0.2", unit: "cups" }] }).feeding;
+  assert.strictEqual(f.mealsRec, 3);   // a kitten on 2 meals: 3 advised
+  f = recommend({ species: "cat", unit: "cm", weight: 2, stage: "young", activity: "usual", mealsPerDay: 4, labelKcal: "420", foods: [{ id: "any-dry", amount: "0.2", unit: "cups" }] }).feeding;
+  assert.strictEqual(f.mealsRec, undefined);   // already 4: as typed
+  // Food a day goes by the number on the "To lose weight" line when that line shows, else by the number on the "Calories
+  // a day" line (owner 2026-11-21), the numbers as shown: the border collie, 521 to 607 kcal / 369 a cup = 1.41 to 1.64
+  const bc = { species: "dog", unit: "cm", weight: 22.5, stage: "neutered", activity: "low", senior: true, mealsPerDay: 2, size: "medium", conditions: ["overweight"],
+    foods: [{ id: "purina-one-lamb-rice-dry", amount: "1.3", unit: "cups" }] };
+  f = recommend(bc).feeding;
+  assert.deepStrictEqual([f.kcalLo, f.kcalHi, f.lossLo, f.lossHi, f.dayLo, f.dayHi], [868, 1012, 521, 607, 1.41, 1.64]);
+  f = recommend(Object.assign({}, bc, { conditions: [] })).feeding;   // no "To lose weight" line: 868 to 1012 / 369 = 2.35 to 2.74
+  assert.deepStrictEqual([f.lossLo, f.dayLo, f.dayHi], [undefined, 2.35, 2.74]);
+  // and for any pet and food, Food a day = the number shown / the food's calories, and the same numbers as Eats now's target
+  [bc, Object.assign({}, bc, { conditions: [] }), tux, Object.assign({}, tux, { conditions: [] }), Object.assign({}, bc, { weight: 31.7 }), Object.assign({}, tux, { weight: 5.1, species: "cat" })].forEach((p) => {
+    const r = recommend(p), fd = r.feeding, lo = fd.lossLo || fd.kcalLo, hi = fd.lossHi || fd.kcalHi, per = p.species === "cat" ? 411 : 369;
+    assert.deepStrictEqual([fd.dayLo, fd.dayHi, r.takeaway.kcalLo, r.takeaway.kcalHi], [Math.round(lo / per * 100) / 100, Math.round(hi / per * 100) / 100, lo, hi]);
+  });
+  // Working on weight loss, the bowl goes by the recommendation (owner 2026-11-21): one meal of Food a day, its high end
+  // as shown / the meals Food a day gives, with any water or broth typed for a meal; what it eats now stays as typed
+  let r = recommend(tux);   // 0.48 cups / 2 = 0.24 cup = 56.8 ml, x 2 for a slow feeder = 113.6, so 150 ml
+  assert.deepStrictEqual([r.mealMl, r.capacityMl, r.mealRec, r.fedKcalDay], [56.8, 150, true, 411]);
+  r = recommend(Object.assign({}, tux, { conditions: [] }));   // not losing weight: the 1 cup typed, 236.6 x 2 = 473.2, so 500
+  assert.deepStrictEqual([r.mealMl, r.capacityMl, r.mealRec], [236.6, 500, undefined]);
+  r = recommend(Object.assign({}, tux, { foods: [{ id: "purina-cat-chow-complete", amount: "", unit: "cups" }] }));   // no amount typed: the same
+  assert.deepStrictEqual([r.mealMl, r.capacityMl], [56.8, 150]);
+  r = recommend(bc);   // 1.64 cups / 2 = 0.82 cup = 194 ml, x 1.5 = 291, so 300 ml (from the 1.3 cups typed it was 500)
+  assert.deepStrictEqual([r.mealMl, r.capacityMl, r.fedKcalDay], [194, 300, 959]);
+  assert.deepStrictEqual(recommend(Object.assign({}, bc, { conditions: [] })).capacityMl, 500);
+  const exDogLoss = { species: "dog", unit: "cm", weight: 9.3, stage: "intact", activity: "usual", mealsPerDay: 3, fastEater: true, conditions: ["overweight"],
+    foods: [{ id: "hills-pd-id-low-fat-can-dog", amount: "180", unit: "g" }, { id: "jffd-turkey-whole-wheat-macaroni", amount: "10", unit: "g" }] };
+  r = recommend(exDogLoss);   // two foods: 410 g + 23 g a day / 3 meals = 136.7 ml + 10.3 ml = 146.9 ml, x 2 = 293.9, so 300 ml
+  assert.deepStrictEqual([r.feeding.lossHi, r.feeding.mix.map((m) => m.dayHi), r.mealMl, r.capacityMl], [403, [410, 23], 146.9, 300]);
+  r = recommend(Object.assign({}, exDogLoss, { foods: exDogLoss.foods.concat([{ id: "water", amount: "60", unit: "g" }]) }));   // 60 ml of water a meal stays in
+  assert.deepStrictEqual([r.mealMl, r.capacityMl], [206.9, 450]);
+  // and when the meals advised differ from the meals typed (owner 2026-11-21): a large dog with its whole day, 3.75 cups,
+  // in 1 meal: 3.78 cups / 2 = 1.89 cups = 447.2 ml, x 1.5 = 670.8, so 700 ml (from the 3.75 cups typed it was 1350)
+  const bigDog = { species: "dog", unit: "cm", weight: 32, stage: "intact", activity: "usual", mealsPerDay: 1, size: "large", foods: [{ id: "purina-pro-plan-sensitive-salmon-rice-dry", amount: "3.75", unit: "cups" }] };
+  r = recommend(bigDog);
+  assert.deepStrictEqual([r.feeding.dayHi, r.feeding.mealsRec, r.mealMl, r.capacityMl, r.mealRec], [3.78, 2, 447.2, 700, true]);
+  assert.strictEqual(recommend(Object.assign({}, bigDog, { mealsPerDay: 2 })).capacityMl, 1350);   // 2 meals as advised: what is typed, 3.75 cups a meal
+  // a kitten on 2 meals: 0.84 cups / 3 = 0.28 cup = 66.2 ml, x 2 for a slow feeder = 132.5, so 150 ml (the 0.2 cup typed: 100)
+  const kit2 = { species: "cat", unit: "cm", weight: 2, stage: "young", activity: "usual", mealsPerDay: 2, labelKcal: "420", fastEater: true, foods: [{ id: "any-dry", amount: "0.2", unit: "cups" }] };
+  r = recommend(kit2);
+  assert.deepStrictEqual([r.feeding.dayHi, r.feeding.mealsRec, r.mealMl, r.capacityMl], [0.84, 3, 66.2, 150]);
+  r = recommend(Object.assign({}, kit2, { mealsPerDay: 4 }));   // already 4 meals, nothing to follow: what is typed
+  assert.deepStrictEqual([r.mealMl, r.capacityMl, r.mealRec], [47.3, 100, undefined]);
+}
+console.log("food a day recommendation tests passed");

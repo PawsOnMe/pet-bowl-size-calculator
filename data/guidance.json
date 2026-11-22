@@ -49,7 +49,7 @@
     {
       "id": "capacity",
       "applies_to": "dogs and cats",
-      "rule": "At least 1.5 x the meal volume, 2 x for a slow feeder; 1 US cup = 236.6 ml",
+      "rule": "At least 1.5 x the meal volume, 2 x for a slow feeder; 1 US cup = 236.6 ml. The meal is what is typed for one meal; working on weight loss, or when the meals advised differ from the meals typed, one meal of Food a day (its high end) divided by the meals Food a day gives, plus any water or broth typed for a meal",
       "evidence": "rule of thumb"
     },
     {
@@ -140,6 +140,27 @@
         "https://www.merckvetmanual.com/nervous-system/motion-sickness/overview-of-motion-sickness",
         "https://pubmed.ncbi.nlm.nih.gov/27008323/"
       ]
+    },
+    {
+      "id": "meals-a-day",
+      "applies_to": "puppies and kittens; large and giant dogs fed once a day; pets on weight loss fed once a day",
+      "rule": "Puppies: 3 meals a day until about 6 months, then 2 until 12 months; small breeds may need more than 3. Kittens: 3 until 6 months, then 2 until a year. A large or giant dog on 1 meal a day: 2 or more smaller meals. Weight loss on 1 meal a day: 2 or more meals rather than one large one. Healthy adult dogs and cats: once or twice a day is fine, no advice. Shown as additional advice on the bowl's size line (the bowl holds one meal)",
+      "evidence": "Merck Veterinary Manual (Feeding Practices in Small Animals; Gastric Dilation and Volvulus in Small Animals; Nutrition in Disease Management) and the Cornell Feline Health Center: expert advice; Raghavan et al., JAAHA 2004, case-control study within 11 high-risk breeds: bloat risk rose with the volume of each meal whatever the number of meals, and was highest with a larger meal once a day; Witzel-Rollins et al., JFMS 2022, 23 obese cats: 6 meals a day did not speed weight loss compared with 2; a newer Dog Aging Project study (McCord et al., JAVMA 2026) found no link between the number of meals itself and bloat, so the advice is about each meal's size",
+      "sources": [
+        "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/feeding-practices-in-small-animals",
+        "https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/how-often-should-you-feed-your-cat",
+        "https://www.merckvetmanual.com/digestive-system/surgical-problems-of-the-gastrointestinal-tract-in-small-animals/gastric-dilation-and-volvulus-in-small-animals",
+        "https://pubmed.ncbi.nlm.nih.gov/15131099/",
+        "https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/nutrition-in-disease-management-in-small-animals",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10812286/",
+        "https://pubmed.ncbi.nlm.nih.gov/41349220/"
+      ]
+    },
+    {
+      "id": "food-a-day",
+      "applies_to": "a result with a weight and a food whose calories are known",
+      "rule": "What to feed: the number on the To lose weight line when that line shows (working on weight loss), else the number on the Calories a day line, as shown, a broth's calories taken off first. One food: those calories divided by its calories per cup, gram, ounce or can. Two or more foods: the amounts typed for one meal, in the same ratio, scaled up or down to those calories, food by food, ending \"in N meals, if keeping the current ratio of your N kinds of main food per meal.\"; it needs an amount and known calories for each food. Its meals are the meals advised when the meals advice differs from the meals typed",
+      "evidence": "arithmetic on the calories a day (see daily-calories) and the makers' calorie figures (foods.js)"
     }
   ]
 }

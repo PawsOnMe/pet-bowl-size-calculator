@@ -7,8 +7,8 @@
 <meta name="description" content="Free nutrition calculator for dogs of any breed or mix, and cats: daily calories and how much to feed for dry, wet, fresh or freeze-dried food, plus the right bowl height and size. Sources cited. Made by PawsOnMe.">
 <link rel="canonical" href="https://pawsonme.github.io/pet-bowl-size-calculator/">
 <style>
-:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6;--yellow:#8a6100;--scrim:rgba(42,38,34,.52)}
-@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f;--yellow:#f2c94c;--scrim:rgba(0,0,0,.62)}}
+:root{--bg:#fffaf3;--card:#fff;--ink:#2a2622;--muted:#6b625a;--line:#eadfd2;--accent:#6f5aa8;--accent-soft:#efeafb;--hl:#ebe4fd;--on-accent:#fff;--warn:#8f4317;--warn-soft:#fdf0e6;--yellow:#8a6100;--scrim:rgba(42,38,34,.52)}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--card:#262321;--ink:#f3ede6;--muted:#b5aba0;--line:#3a3532;--accent:#b7a6f0;--accent-soft:#2e2a3d;--hl:#3d3558;--on-accent:#1c1a18;--warn:#f0a774;--warn-soft:#3a2a1f;--yellow:#f2c94c;--scrim:rgba(0,0,0,.62)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:720px;margin:0 auto;padding:24px 16px 48px}
@@ -118,7 +118,7 @@ html.zoom,html.zoom body{overflow:hidden}
 html.zoom .jump{z-index:50;transform:translateY(100%);pointer-events:none}
 html.zoom.zon .jump{transform:none;pointer-events:auto}
 .ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
-/* While the link reads "Clear & hide the example" (owner 2026-11-20), it and its three-dot button wrap together: at
+/* While the link reads "Clear example & start over" (owner 2026-11-21; before, "Clear & hide the example"), it and its three-dot button wrap together: at
    430 px wide the button alone fell to the next line. Only that state changes (owner 2026-11-20); "Show a filled-in
    example" wraps as it always did. */
 .exw.on{white-space:nowrap}
@@ -180,6 +180,16 @@ table.rer tr.on td{background:var(--accent-soft);font-weight:600}
    lines (owner 2026-11-20: as a bullet of its own it looked like something unrelated). The asterisk is drawn by CSS,
    so the label still reads "Bowl height". */
 dt.ast::after{content:"*";content:"*"/""}
+/* The link after "in N meals" to the meals advice (owner 2026-11-21): a hollow pill, an "i" in a circle at its front with
+   room to the border, then "Change noted" in smaller type, as a "*" and then an "ⓘ" were too easy to miss. Above the
+   pencil's wide tap area, and easier to tap than it looks. */
+a.minfo{position:relative;z-index:1;display:inline-block;padding:0 8px 0 4px;border:1.5px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:.72em;font-weight:600;line-height:1.45;vertical-align:baseline;white-space:nowrap}   /* its words on the line's baseline (owner 2026-11-21) */
+a.minfo::after{content:"";position:absolute;inset:-9px -4px}
+a.minfo svg{width:1.3em;height:1.3em;margin-right:4px;vertical-align:-.32em;fill:none;stroke:currentColor;stroke-width:2}
+#adv-meals{scroll-margin:24px 0 120px}
+/* The first sentence a link on the page jumped to (owner 2026-11-21): a light purple background until a tap elsewhere.
+   The text on it stays 9:1 or more, and the purple links in it 4.6:1 (light) and 5.2:1 (dark). */
+.hl{background:var(--hl);box-shadow:0 0 0 2px var(--hl);border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .fn.note{margin-top:12px}
 /* "* Additional advice" ends in a thin grey line out to the right edge, like a separator, easier to read (owner
    2026-11-20). The elbow note of the empty result has none (owner 2026-11-20). The line starts right after the
@@ -234,6 +244,19 @@ a.goto.edit path{stroke-width:1.9}
 .field{scroll-margin-top:12px}
 #foodRows .frow{scroll-margin-top:44px}   /* leaves room for "Food per meal" above the first food */
 .caution{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0 0}
+/* The takeaway (owner 2026-11-21): a small pill under the words "Eats now", in the space the label column leaves while
+   the line beside it wraps, saying what to do at a glance: can increase (green), can reduce (orange) or keep (teal), a
+   small icon in front. Soft gradients after the shop's pastel ceramics, checked here: the
+   words at 5.5:1 contrast or more on both ends of every gradient, the icons 3.7:1 or more, in light and dark. It sits
+   out of the label column's width, so a wide pill never squeezes the lines beside it on a small phone. */
+dt.hastake{position:relative;padding-bottom:30px}   /* room for the pill under the words, even when the line beside them is short */
+.take{position:absolute;left:0;top:calc(1.55rem + 6px);display:flex;align-items:center;gap:4px;width:max-content;box-sizing:border-box;margin:0;padding:3px 9px 3px 7px;border-radius:999px;font-size:.78rem;line-height:1.35;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.take svg{flex:none;width:13px;height:13px;fill:none;stroke:var(--tki);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.take b{font-weight:700}
+.take-increase{background:linear-gradient(90deg,#e7f3e5,#d5ead7);color:#285b39;--tki:#397a4b}
+.take-reduce{background:linear-gradient(90deg,#fff0e3,#fbe1cd);color:#8f4317;--tki:#b45d29}
+.take-keep{background:linear-gradient(90deg,#e3f3ef,#cfebe6);color:#22635e;--tki:#327f77}
+@media (prefers-color-scheme:dark){.take{box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}.take-increase{background:linear-gradient(90deg,#293a2e,#344a37);color:#a7dead;--tki:#91d09c}.take-reduce{background:linear-gradient(90deg,#3c2b24,#50362a);color:#f5bb91;--tki:#e9a575}.take-keep{background:linear-gradient(90deg,#243b39,#2b4b47);color:#a0e3da;--tki:#85d0c5}}
 .tips{margin:12px 0 0;padding-left:20px}
 .ours{background:var(--accent-soft);border-radius:10px;padding:12px;margin-top:14px}
 .ours p{margin:0}.ours ul{margin:8px 0;padding-left:20px}.ours span{color:var(--muted);font-size:.92rem}
@@ -499,6 +522,11 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <li data-src="acvs-gdv">Robbins. Surgery STAT: Prevent gastric dilatation volvulus with laparoscopic assisted gastropexy. SurgerySTAT, a column of the American College of Veterinary Surgeons and DVM Newsmagazine, 2009. <a href="https://www.dvm360.com/view/surgery-stat-prevent-gastric-dilatation-volvulus-with-laparoscopic-assisted-gastropexy">dvm360</a></li>
 <li data-src="wdj-elevated">Bailey J. All About Elevated Dog Bowls. Whole Dog Journal, 2022. <a href="https://www.whole-dog-journal.com/lifestyle/dog-gear/all-about-elevated-dog-bowls/">Article</a></li>
 <li data-src="hills-megaesophagus">Wooten S. Managing Megaesophagus in Dogs. Hill's Pet Nutrition, 2020. <a href="https://www.hillspet.com/dog-care/healthcare/megaesophagus-in-dogs">Hill's</a></li>
+<li data-src="merck-feeding">Sanderson SL. Feeding Practices in Small Animals. Merck Veterinary Manual, updated 2024. <a href="https://www.merckvetmanual.com/management-and-nutrition/nutrition-small-animals/feeding-practices-in-small-animals">Merck</a></li>
+<li data-src="cornell-cat-meals">Cornell Feline Health Center. How often should you feed your cat? Cornell University College of Veterinary Medicine. <a href="https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/how-often-should-you-feed-your-cat">Cornell</a></li>
+<li data-src="merck-gdv">Winkler KP. Gastric Dilation and Volvulus in Small Animals. Merck Veterinary Manual, 2025. <a href="https://www.merckvetmanual.com/digestive-system/surgical-problems-of-the-gastrointestinal-tract-in-small-animals/gastric-dilation-and-volvulus-in-small-animals">Merck</a></li>
+<li data-src="raghavan">Raghavan M, et al. Diet-related risk factors for gastric dilatation-volvulus in dogs of high-risk breeds. Journal of the American Animal Hospital Association, 2004. <a href="https://pubmed.ncbi.nlm.nih.gov/15131099/">PubMed</a></li>
+<li data-src="witzel">Witzel-Rollins A, et al. Evaluation of a pet-separating automatic feeder and high-frequency meal feeding for weight loss in multi-cat households. Journal of Feline Medicine and Surgery, 2022. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10812286/">PMC</a></li>
 </ol>
 </details>
 </section>
@@ -795,6 +823,48 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   window.addEventListener("hashchange", function () {   // an address typed or pasted while the list was folded
     var was = srcList && srcList.open, li = openSource(location.hash);
     if (li && !was) li.scrollIntoView({ block: "start" });
+    if (li) mark(li, true);
+  });
+  // A link that jumps to text on the page, the "Change noted" pill after "in N meals" or a source number, marks where it lands (owner
+  // 2026-11-21, as a rule for every such link): the first sentence there gets a light purple background, so it is plain
+  // what the link points at, also when the page can't scroll that text up to the top. A tap anywhere that isn't a link,
+  // button or box takes it away. The pencils and arrows go to a box to fill in, so they don't mark anything.
+  var hlOn = [];
+  function unmark() {
+    hlOn.forEach(function (sp) { var p = sp.parentNode; if (!p) return; while (sp.firstChild) p.insertBefore(sp.firstChild, sp); p.removeChild(sp); p.normalize(); });
+    hlOn = [];
+  }
+  // Where the first sentence ends: at the first ".", "!" or "?" followed by a space or the end, but not after "e.g",
+  // "et al" and the like, nor, in a source, after an author's initials ("Sanderson SL. Feeding Practices ...").
+  function sentenceEnd(text, start, cite) {
+    var re = /[.!?](?=\s|$)/g, m;
+    re.lastIndex = start;
+    while ((m = re.exec(text))) {
+      var before = text.slice(start, m.index);
+      if (/(?:\be\.g|\bi\.e|\bet al|\bvs|\betc|\bapprox|\bcf)$/.test(before)) continue;
+      if (cite && /(?:^|[\s,])[A-Z]{1,2}$/.test(before)) continue;
+      return m.index + 1;
+    }
+    return text.length;
+  }
+  function mark(el, cite) {
+    unmark();
+    if (!el) return;
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), parts = [], t, text = "";
+    while ((t = w.nextNode())) { parts.push([t, text.length]); text += t.nodeValue; }
+    var start = text.length - text.replace(/^\s+/, "").length, end = sentenceEnd(text, start, cite);
+    parts.forEach(function (x) {
+      var node = x[0], a = Math.max(start - x[1], 0), b = Math.min(end - x[1], node.nodeValue.length);
+      if (b <= a) return;
+      if (b < node.nodeValue.length) node.splitText(b);
+      var mid = a > 0 ? node.splitText(a) : node, sp = document.createElement("span");
+      sp.className = "hl"; mid.parentNode.insertBefore(sp, mid); sp.appendChild(mid); hlOn.push(sp);
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a.minfo, a.cite");
+    if (a) { mark(document.getElementById(a.getAttribute("href").slice(1)), a.classList.contains("cite")); return; }
+    if (hlOn.length && !(e.target.closest && e.target.closest("a, button, input, select, textarea, label, summary, [role=button], [tabindex]"))) unmark();
   });
   // Where a box still needs filling in, the line in the result ends in a small round button with an arrow up (owner
   // 2026-11-20). A tap scrolls up to that box, like the bottom bar does to the result, and puts the cursor in it.
@@ -887,6 +957,13 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
       '<li><svg viewBox="0 0 18 18" aria-hidden="true"><rect class="band" x="1" y="5" width="16" height="8"/><path class="gd" style="stroke-dasharray:3 2;stroke-width:1.6" d="M1 5h16M1 13h16"/></svg><span>The top edge should land in this band: from the elbow height down to ' + less + " lower.</span></li></ul>" +
       (mine ? "<p>" + mine + "</p>" : "") + "</div>";
   }
+  // The takeaway pill (owner 2026-11-21): the status alone, in bold after its icon, so it fits under the words "Eats now"
+  // (owner, the same day); the amounts are in the lines above it.
+  var TK = { increase: ["Can increase", '<path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/>'], reduce: ["Can reduce", '<path d="M8 3v10M3.5 8.5L8 13l4.5-4.5"/>'],
+    keep: ["Keep", '<path d="M3 8.5l3.2 3.2L13 4.8"/>'] };
+  function takeaway(t) {
+    return '<span class="take take-' + t.status + '"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + TK[t.status][1] + "</svg><b>" + TK[t.status][0] + "</b></span>";
+  }
   var lastHtml = null, howhShut = false;   // "How the bowl height is worked out" closed by a tap
   function render() {
     syncActivity();
@@ -907,22 +984,62 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     // The empty result: no number yet (the same test as the purple "Your numbers"). Its "*" note says how to measure the
     // elbow; the "* Additional advice" bullets only come with a real result. The two never show together (owner 2026-11-20).
     var empty = !((r.energy && r.energy.rer) || r.feeding || r.fedKcalDay || (r.height && +v.elbow > 0) || r.minWidthCm || r.capacityMl);
-    var h = '<h2>Your numbers <span class="sub"><span class="dash">- </span>Results tailored for you <span aria-hidden="true">💛</span></span></h2><h3>Nutrition</h3><dl>';
+    // The bullets under the bowl are additional advice from what was ticked, with a grey "* Additional advice" line right
+    // over them like the elbow note. Each bullet's "*" goes on the Bowl line it is about, never by default on Slow feeder
+    // (owner 2026-11-20): "Older or stiff" on Bowl height, "Eats very fast" on Slow feeder, a flat face or long ears on
+    // Tilted bowl, and so on (tipRows in bowlfit.js). The meals-a-day advice also stars Eats now (owner 2026-11-21: it is
+    // about what the pet eats too, and the star tells the reader to look down at the advice; tipAlso in bowlfit.js), when
+    // that line shows. The bullets also go in the order of their starred lines, top to bottom: the first bullet is about
+    // the first starred line, the second about the second (owner 2026-11-20), a bullet by its top starred line; two
+    // about the same line keep their order. Worked out here, before the lines, so Eats now can get its "*".
+    var nt = r.nutritionTips || [];
+    // The meals advice also puts a link right after "in N meals" on Food a day, to its bullet (owner 2026-11-21): a hollow
+    // pill, "i" and "Change noted", as a "*" and then an "ⓘ" were too easy to miss (owner, the same day); the "*" after a
+    // line's name, which isn't a link, stays.
+    var LINES = ["food", "eats", "height", "width", "holds", "slow", "tilted"];
+    function linesOf(t) {
+      var k = (r.tipRows || {})[t] || "holds";
+      if ((k === "width" && !r.minWidthCm) || (k === "tilted" && !r.tilted)) k = "holds";   // a line not shown: the bowl's size line
+      return ((r.tipAlso || {})[t] || []).filter(function (x) { return x === "eats" ? !!r.fedKcalDay : x === "food" ? !!(r.feeding && (r.feeding.unit || r.feeding.mix)) : true; }).concat([k]);
+    }
+    function lineOf(t) { return linesOf(t).sort(function (a, b) { return LINES.indexOf(a) - LINES.indexOf(b); })[0]; }
+    var bt = empty ? [] : r.tips.filter(function (t) { return nt.indexOf(t) < 0 && t !== r.elbowAsk; })   // the elbow note is its own line
+      .map(function (t, k) { return [t, k]; })
+      .sort(function (a, b) { return LINES.indexOf(lineOf(a[0])) - LINES.indexOf(lineOf(b[0])) || a[1] - b[1]; })
+      .map(function (x) { return x[0]; });
+    var star = {};
+    bt.forEach(function (t) { linesOf(t).forEach(function (k) { star[k] = 1; }); });
+    var h = '<h2>Your numbers <span class="sub"><span class="dash">- </span>Results tailored for you <span aria-hidden="true">💛</span></span></h2><h3>Nutrition recommendation</h3><dl>';
     var fd = r.feeding, rng = function (a, b) { return a === b ? "about " + b : a + " to " + b; };
     // Nutrition first: what the pet needs, how much to feed, what it eats now; then the bowl
     // Resting energy and the factor behind the calories, then a table of every level with its calories for this
     // pet, the level in use highlighted; then what any ticked health conditions mean for feeding (owner 2026-11-16).
     var en = r.energy, rerSay = en && en.rer ? " (" + fx(en.lo, en.hi) + "&nbsp;×&nbsp;RER for " + esc(en.basis) + ")" : "";
     if (en && en.rer) n++;
-    if (en && en.rer) h += "<dt>Resting energy</dt><dd>" + edit(en.rer + " kcal a day, what a pet burns at rest: 70&nbsp;×&nbsp;(" + en.kg + "&nbsp;kg)<sup>0.75</sup>", ["weight", "Change the weight"]) + "</dd>";
+    if (en && en.rer) h += "<dt>Resting energy</dt><dd>" + edit(en.rer + " kcal a day, what a pet burns at rest: 70&nbsp;× (" + en.kg + "&nbsp;kg)<sup>0.75</sup>", ["weight", "Change the weight"]) + "</dd>";
     if (fd) n++;
     h += "<dt>Calories a day</dt><dd>" + (fd ? edit(rng(fd.kcalLo, fd.kcalHi) + " kcal" + rerSay, ["weight", "Change the weight"]) : need("Add your pet's weight.", ["weight", "Go to the weight"])) + "</dd>";
     if (fd && fd.lossLo) n++;
     if (fd && fd.lossLo) h += "<dt>To lose weight</dt><dd>" + edit(rng(fd.lossLo, fd.lossHi) + " kcal a day, " + Math.round(fd.lossShare * 100) + "% of that", ["condOverweight", "Change Working on weight loss"]) + "</dd>";
-    if (fd && fd.unit) n++;
-    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + edit(rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + " in " + fd.meals + " meals", foodEdit("food")) + "</dd>";
+    // "in 1 meal", not "1 meals" (owner's screenshot, 2026-11-21); the pill after it links to the meals advice (owner 2026-11-21).
+    // A space before the pill, so it can go to the next line with the pencil; "Change noted" itself never splits.
+    // Food a day is a recommendation: the meals the advice recommends when they differ from the ones typed (owner 2026-11-21)
+    var mealsFd = fd ? fd.mealsRec || fd.meals : 0;
+    var inMeals = fd ? " in " + mealsFd + (mealsFd === 1 ? " meal" : " meals") + (star.food ? ' <a class="minfo" href="#adv-meals" aria-label="Change noted: the meals a day advice, below"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 10.8v6"/><circle cx="12" cy="7.4" r="1.2" fill="currentColor" stroke="none"/></svg>Change&nbsp;noted</a>' : "") : "";
+    if (fd && (fd.unit || fd.mix)) n++;
+    if (fd && fd.unit) h += "<dt>Food a day</dt><dd>" + edit(rng(fd.dayLo, fd.dayHi) + " " + esc(fd.unitName) + inMeals, foodEdit("food")) + "</dd>";
+    // Two or more foods: the same mix as typed, scaled to the calories Food a day goes by (owner 2026-11-21), food by food
+    // in the order typed, then the owner's wording (2026-11-21): "about ... in X meals, if keeping the current ratio of
+    // your 2 kinds of main food per meal."
+    else if (fd && fd.mix) {
+      var same = fd.mix.every(function (m) { return m.dayLo === m.dayHi; });
+      h += "<dt>Food a day</dt><dd>" + edit((same ? "about " : "") + fd.mix.map(function (m) { return (same ? m.dayHi : m.dayLo + " to " + m.dayHi) + " " + esc(m.unitName); }).join(" + ") +
+        inMeals + ", if keeping the current ratio of your " + fd.mix.length + " kinds of main food per meal.", foodEdit("food")) + "</dd>";
+    }
     if (r.fedKcalDay) n++;
-    if (r.fedKcalDay) h += "<dt>Eats now</dt><dd>" + edit("About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
+    if (r.fedKcalDay) h += (r.takeaway ? '<dt class="hastake' + (star.eats ? " ast" : "") + '">Eats now' + takeaway(r.takeaway) : "<dt" + (star.eats ? ' class="ast"' : "") + ">Eats now") + "</dt><dd>" + edit("About " + r.fedKcalDay + " kcal a day" + (fd ? (fd.kcalLo === fd.kcalHi ? ", " + Math.round(r.fedKcalDay / fd.kcalHi * 100) + "% of the estimate" : "; the estimate is " + fd.kcalLo + " to " + fd.kcalHi) : "") +
+      // with a To lose weight line, the Calories a day comparison first, then the share of the weight-loss calories (owner 2026-11-21)
+      (fd && fd.lossLo ? ", " + (fd.lossLo === fd.lossHi ? Math.round(r.fedKcalDay / fd.lossHi * 100) : Math.round(r.fedKcalDay / fd.lossHi * 100) + " to " + Math.round(r.fedKcalDay / fd.lossLo * 100)) + "% of the weight-loss calories" : "") +
       (en && en.fedTimesRer ? " (" + en.fedTimesRer.toFixed(1) + "&nbsp;×&nbsp;RER)" : ""), foodEdit("amount")) + "</dd>";
     h += "</dl>";
     // The detail stays folded until tapped (owner 2026-11-16): the table of levels, the health notes and the tips.
@@ -945,26 +1062,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     var cn = r.conditionNotes || [];
     if (cn.length) h += fold("health", "Health notes (" + cn.length + ")", '<div class="conds">' + cn.map(function (c) { return "<p><strong>" + esc(c.title) + ":</strong> " + cite(c.text, c.src) + "</p>"; }).join("") +
       "<p>Your vet's plan comes first.</p></div>");
-    var nt = r.nutritionTips || [];
     if (nt.length) h += fold("tips", "Tips (" + nt.length + ")", '<ul class="tips">' + nt.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>");
-    h += "<h3>Bowl</h3><dl>";
-    // The bullets under the bowl are additional advice from what was ticked, with a grey "* Additional advice" line right
-    // over them like the elbow note. Each bullet's "*" goes on the Bowl line it is about, never by default on Slow feeder
-    // (owner 2026-11-20): "Older or stiff" on Bowl height, "Eats very fast" on Slow feeder, a flat face or long ears on
-    // Tilted bowl, and so on (tipRows in bowlfit.js). The bullets also go in the order of their starred lines, top to
-    // bottom: the first bullet is about the first starred line, the second about the second (owner 2026-11-20); two
-    // about the same line keep their order.
-    var LINES = ["height", "width", "holds", "slow", "tilted"];
-    function lineOf(t) {
-      var k = (r.tipRows || {})[t] || "holds";
-      return (k === "width" && !r.minWidthCm) || (k === "tilted" && !r.tilted) ? "holds" : k;   // a line not shown: the bowl's size line
-    }
-    var bt = empty ? [] : r.tips.filter(function (t) { return nt.indexOf(t) < 0 && t !== r.elbowAsk; })   // the elbow note is its own line
-      .map(function (t, k) { return [t, k]; })
-      .sort(function (a, b) { return LINES.indexOf(lineOf(a[0])) - LINES.indexOf(lineOf(b[0])) || a[1] - b[1]; })
-      .map(function (x) { return x[0]; });
-    var star = {};
-    bt.forEach(function (t) { star[lineOf(t)] = 1; });
+    h += "<h3>Bowl feeding recommendation</h3><dl>";   // "Bowl" until owner 2026-11-21, then "Bowl recommendation" the same day
     function dt(text, on) { return "<dt" + (on ? ' class="ast"' : "") + ">" + text + "</dt>"; }
     // "Bowl height", not "rim height": the floor to the top edge of the bowl, the same as "tall" on the bowl cards (owner
     // 2026-11-20: "rim" read as two different heights). The line asks for the elbow when there is none (a large breed's
@@ -987,7 +1086,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     h += fold("howh", "How the bowl height is worked out", howHeight(r, v.species));
     // No box with the large- or giant-breed numbers in the result (owner 2026-11-20): those numbers are in the quick
     // answer on raised bowls for large dogs, and the Bowl height line cites the study.
-    if (bt.length) h += '<p class="fn star note"><span aria-hidden="true">*&nbsp;</span>Additional advice</p><ul class="tips">' + bt.map(function (t) { return "<li>" + citeTip(t, r.tipSources, r.tipStrong) + "</li>"; }).join("") + "</ul>";
+    if (bt.length) h += '<p class="fn star note"><span aria-hidden="true">*&nbsp;</span>Additional advice</p><ul class="tips">' + bt.map(function (t) {
+      return "<li" + (((r.tipAlso || {})[t] || []).indexOf("food") >= 0 ? ' id="adv-meals"' : "") + ">" + citeTip(t, r.tipSources, r.tipStrong) + "</li>"; }).join("") + "</ul>";   // the meals bullet: where the pill after "in N meals" goes
     h += '<div class="ours"><p>' + esc(r.productNote) + "</p>";
     // Our bowls as upright cards in a row that scrolls sideways (a phone shows two and a half): the listing's main
     // photo on top, then the name and sizes, and the whole card opens that bowl on Etsy (owner 2026-11-16)
@@ -1043,49 +1143,37 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   f.addEventListener("submit", function (e) { e.preventDefault(); });
   f.addEventListener("input", render);
   f.addEventListener("change", render);
-  // "Meals a day" splits the same food a day (owner 2026-11-20): once the meals are set, changing them keeps the food
-  // a day. Going from 3 meals to 1 puts the three meals' food into one: each amount becomes three times as much, the
-  // pet still eats the same a day, and the bowl has to hold three times as much. Setting the meals for the first time,
-  // after typing the amounts (the box sits below them), only says how many meals those amounts are for. Amounts are
-  // worked out again from what was typed, so going back gives the typed amounts back without rounding drift; typing an
-  // amount, or changing its unit, makes that the new start.
-  var mealsBox = document.getElementById("meals"), mealsWas = +mealsBox.value || 0, mealsSet = false;
-  function amountText(x, unit) { var m = Math.pow(10, unit === "g" ? 0 : unit === "oz" ? 1 : 2); return String(Math.round(x * m) / m); }
-  function startAt(row) { row.dataset.base = row.querySelector(".fa").value; row.dataset.baseMeals = mealsSet ? String(mealsWas) : ""; }
-  mealsBox.addEventListener("input", function () {
-    var m = +mealsBox.value;
-    if (!(m >= 1)) return;   // half typed: wait for a number
-    [].forEach.call(box.querySelectorAll(".frow"), function (row) {
-      var fa = row.querySelector(".fa");
-      if (!(+fa.value > 0)) return;
-      if (!row.dataset.base) startAt(row);
-      if (!row.dataset.baseMeals) row.dataset.baseMeals = String(m);   // the first time: these amounts are for m meals
-      else fa.value = amountText(+row.dataset.base * +row.dataset.baseMeals / m, row.querySelector(".fu").value);
-    });
-    mealsWas = m; mealsSet = true;
-  });
-  box.addEventListener("input", function (e) { if (e.target.classList.contains("fa")) startAt(e.target.closest(".frow")); });
-  box.addEventListener("change", function (e) { if (e.target.classList.contains("fu")) startAt(e.target.closest(".frow")); });
+  // Two rules about meals, both the owner's, that work together:
+  // 1. "Meals a day" multiplies; it never changes the amounts (owner 2026-11-21). The amounts under "Food per meal" are one
+  //    meal each, typed before the meals box below them, so changing the meals keeps every amount as typed and changes
+  //    the food a day (each amount x the meals), and "Eats now" with it.
+  // 2. The bowl is worked out after that (owner 2026-11-20; see capacityMl in bowlfit.js): it holds one meal, so the same
+  //    food a day in a third as many meals needs a bowl three times as big. Working on weight loss, or when the meals
+  //    advised differ from the meals typed, it holds one meal of what is recommended instead (owner 2026-11-21).
+  // (From 2026-11-20 to 11-21 the page wrongly turned rule 2 into re-splitting the typed amounts when the meals changed.)
   // "Show a filled-in example" at the end of the intro (owner 2026-11-19): one tap fills the form with an example dog,
-  // so a visitor sees a whole result before typing anything. The link then reads "Clear & hide the example" (owner
-  // 2026-11-20 wording; it was "Hide the example"), and a second tap clears every input back to the empty form
+  // so a visitor sees a whole result before typing anything. The link then reads "Clear example & start over" (owner
+  // 2026-11-21; before that "Clear & hide the example", owner 2026-11-20, and first "Hide the example"), and a second
+  // tap clears every input back to the empty form
   // (owner 2026-11-20; before, it put back what had been typed).
   // Weight and elbow are kept in both unit systems, so the example uses the units already picked, and switching units
   // while it shows keeps the same dog (9.3 kg doesn't turn into 9.3 lb). No broth in it: a broth is looked up at USDA,
   // and each visitor only gets a few look-ups. It also ticks "Liver values to watch" and "High triglycerides or cholesterol"
   // (owner 2026-11-20), and opens "Anything your vet is watching" so those ticks show; hiding the example closes it again.
   // It ticks "Eats very fast" too (owner 2026-11-20), so the example shows a slow feeder worth trying.
+  // Of the signs under "Anything that applies" it ticks only that and the empty-stomach one, not "Brings food back up"
+  // (owner 2026-11-21).
   // The example is also one of the cards, the second (owner 2026-11-21): "Show a filled-in example" outlines that card,
   // and a tap on the card fills the same example. Its drawing has a raised, footed bowl, after our two-tone raised flower
   // slow feeder but hand drawn, as its result recommends raised, footed bowls (owner 2026-11-21).
   var EX = { group: "Dogs", label: ["Small", "liver, high cholesterol"], art: "img/ex-dog-liver.jpg",
     species: "dog", weight: { cm: "9.3", "in": "20.5" }, elbow: { cm: "19.7", "in": "7.75" }, stage: "intact", activity: "usual", meals: "3",
     size: "small",   // the example dog is 9.3 kg, a small dog (under 10 kg)
-    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["fastEater", "cond:liver", "cond:lipids", "regurgitates", "emptyStomach"] };
+    foods: [["hills-pd-id-low-fat-can-dog", "180"], ["jffd-turkey-whole-wheat-macaroni", "10"]], ticks: ["fastEater", "cond:liver", "cond:lipids", "emptyStomach"] };   // not "Brings food back up" (owner 2026-11-21)
   // More examples behind the round button after the link (owner 2026-11-20): five typical dogs, the second being the
-  // example above, and three cats, from the cases tested, so each breed size, different elbow heights, meals a day and
+  // example above, and four cats, from the cases tested, so each breed size, different elbow heights, meals a day and
   // health boxes come up. They run from small to large, the dogs first and then the cats (owner 2026-11-21): the
-  // dachshund first and the example second, then medium, large and giant; the kitten, the adult cat, the older cat. label = a few words: size or age, then (with the weight in the units picked) what stands out.
+  // dachshund first and the example second, then medium, large and giant; the kitten, the adult cat, the overweight adult cat, the older cat. label = a few words: size or age, then (with the weight in the units picked) what stands out.
   // whisker = cats' whisker span; kcal = calories per cup, for a food not in the list. Amounts give about the calories
   // each pet needs. art = the card's hand-drawn picture (owner 2026-11-20), drawn to show what the example is about.
   // The small one that eats fast is a dachshund with short legs (owner 2026-11-21, in place of a Pomeranian). Its result
@@ -1098,7 +1186,20 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // 11 cm. Short legs is ticked for it. Three meals of 0.35 cup of a small-breed food (452 kcal a cup) give about 94% of
   // the calories it needs, and each meal stays small enough for a 200 ml slow feeder with the room a slow feeder needs.
   // The large dog brings food back up (owner 2026-11-20), so one example shows the megaesophagus sentence, in bold, and
-  // the caution after it; it still eats one meal a day, which that tip's "smaller meals, more often" answers.
+  // the caution after it. It eats 2 meals of 1.9 cups (owner 2026-11-21; it was one meal of 3.75 cups): for a large
+  // dog, vets advise 2 or more smaller meals rather than one, as bloat risk rose with the size of each meal (Merck;
+  // Raghavan 2004), about the same food a day as before.
+  // The fourth cat (owner 2026-11-21: a cat example that shows the meals advice, a tuxedo cat, its input a little off so
+  // "Eats now" says reduce): an overweight indoor tuxedo cat, 6.4 kg (14 lb), spayed or neutered, low activity, working
+  // on weight loss, fed once a day: 1 cup of Purina Cat Chow Complete (411 kcal a cup), about 411 kcal a day against about
+  // 197 to lose weight, so "Can reduce", and the meals advice: 2 or more meals rather than one large one (Merck), and in
+  // cats 6 meals a day didn't speed weight loss compared with 2 (Witzel-Rollins 2022). It gulps that one big meal and
+  // can bring it back up, so "Eats very fast" is ticked: the feline consensus line on small meals from puzzle feeders.
+  // Its picture is in the British scribbly, ugly-cute style of the owner's reference (owner 2026-11-21: not like the other
+  // cats, eyes wide open, a cat with character), and lying on its side with its round belly up like the pug in that
+  // reference, as a fat cat likes to lie about (owner, the same day): its big eyes open, its head by its heaped plain
+  // bowl, two arrows to two small slow feeders, as its result says a slow feeder is worth trying, and "2 meals" on the
+  // left, clear of the button.
   var PRESETS = [
     { group: "Dogs", label: ["Small", "short legs, eats fast"], art: "img/ex-dog-dachshund.jpg", species: "dog", weight: { cm: "7.5", "in": "16.5" }, elbow: { cm: "12", "in": "4.75" },
       stage: "neutered", activity: "usual", meals: "3", size: "small", foods: [["purina-pro-plan-small-breed-chicken-rice-dry", "0.35"]], ticks: ["fastEater", "shortLegs"] },
@@ -1109,13 +1210,15 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     { group: "Dogs", label: ["Medium", "older, losing weight"], art: "img/ex-dog-medium.jpg", species: "dog", weight: { cm: "22.5", "in": "49.5" }, elbow: { cm: "27", "in": "10.5" },
       stage: "neutered", activity: "low", meals: "2", size: "medium", foods: [["purina-one-lamb-rice-dry", "1.3"]], ticks: ["senior", "cond:overweight"] },
     { group: "Dogs", label: ["Large", "brings food back up"], art: "img/ex-dog-large.jpg", species: "dog", weight: { cm: "32", "in": "70" }, elbow: { cm: "32", "in": "12.5" },
-      stage: "intact", activity: "usual", meals: "1", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "3.75"]], ticks: ["cond:pancreatitis", "regurgitates"] },
+      stage: "intact", activity: "usual", meals: "2", size: "large", foods: [["purina-pro-plan-sensitive-salmon-rice-dry", "1.9"]], ticks: ["cond:pancreatitis", "regurgitates"] },
     { group: "Dogs", label: ["Giant", "long ears"], art: "img/ex-dog-giant.jpg", species: "dog", weight: { cm: "60", "in": "132" }, elbow: { cm: "44", "in": "17.25" },
       stage: "neutered", activity: "usual", meals: "2", size: "giant", foods: [["hills-sd-adult-chicken-barley-dry", "3.3"]], ticks: ["longEars"] },
     { group: "Cats", label: ["Kitten", "eats fast"], art: "img/ex-cat-kitten.jpg", species: "cat", weight: { cm: "2", "in": "4.5" }, elbow: { cm: "8", "in": "3.25" },
       stage: "young", activity: "usual", meals: "4", kcal: "420", foods: [["any-dry", "0.2"]], ticks: ["fastEater"] },
     { group: "Cats", label: ["Adult", "flat face"], art: "img/ex-cat-adult.jpg", species: "cat", weight: { cm: "4.5", "in": "10" }, elbow: { cm: "12", "in": "4.75" }, whisker: { cm: "13", "in": "5" },
       stage: "neutered", activity: "usual", meals: "2", foods: [["hills-sd-cat-adult-indoor-dry", "0.4"]], ticks: ["flatFace"] },
+    { group: "Cats", label: ["Adult", "overweight, 1 big meal"], art: "img/ex-cat-tuxedo.jpg", species: "cat", weight: { cm: "6.4", "in": "14" }, elbow: { cm: "13", "in": "5" }, whisker: { cm: "14", "in": "5.5" },
+      stage: "neutered", activity: "low", meals: "1", foods: [["purina-cat-chow-complete", "1"]], ticks: ["fastEater", "cond:overweight"] },
     { group: "Cats", label: ["Older", "kidney values"], art: "img/ex-cat-older.jpg", species: "cat", weight: { cm: "3.8", "in": "8.5" }, elbow: { cm: "11", "in": "4.25" }, whisker: { cm: "12", "in": "4.75" },
       stage: "neutered", activity: "usual", meals: "3", foods: [["hills-pd-kd-chicken-pate-can-cat", "0.4"]], ticks: ["senior", "cond:kidney"] }
   ];
@@ -1149,10 +1252,8 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     KEEP.forEach(function (n) { document.getElementById(n).value = v[n]; });
     allBoxes().forEach(function (c) { tickBox(c, x.ticks.indexOf(boxKey(c)) >= 0); });
     adv.open = x.ticks.some(function (t) { return t.indexOf("cond:") === 0; });   // so the health boxes it ticks show
-    mealsWas = +mealsBox.value; mealsSet = true;
-    [].forEach.call(box.querySelectorAll(".frow"), startAt);
     exOn = x; exBusy = false;
-    exBtn.textContent = "Clear & hide the example"; exBtn.parentNode.classList.add("on"); markCards();
+    exBtn.textContent = "Clear example & start over"; exBtn.parentNode.classList.add("on"); markCards();   // "Clear & hide the example" until owner 2026-11-21
     render();
     // so it's plain where to look next (owner 2026-11-21): the bottom bar comes up, its purple "Your numbers" pops, and
     // the count ticks to this example's (the bar and the motion scripts below listen)
@@ -1166,12 +1267,11 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     KEEP.forEach(function (n) { document.getElementById(n).value = DEF[n]; });
     allBoxes().forEach(function (c) { tickBox(c, false); });
     adv.open = false;
-    mealsWas = +mealsBox.value || 0; mealsSet = false;
     exOn = null; exWas = null; exBusy = false;
     exBtn.textContent = exShow; exBtn.parentNode.classList.remove("on"); markCards();
     render();
   }
-  // "Clear & hide the example" also folds the example cards away, the caret back to pointing right (owner 2026-11-21)
+  // "Clear example & start over" also folds the example cards away, the caret back to pointing right (owner 2026-11-21)
   exBtn.addEventListener("click", function () {
     // Show: the example, with its card outlined in the row, which always opens if it was folded away (owner 2026-11-21)
     if (!exOn) { fill(EX); if (moreBtn.getAttribute("aria-expanded") !== "true") setOpen(true); else pickedIntoView(); return; }
@@ -1189,7 +1289,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // don't. They show from the start (owner 2026-11-21), and "Show a filled-in example" always opens them (owner
   // 2026-11-21). A tap on a card fills the form with that example. The row stays
   // open, and the card filled in is outlined until the example is cleared or another one is picked. A tap on the
-  // outlined card clears it, as "Clear & hide the example" does, back to the empty form and the link's own words, while
+  // outlined card clears it, as "Clear example & start over" does, back to the empty form and the link's own words, while
   // the row stays open (owner 2026-11-21). The names give the weight in the units picked.
   // Each card also has a small round enlarge button where its words meet its drawing (owner 2026-11-21).
   var moreBtn = document.getElementById("exMore"), car = document.getElementById("exCar");
@@ -1494,7 +1594,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   addRow(false); render();
   drawCards();   // the example cards show from the start (owner 2026-11-21)
   linkCites(document.querySelector("main"));   // the quick answers and anything else written into the page
-  if (openSource(location.hash)) window.addEventListener("load", function () { var li = openSource(location.hash); if (li) li.scrollIntoView({ block: "start" }); });
+  if (openSource(location.hash)) window.addEventListener("load", function () { var li = openSource(location.hash); if (li) { li.scrollIntoView({ block: "start" }); mark(li, true); } });
 })();
 </script>
 <script>
