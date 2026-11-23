@@ -35,12 +35,15 @@ h3{font-size:1.02rem;margin:1.4em 0 .3em}
 .exmore:focus-visible{outline:2px solid var(--accent);outline-offset:-10px;border-radius:999px}
 header{position:relative}
 /* The dark / light button (owner 2026-11-22): round, at the top right, level with "PawsOnMe" (centred on its 24.8 px
-   line: 12.4 px down, less half the button). The same tertiary round button as the ? in the bottom bar: 44 px, the card
-   colour, the usual grey border, a purple icon. The icon is the mode a tap switches to: a sun on the dark page, a moon
-   on the light one. Like every button it shrinks when pressed and springs back, with a ripple from the tap point and,
-   with a mouse, a lean toward the pointer; the new icon turns in on a spring (the motion script sets --ti from 0 to 1). */
-.theme{position:absolute;top:-9.6px;right:0;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;overflow:hidden;isolation:isolate;transform:translate(calc(var(--mx,0) * 1px),calc(var(--my,0) * 1px)) scale(var(--ps,1))}
-.theme svg{flex:none;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform:rotate(calc((1 - var(--ti,1)) * -90deg)) scale(calc(.4 + .6 * var(--ti,1)))}
+   line: 12.4 px down, less half the button). The same size and look as the example cards' round enlarge button (owner
+   2026-11-22, later: the first one, 44 px like the ? in the bottom bar, stood out too much for a button that isn't a
+   main one): 26 px, the card colour, the grey border, the small shadow, a 14 px purple icon, the tap area 7 px wider all
+   round. The icon is the mode a tap switches to: a sun on the dark page, a moon on the light one. Like the enlarge button
+   it shrinks when pressed and springs back; the new icon turns in on a spring (the motion script sets --ti from 0 to 1). */
+.theme{--ps:1;position:absolute;top:-.6px;right:0;display:flex;align-items:center;justify-content:center;width:26px;height:26px;margin:0;padding:0;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.16);font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transform:scale(var(--ps))}
+.theme::before{content:"";position:absolute;inset:-7px;border-radius:999px}
+.theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.theme svg{display:block;flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transform:rotate(calc((1 - var(--ti,1)) * -90deg)) scale(calc(.4 + .6 * var(--ti,1)))}
 [data-theme=dark] .theme .moon,html:not([data-theme=dark]) .theme .sun{display:none}
 /* While the page switches, its colours fade over 300 ms instead of jumping; the script leaves this class off when the
    system asks for reduced motion */
@@ -137,7 +140,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @media (max-height:500px){@supports (height:100dvh){.zbox{width:min(100%,560px,calc((100dvh - 276px) * 1.2 + 16px))}}}
 @media (prefers-reduced-motion:reduce){.zbox,.zcard,.zsel,.zbox.on .zsel,.zdots,.zdot i,.zslide{transition:none}}
 html.zoom,html.zoom body{overflow:hidden}
-html.zoom .jump{z-index:50;transform:translateY(100%);pointer-events:none}
+html.zoom .jump{z-index:50;transform:translateY(calc(100% + 8px));pointer-events:none}
 html.zoom.zon .jump{transform:none;pointer-events:auto}
 .ex:focus-visible{outline:2px solid var(--accent);outline-offset:-6px;border-radius:8px}
 /* While the link reads "Clear example & start over" (owner 2026-11-21; before, "Clear & hide the example"), it and its three-dot button wrap together: at
@@ -338,7 +341,13 @@ a.shop{display:inline-block}
    come up into the top third of the screen (and on through the quick answers), and while the phone keyboard is up. */
 html{scroll-padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 .jump{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:8px;padding:8px max(16px,calc((100% - 420px) / 2)) calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);transform:translateY(0);transition:transform .22s ease-out}
-.jump.away{transform:translateY(100%);pointer-events:none}
+.jump.away{transform:translateY(calc(100% + 8px));pointer-events:none}
+/* A small shadow above the strip, going up only (owner 2026-11-22): the round buttons' 0 1px 4px turned upward. The strip
+   runs from edge to edge and its colour carries on below it, so only the part above it shows. On the dark page the
+   buttons' .16 can't be seen against the dark form, so there it is darker (.6). Slid away, the strip goes 8 px further
+   down than its height, so the shadow doesn't stay showing at the foot of the screen. */
+.jump{box-shadow:0 -1px 4px rgba(0,0,0,.16)}
+@media screen{[data-theme=dark] .jump{box-shadow:0 -1px 4px rgba(0,0,0,.6)}}
 /* The strip's colour carries on below it, so no page shows under the strip when iPhone Safari's toolbar slides away
    during a scroll (owner 2026-11-20: the page showed through below "Your numbers"). */
 .jump::after{content:"";position:absolute;left:0;right:0;top:100%;height:100vh;background:var(--card)}
@@ -413,7 +422,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <main>
 <header>
 <p class="brand"><a href="https://www.etsy.com/shop/PawsOnMePet">PawsOnMe</a></p>
-<button type="button" class="theme" id="theme" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.7V5M12 19v2.3M2.7 12H5M19 12h2.3M5.4 5.4L7 7M17 17l1.6 1.6M5.4 18.6L7 17M17 7l1.6-1.6"/></g><path class="moon" d="M20.4 14.2A8.6 8.6 0 1 1 9.8 3.6a6.8 6.8 0 0 0 10.6 10.6z"/></svg></button>
+<button type="button" class="theme" id="theme" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g class="sun"><circle cx="12" cy="12" r="3.6"/><path d="M12 1.8v2.7M12 19.5v2.7M1.8 12h2.7M19.5 12h2.7M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M4.8 19.2l1.9-1.9M17.3 6.7l1.9-1.9"/></g><path class="moon" d="M20.4 14.2A8.6 8.6 0 1 1 9.8 3.6a6.8 6.8 0 0 0 10.6 10.6z"/></svg></button>
 <h1>Pet Nutrition & Bowl Calculator</h1>
 <p class="lede">A healthy nutrition plan starts with how much and what your pet eats. Enter your dog's or cat's weight and food to get daily calories and how much to feed, then a bowl that helps them eat it well: the right height and size, and a slow feeder for fast eaters. Every number says where it comes from. <span class="exw"><button type="button" class="ex" id="example" aria-controls="f">Show a filled-in example</button><button type="button" class="exmore" id="exMore" aria-label="More examples" aria-expanded="true" aria-controls="exCar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle class="bg" cx="12" cy="12" r="11"/><path class="chev" d="M9.9 7.6l4.4 4.4-4.4 4.4"/></svg></button></span></p>
 <div class="excar" id="exCar" role="region" aria-label="Examples"></div>
@@ -1677,12 +1686,12 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 //   back when it leaves (stiffness 150, damping 15). Phones have no pointer to follow, so it is mouse only.
 // Every button has motion (owner 2026-11-20): the press and spring back on all of them, and on every expander line
 // (owner 2026-11-20, the same as the "Show a filled-in example" link) and on each example card's round enlarge button
-// (owner 2026-11-21), and on the enlarged card with its "Tap to select this example" band, as one piece, until it is
-// picked, with a white ripple in the band (owner 2026-11-21); the ripple and the magnetic lean
-// also on the bottom bar's two buttons and the two round buttons in the quick answers, and on the round dark / light
-// button at the top right (owner 2026-11-22), whose new icon also turns in on the elastic toggle's spring. "Your
-// numbers" in the bar is the one exception while it is tertiary, before there is a number to see; once it turns purple
-// it moves like the rest.
+// (owner 2026-11-21) and the round dark / light button at the top right, which has its size and look (owner 2026-11-22)
+// and whose new icon also turns in on the elastic toggle's spring, and on the enlarged card with its "Tap to select this
+// example" band, as one piece, until it is picked, with a white ripple in the band (owner 2026-11-21); the ripple and the
+// magnetic lean also on the bottom bar's two buttons and the two round buttons in the quick answers. "Your numbers" in
+// the bar is the one exception while it is tertiary, before there is a number to see; once it turns purple it moves like
+// the rest.
 // The enlarged card follows a sideways swipe and slides on to the next card (owner 2026-11-21: light motion); it is
 // written with the card itself, further up.
 // Springs have mass 1. Nothing moves when the system asks for reduced motion.
@@ -1766,7 +1775,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   // moves alone (owner 2026-11-21). The enlarged card presses as a whole (its .zpress) while it isn't picked yet, as a tap
   // on it picks it, and its "Tap to select this example" band, joined to it, moves with it, the ripple in the band; once
   // picked a tap on it does nothing, so it stays still (owner 2026-11-21).
-  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .zbox:not(.on) .zpress, .zdot, .rm, .adv>summary, details.more>summary, .srcs>summary, .theme", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a, .zsel, .theme";
+  var PRESS = ".add, a.pcard, a.shop, .jump-qa, .jump-res.ready, .fab a, a.goto, .ex, .exmore, .excar li, .exzoom, .zbox:not(.on) .zpress, .zdot, .rm, .adv>summary, details.more>summary, .srcs>summary, .theme", RIPPLE = ".add, .jump-qa, .jump-res.ready, .fab a, .zsel";
   function ripple(b, e) {
     if (reduce.matches || !b.animate) return;
     var r = b.getBoundingClientRect(), d = r.width * 2.4, s = document.createElement("span");
@@ -1833,7 +1842,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   var mx = -1e4, my = -1e4, queued = 0, leaned = [];
   function groups() {   // with a card enlarged, only the bottom bar shows above it, once the card is picked (owner 2026-11-21)
     var root = document.documentElement, bar = document.getElementById("jump"), fab = document.getElementById("fab"), zoomed = root.classList.contains("zoom");
-    return [zoomed ? [] : [document.getElementById("addFood")], zoomed ? [] : [document.getElementById("theme")],
+    return [zoomed ? [] : [document.getElementById("addFood")],
       bar && (zoomed ? root.classList.contains("zon") : !bar.classList.contains("away")) ? [].slice.call(bar.querySelectorAll(".jump-res.ready, .jump-qa")) : [],
       fab && !zoomed && !fab.classList.contains("away") ? [].slice.call(fab.querySelectorAll("a")) : []];
   }
