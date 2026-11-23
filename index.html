@@ -408,10 +408,10 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <label><input type="radio" name="species" value="dog" checked><span>Dog</span></label>
 <label><input type="radio" name="species" value="cat"><span>Cat</span></label></div></fieldset>
 <fieldset><legend>Units</legend><div class="seg">
-<label><input type="radio" name="unit" value="cm" checked><span>Metric (cm, kg)</span></label>
-<label><input type="radio" name="unit" value="in"><span>US (inches, lb)</span></label></div></fieldset>
+<label><input type="radio" name="unit" value="cm"><span>Metric (cm, kg)</span></label>
+<label><input type="radio" name="unit" value="in" checked><span>US (inches, lb)</span></label></div></fieldset>
 <h2 class="part">For Nutrition</h2>
-<div class="field"><label for="weight"><span class="dog-only">Dog</span><span class="cat-only">Cat</span> weight (<span id="u3">kg</span>)</label>
+<div class="field"><label for="weight"><span class="dog-only">Dog</span><span class="cat-only">Cat</span> weight (<span id="u3">lb</span>)</label>
 <input id="weight" name="weight" type="number" min="0" step="0.1" inputmode="decimal"></div>
 <div class="field"><label for="stage">Life stage</label>
 <select id="stage" name="stage">
@@ -445,7 +445,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <label><input type="checkbox" name="cond" value="overweight" id="condOverweight"> Working on weight loss</label>
 </div></details>
 <h2 class="part">For Bowl</h2>
-<div class="field"><label for="elbow">Elbow height (<span id="u1">cm</span>)</label>
+<div class="field"><label for="elbow">Elbow height (<span id="u1">in</span>)</label>
 <input id="elbow" name="elbow" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Pet standing on a flat floor. Measure from the floor to the elbow.</span></div>
 <div class="field dog-only"><label for="size">Breed size</label>
@@ -456,7 +456,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 <option value="giant">Giant: adults over 45 kg (99 lb)</option>
 </select>
 <span class="hint">Large and giant breeds get a separate height rule, from a study of 1,637 dogs [1].</span></div>
-<div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">cm</span>), optional</label>
+<div class="field cat-only"><label for="whisker">Whisker span (<span id="u2">in</span>), optional</label>
 <input id="whisker" name="whisker" type="number" min="0" step="0.5" inputmode="decimal">
 <span class="hint">Tip to tip, across the face.</span></div>
 <fieldset class="checks"><legend>Anything that applies</legend>
@@ -1296,7 +1296,9 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     exBusy = true;
     [].slice.call(box.children).forEach(function (row) { box.removeChild(row); });
     addRow(false);
-    pickRadio("species", exWas ? exWas.species : "dog"); pickRadio("unit", exWas ? exWas.unit : "cm"); syncActivity();
+    // without a pick to go back to, the page's own start: Dog, and US units (owner 2026-11-22: US at every page load,
+    // Metric only once it's tapped)
+    pickRadio("species", exWas ? exWas.species : "dog"); pickRadio("unit", exWas ? exWas.unit : "in"); syncActivity();
     KEEP.forEach(function (n) { document.getElementById(n).value = DEF[n]; });
     allBoxes().forEach(function (c) { tickBox(c, false); });
     adv.open = false;
